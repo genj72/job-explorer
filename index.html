@@ -5,42 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>직무탐색 서비스</title>
 <style>
-/* ── 기본 리셋 ──────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color:#1a1a2e;min-height:100vh;}
-
-/* ── 헤더 ────────────────────────────────────────────── */
 .site-header{background:linear-gradient(135deg,#1B3A6B 0%,#2563EB 100%);color:#fff;padding:28px 24px 24px;}
 .site-header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
 .site-header p{font-size:13px;opacity:.8;margin-top:4px;}
-
-/* ── 탭 ──────────────────────────────────────────────── */
 .tab-bar{display:flex;background:#fff;border-bottom:2px solid #E5E9F0;position:sticky;top:0;z-index:100;}
 .tab-btn{flex:1;padding:14px 8px;font-size:14px;font-weight:600;color:#888;border:none;background:none;cursor:pointer;transition:all .2s;}
 .tab-btn.active{color:#1B3A6B;border-bottom:2px solid #1B3A6B;margin-bottom:-2px;}
-
-/* ── 컨테이너 ─────────────────────────────────────────── */
 .container{max-width:900px;margin:0 auto;padding:20px 16px;}
-
-/* ── 로딩 ────────────────────────────────────────────── */
 .loading{text-align:center;padding:60px 20px;color:#888;}
 .loading .spinner{width:36px;height:36px;border:4px solid #E5E9F0;border-top-color:#2563EB;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
-/* ── 안내 배너 ─────────────────────────────────────────── */
-.notice{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#1e40af;line-height:1.6;}
-
-/* ── 탭 패널 ─────────────────────────────────────────── */
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
-
-/* ── 전공 탐색 탭 ─────────────────────────────────────── */
 .major-select-wrap{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
 .major-select-wrap label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:8px;}
 .major-select{width:100%;padding:10px 14px;border:1.5px solid #E5E9F0;border-radius:8px;font-size:14px;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23888' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 12px center;cursor:pointer;}
 .major-select:focus{outline:none;border-color:#2563EB;}
-
-/* ── 직무 카드 그리드 ─────────────────────────────────── */
 .job-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
 .job-card{background:#fff;border-radius:12px;padding:18px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1.5px solid transparent;transition:all .2s;position:relative;}
 .job-card:hover{border-color:#2563EB;transform:translateY(-2px);box-shadow:0 4px 16px rgba(37,99,235,.12);}
@@ -54,8 +36,6 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .job-card .skill-row{display:flex;gap:6px;flex-wrap:wrap;}
 .skill-main{font-size:11px;padding:3px 9px;border-radius:20px;background:#E8F5E9;color:#1B5E20;font-weight:600;}
 .skill-sub{font-size:11px;padding:3px 9px;border-radius:20px;background:#FFEBEE;color:#B71C1C;font-weight:600;}
-
-/* ── 자가진단 탭 ──────────────────────────────────────── */
 .diag-section{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
 .diag-section h3{font-size:15px;font-weight:700;margin-bottom:16px;color:#1B3A6B;}
 .env-question{margin-bottom:16px;}
@@ -72,13 +52,9 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .skill-checkbox-item input{display:none;}
 .diag-result-btn{width:100%;padding:14px;background:#1B3A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s;}
 .diag-result-btn:hover{background:#2563EB;}
-
-/* ── 매칭 결과 ────────────────────────────────────────── */
 .match-result-section{margin-top:20px;}
 .match-result-section h3{font-size:16px;font-weight:700;color:#1B3A6B;margin-bottom:14px;}
 .match-score-badge{position:absolute;top:12px;right:12px;background:#1B3A6B;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
-
-/* ── 직무 상세 모달 ─────────────────────────────────────── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;overflow-y:auto;padding:20px 12px;}
 .modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:680px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);}
@@ -90,48 +66,25 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .modal-tab{flex:1;padding:12px 4px;font-size:12px;font-weight:600;color:#888;border:none;background:none;cursor:pointer;transition:all .2s;}
 .modal-tab.active{color:#1B3A6B;border-bottom:2px solid #1B3A6B;margin-bottom:-2px;}
 .modal-body{padding:20px 24px;max-height:70vh;overflow-y:auto;}
-.modal-panel{display:none;}
-.modal-panel.active{display:block;}
-
-/* ── 상세 섹션 카드 ─────────────────────────────────────── */
 .detail-card{background:#F8F9FC;border-radius:10px;padding:16px;margin-bottom:14px;}
 .detail-card h4{font-size:13px;font-weight:700;color:#1B3A6B;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.detail-card .icon{font-size:14px;}
-.detail-card p, .detail-card li{font-size:13px;color:#444;line-height:1.7;}
+.detail-card p,.detail-card li{font-size:13px;color:#444;line-height:1.7;}
 .detail-card ul{padding-left:16px;}
-
-/* 연봉 */
 .salary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
 .salary-item{text-align:center;background:#fff;border-radius:8px;padding:12px 6px;border:1px solid #E5E9F0;}
 .salary-item .amt{font-size:18px;font-weight:800;color:#1B3A6B;}
 .salary-item .lbl{font-size:10px;color:#888;margin-top:3px;}
-
-/* AI 위험도 */
 .ai-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:8px;}
 .ai-low{background:#E8F5E9;color:#1B5E20;}
 .ai-mid{background:#FFF9C4;color:#7B5E00;}
 .ai-high{background:#FFEBEE;color:#B71C1C;}
-
-/* 전망 */
 .outlook-box{background:#EFF6FF;border-radius:8px;padding:12px 14px;font-size:13px;color:#1e40af;line-height:1.7;}
-
-/* 링크 버튼 */
 .link-btn-group{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
-.link-btn{display:inline-block;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:all .2s;}
+.link-btn{display:inline-block;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s;}
 .link-btn-job{background:#FF6B35;color:#fff;}
-.link-btn-job:hover{background:#e55a24;}
 .link-btn-sar{background:#FF4A4A;color:#fff;}
-.link-btn-sar:hover{background:#e03c3c;}
-
-/* 준비중 배지 */
-.preparing{text-align:center;padding:40px 20px;color:#aaa;font-size:14px;}
-.preparing .prep-icon{font-size:32px;margin-bottom:8px;}
-
-/* 키워드 태그 */
 .keyword-cloud{display:flex;flex-wrap:wrap;gap:6px;}
 .kw-tag{font-size:11px;padding:4px 10px;background:#EFF6FF;color:#1e40af;border-radius:20px;font-weight:500;}
-
-/* 반응형 */
 @media(max-width:480px){
   .salary-grid{grid-template-columns:1fr;}
   .skill-checkbox-grid{grid-template-columns:1fr;}
@@ -151,7 +104,6 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
   <button class="tab-btn" onclick="switchTab('diag')">🔍 자가진단으로 탐색</button>
 </div>
 
-<!-- 전공 탐색 탭 -->
 <div id="tab-major" class="tab-panel active">
   <div class="container">
     <div id="loading-major" class="loading">
@@ -170,19 +122,13 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
   </div>
 </div>
 
-<!-- 자가진단 탭 -->
 <div id="tab-diag" class="tab-panel">
   <div class="container">
-    <div id="loading-diag" class="loading" style="display:none">
-      <div class="spinner"></div><p>데이터를 불러오는 중...</p>
-    </div>
     <div id="content-diag">
-      <!-- 환경 진단 -->
       <div class="diag-section">
         <h3>① 나의 업무 환경 선호도</h3>
         <div id="env-questions"></div>
       </div>
-      <!-- 역량 진단 -->
       <div class="diag-section">
         <h3>② 나의 강점 역량 (1~3개 선택)</h3>
         <div class="skill-checkbox-grid" id="skill-checkboxes"></div>
@@ -193,12 +139,11 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
   </div>
 </div>
 
-<!-- 직무 상세 모달 -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalIfOverlay(event)">
-  <div class="modal" id="modal">
+  <div class="modal">
     <div class="modal-header">
       <button class="modal-close" onclick="closeModal()">×</button>
-      <h2 id="modal-title">직무명</h2>
+      <h2 id="modal-title"></h2>
       <div class="modal-sub" id="modal-sub"></div>
     </div>
     <div class="modal-tabs">
@@ -207,32 +152,52 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
       <button class="modal-tab" onclick="switchModalTab(2)">🚀 역량개발</button>
       <button class="modal-tab" onclick="switchModalTab(3)">📊 시장현황</button>
     </div>
-    <div class="modal-body" id="modal-body">
-      <div class="loading"><div class="spinner"></div><p>불러오는 중...</p></div>
-    </div>
+    <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
 
 <script>
-// ════════════════════════════════════════════════════
-// ★ 여기에 구글 앱스 스크립트 배포 URL을 넣으세요 ★
-// ════════════════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbxWxGrkMdhxOiOdUyMofzmhPG5ZMWH0Yv7gMlGV08DPhN9F9fL1XyGmHHecLjsKFV2w/exec";
-// 예시: "https://script.google.com/macros/s/AKfyc.../exec"
+// ★ 앱스 스크립트 배포 URL
+const API_URL = "https://script.google.com/macros/s/AKfycbz5FXPbt2xEQ1fmf9RGkrdbAEYURaZPAGvDXUDttaqBz3J_fjP7EIYe1gAoj27_-Udo/exec";
 
-// ── 전역 데이터 저장소 ──────────────────────────────
-let DB = { majors: [], jobs: [], skill_defs: [], env_defs: [] };
+let DB = { majors:[], jobs:[], skill_defs:[], env_defs:[] };
 let currentJobDetail = null;
 
-// ── 초기 로딩 ──────────────────────────────────────
-window.addEventListener("DOMContentLoaded", async () => {
-  await loadAllData();
-});
+// ── JSONP 호출 함수 ─────────────────────────────────
+function jsonpFetch(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = "_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+    const script = document.createElement("script");
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("timeout"));
+    }, 15000);
 
-async function loadAllData() {
+    window[cbName] = (data) => {
+      clearTimeout(timeout);
+      cleanup();
+      resolve(data);
+    };
+
+    function cleanup() {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    const qs = Object.keys(params).map(k =>
+      encodeURIComponent(k) + "=" + encodeURIComponent(params[k])
+    ).join("&");
+
+    script.src = API_URL + "?" + qs + "&callback=" + cbName;
+    script.onerror = () => { cleanup(); reject(new Error("script error")); };
+    document.head.appendChild(script);
+  });
+}
+
+// ── 초기 로딩 ───────────────────────────────────────
+window.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await fetch(`${API_URL}?action=all`);
-    const data = await res.json();
+    const data = await jsonpFetch({ action: "all" });
     DB = data;
     initMajorTab();
     initDiagTab();
@@ -240,25 +205,21 @@ async function loadAllData() {
     document.getElementById("content-major").style.display = "block";
   } catch(e) {
     document.getElementById("loading-major").innerHTML =
-      `<p style="color:#e53e3e">⚠️ 데이터를 불러오지 못했습니다.<br>API_URL을 확인해 주세요.</p>`;
+      `<p style="color:#e53e3e;padding:20px">⚠️ 데이터를 불러오지 못했습니다.<br>잠시 후 새로고침 해보세요.</p>`;
   }
-}
+});
 
 // ── 탭 전환 ────────────────────────────────────────
 function switchTab(tab) {
-  document.querySelectorAll(".tab-btn").forEach((b,i) => {
-    b.classList.toggle("active", (i === 0 && tab === "major") || (i === 1 && tab === "diag"));
-  });
-  document.getElementById("tab-major").classList.toggle("active", tab === "major");
-  document.getElementById("tab-diag").classList.toggle("active", tab === "diag");
+  document.querySelectorAll(".tab-btn").forEach((b,i) =>
+    b.classList.toggle("active", (i===0&&tab==="major")||(i===1&&tab==="diag")));
+  document.getElementById("tab-major").classList.toggle("active", tab==="major");
+  document.getElementById("tab-diag").classList.toggle("active", tab==="diag");
 }
 
-// ════════════════════════════════════════════════════
-// 전공 탐색 탭
-// ════════════════════════════════════════════════════
+// ── 전공 탐색 ───────────────────────────────────────
 function initMajorTab() {
   const sel = document.getElementById("major-select");
-  // 그룹별 optgroup
   const groups = {};
   DB.majors.forEach(m => {
     if (!groups[m.group_name]) groups[m.group_name] = [];
@@ -278,276 +239,189 @@ function initMajorTab() {
 }
 
 function onMajorChange(majorId) {
-  if (!majorId) {
-    document.getElementById("job-grid-wrap").innerHTML = "";
-    return;
-  }
-  const jobs = DB.jobs.filter(j => j.major_id === majorId);
-  renderJobGrid(jobs, "job-grid-wrap");
+  if (!majorId) { document.getElementById("job-grid-wrap").innerHTML=""; return; }
+  renderJobGrid(DB.jobs.filter(j=>j.major_id===majorId), "job-grid-wrap");
 }
 
-// ════════════════════════════════════════════════════
-// 직무 카드 렌더링
-// ════════════════════════════════════════════════════
-function renderJobGrid(jobs, containerId, showScore = false) {
+// ── 직무 카드 렌더링 ────────────────────────────────
+function renderJobGrid(jobs, containerId, showScore=false) {
   const wrap = document.getElementById(containerId);
   if (!jobs.length) {
-    wrap.innerHTML = '<p style="color:#aaa;text-align:center;padding:30px">해당하는 직무가 없습니다.</p>';
+    wrap.innerHTML='<p style="color:#aaa;text-align:center;padding:30px">해당하는 직무가 없습니다.</p>';
     return;
   }
-
-  const envNames = ["사람만남","정보탐색","창의성","변화","피드백"];
-  const envKeys  = ["env_people","env_info","env_creative","env_change","env_feedback"];
-
-  const html = `<div class="job-grid">` +
-    jobs.map(j => {
-      const envTags = envKeys.map((k,i) =>
-        j[k] ? `<span class="env-tag env-${j[k]}">${envNames[i]} ${j[k]}</span>` : ""
-      ).join("");
-      const score = showScore && j._score !== undefined
-        ? `<span class="match-score-badge">매칭 ${j._score}점</span>` : "";
-      return `
-        <div class="job-card" onclick="openModal('${j.job_id}','${esc(j.job_name)}','${esc(j.job_desc)}')">
-          ${score}
-          <div class="job-name">${j.job_name}</div>
-          <div class="job-desc">${j.job_desc}</div>
-          <div class="env-row">${envTags}</div>
-          <div class="skill-row">
-            ${j.skill_main ? `<span class="skill-main">${j.skill_main}</span>` : ""}
-            ${j.skill_sub  ? `<span class="skill-sub">${j.skill_sub}</span>`  : ""}
-          </div>
-        </div>`;
-    }).join("") + `</div>`;
-  wrap.innerHTML = html;
+  const envNames=["사람만남","정보탐색","창의성","변화","피드백"];
+  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  wrap.innerHTML = `<div class="job-grid">` + jobs.map(j => {
+    const envTags = envKeys.map((k,i) =>
+      j[k]?`<span class="env-tag env-${j[k]}">${envNames[i]} ${j[k]}</span>`:""
+    ).join("");
+    const score = showScore&&j._score!==undefined
+      ?`<span class="match-score-badge">매칭 ${j._score}점</span>`:"";
+    return `<div class="job-card" onclick="openModal('${j.job_id}','${esc(j.job_name)}','${esc(j.job_desc)}')">
+      ${score}
+      <div class="job-name">${j.job_name}</div>
+      <div class="job-desc">${j.job_desc}</div>
+      <div class="env-row">${envTags}</div>
+      <div class="skill-row">
+        ${j.skill_main?`<span class="skill-main">${j.skill_main}</span>`:""}
+        ${j.skill_sub?`<span class="skill-sub">${j.skill_sub}</span>`:""}
+      </div>
+    </div>`;
+  }).join("") + `</div>`;
 }
 
-// ════════════════════════════════════════════════════
-// 자가진단 탭
-// ════════════════════════════════════════════════════
+// ── 자가진단 ────────────────────────────────────────
 function initDiagTab() {
-  // 환경 진단 질문
-  const envKeys  = ["env_people","env_info","env_creative","env_change","env_feedback"];
-  const envNames = ["①사람만남","②정보탐색","③창의성","④변화지향","⑤피드백속도"];
-  const envDescs = [
+  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  const envNames=["①사람만남","②정보탐색","③창의성","④변화지향","⑤피드백속도"];
+  const envDescs=[
     "하루 업무 중 다른 사람과 직접 소통하는 비중이 어느 정도를 좋아하나요?",
     "새로운 정보를 계속 찾는 것 vs 기존 데이터를 정리·분석하는 것?",
     "새로운 것을 창조하는 것 vs 정해진 방법을 정확히 실행하는 것?",
     "빠르게 변하는 역동적인 환경 vs 안정적으로 예측 가능한 환경?",
     "오늘 한 일의 결과를 빠르게 확인하고 싶다 vs 장기적 성과를 추구한다?"
   ];
-
-  const container = document.getElementById("env-questions");
-  envKeys.forEach((key, i) => {
-    container.innerHTML += `
-      <div class="env-question">
-        <span class="q-label">${envNames[i]}</span>
-        <div class="q-desc">${envDescs[i]}</div>
-        <div class="hml-btn-group">
-          <button class="hml-btn" data-key="${key}" data-val="H" onclick="selectHML(this)">높음 (High)</button>
-          <button class="hml-btn" data-key="${key}" data-val="M" onclick="selectHML(this)">보통 (Mid)</button>
-          <button class="hml-btn" data-key="${key}" data-val="L" onclick="selectHML(this)">낮음 (Low)</button>
-        </div>
-      </div>`;
+  const c = document.getElementById("env-questions");
+  envKeys.forEach((key,i) => {
+    c.innerHTML += `<div class="env-question">
+      <span class="q-label">${envNames[i]}</span>
+      <div class="q-desc">${envDescs[i]}</div>
+      <div class="hml-btn-group">
+        <button class="hml-btn" data-key="${key}" data-val="H" onclick="selectHML(this)">높음 (High)</button>
+        <button class="hml-btn" data-key="${key}" data-val="M" onclick="selectHML(this)">보통 (Mid)</button>
+        <button class="hml-btn" data-key="${key}" data-val="L" onclick="selectHML(this)">낮음 (Low)</button>
+      </div></div>`;
   });
-
-  // 역량 체크박스
-  const skillContainer = document.getElementById("skill-checkboxes");
+  const sc = document.getElementById("skill-checkboxes");
   DB.skill_defs.forEach(s => {
-    skillContainer.innerHTML += `
-      <label class="skill-checkbox-item" onclick="toggleSkill(this)">
-        <input type="checkbox" value="${s.skill_name}">
-        <span>${s.skill_icon || "•"} ${s.skill_name}</span>
-      </label>`;
+    sc.innerHTML += `<label class="skill-checkbox-item" onclick="toggleSkill(this)">
+      <input type="checkbox" value="${s.skill_name}">
+      <span>${s.skill_icon||"•"} ${s.skill_name}</span></label>`;
   });
 }
 
 function selectHML(btn) {
-  const key = btn.dataset.key;
-  document.querySelectorAll(`[data-key="${key}"]`).forEach(b => {
-    b.className = "hml-btn";
-  });
+  const key=btn.dataset.key;
+  document.querySelectorAll(`[data-key="${key}"]`).forEach(b=>b.className="hml-btn");
   btn.classList.add(`sel-${btn.dataset.val}`);
 }
-
 function toggleSkill(label) {
   label.classList.toggle("checked");
-  label.querySelector("input").checked = label.classList.contains("checked");
+  label.querySelector("input").checked=label.classList.contains("checked");
 }
-
 function runDiag() {
-  const envKeys = ["env_people","env_info","env_creative","env_change","env_feedback"];
-  const selectedEnv = {};
-  let envCount = 0;
-  envKeys.forEach(key => {
-    const btn = document.querySelector(`.hml-btn.sel-H[data-key="${key}"], .hml-btn.sel-M[data-key="${key}"], .hml-btn.sel-L[data-key="${key}"]`);
-    if (btn) { selectedEnv[key] = btn.dataset.val; envCount++; }
+  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  const sel={};
+  let cnt=0;
+  envKeys.forEach(k=>{
+    const b=document.querySelector(`.hml-btn.sel-H[data-key="${k}"],.hml-btn.sel-M[data-key="${k}"],.hml-btn.sel-L[data-key="${k}"]`);
+    if(b){sel[k]=b.dataset.val;cnt++;}
   });
+  const skills=[...document.querySelectorAll(".skill-checkbox-item.checked input")].map(i=>i.value);
+  if(cnt<3){alert("환경 선호도를 3개 이상 선택해 주세요.");return;}
+  if(!skills.length){alert("강점 역량을 1개 이상 선택해 주세요.");return;}
 
-  const selectedSkills = [...document.querySelectorAll(".skill-checkbox-item.checked input")]
-    .map(i => i.value);
+  const scored=DB.jobs.map(j=>{
+    let s=0;
+    envKeys.forEach(k=>{if(sel[k]&&j[k]===sel[k])s+=2;});
+    if(skills.includes(j.skill_main))s+=3;
+    if(skills.includes(j.skill_sub))s+=1;
+    return{...j,_score:s};
+  }).filter(j=>j._score>=3).sort((a,b)=>b._score-a._score).slice(0,12);
 
-  if (envCount < 3) { alert("환경 선호도를 3개 이상 선택해 주세요."); return; }
-  if (selectedSkills.length === 0) { alert("강점 역량을 1개 이상 선택해 주세요."); return; }
-
-  // 매칭 점수 계산
-  const scored = DB.jobs.map(job => {
-    let score = 0;
-    envKeys.forEach(key => {
-      if (selectedEnv[key] && job[key] === selectedEnv[key]) score += 2;
-    });
-    if (selectedSkills.includes(job.skill_main)) score += 3;
-    if (selectedSkills.includes(job.skill_sub))  score += 1;
-    return { ...job, _score: score };
-  });
-
-  const top = scored
-    .filter(j => j._score >= 3)
-    .sort((a,b) => b._score - a._score)
-    .slice(0, 12);
-
-  const resultDiv = document.getElementById("diag-result");
-  if (!top.length) {
-    resultDiv.innerHTML = '<p style="text-align:center;color:#aaa;padding:24px">조건에 맞는 직무를 찾지 못했습니다. 다른 조건으로 다시 시도해 보세요.</p>';
+  const rd=document.getElementById("diag-result");
+  if(!scored.length){
+    rd.innerHTML='<p style="text-align:center;color:#aaa;padding:24px">조건에 맞는 직무를 찾지 못했습니다.</p>';
     return;
   }
-
-  resultDiv.innerHTML = `<h3>🎯 추천 직무 TOP ${top.length}</h3>`;
-  const tempDiv = document.createElement("div");
-  tempDiv.id = "_diag_result_grid";
-  resultDiv.appendChild(tempDiv);
-
-  // 임시 그리드 컨테이너 렌더링
-  const wrap = document.createElement("div");
-  wrap.id = "diag-result-grid";
-  resultDiv.appendChild(wrap);
-  renderJobGrid(top, "diag-result-grid", true);
-  resultDiv.scrollIntoView({ behavior: "smooth" });
+  rd.innerHTML=`<h3>🎯 추천 직무 TOP ${scored.length}</h3><div id="diag-result-grid"></div>`;
+  renderJobGrid(scored,"diag-result-grid",true);
+  rd.scrollIntoView({behavior:"smooth"});
 }
 
-// ════════════════════════════════════════════════════
-// 직무 상세 모달
-// ════════════════════════════════════════════════════
+// ── 모달 ────────────────────────────────────────────
 async function openModal(jobId, jobName, jobDesc) {
-  document.getElementById("modal-title").textContent = jobName;
-  document.getElementById("modal-sub").textContent = jobDesc;
-  document.getElementById("modal-body").innerHTML =
+  document.getElementById("modal-title").textContent=jobName;
+  document.getElementById("modal-sub").textContent=jobDesc;
+  document.getElementById("modal-body").innerHTML=
     '<div class="loading"><div class="spinner"></div><p>불러오는 중...</p></div>';
   document.getElementById("modal-overlay").classList.add("open");
-  document.querySelectorAll(".modal-tab").forEach((t,i) => t.classList.toggle("active", i===0));
-
-  // 상세 데이터 API 호출
+  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===0));
   try {
-    const res = await fetch(`${API_URL}?action=job_detail&job_id=${jobId}`);
-    const data = await res.json();
-    currentJobDetail = data.fields || {};
+    const data=await jsonpFetch({action:"job_detail",job_id:jobId});
+    currentJobDetail=data.fields||{};
     renderModalTab(0);
   } catch(e) {
-    document.getElementById("modal-body").innerHTML =
+    document.getElementById("modal-body").innerHTML=
       '<p style="color:#e53e3e;padding:20px">상세 데이터를 불러오지 못했습니다.</p>';
   }
 }
-
-function closeModal() {
+function closeModal(){
   document.getElementById("modal-overlay").classList.remove("open");
-  currentJobDetail = null;
+  currentJobDetail=null;
 }
-
-function closeModalIfOverlay(e) {
-  if (e.target === document.getElementById("modal-overlay")) closeModal();
+function closeModalIfOverlay(e){
+  if(e.target===document.getElementById("modal-overlay"))closeModal();
 }
-
-function switchModalTab(idx) {
-  document.querySelectorAll(".modal-tab").forEach((t,i) => t.classList.toggle("active", i===idx));
+function switchModalTab(idx){
+  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===idx));
   renderModalTab(idx);
 }
-
-function renderModalTab(idx) {
-  const f = currentJobDetail;
-  if (!f) return;
-  const body = document.getElementById("modal-body");
-
-  if (idx === 0) {
-    // 직무이해
-    body.innerHTML = `
-      ${detailCard("📌 하는 일", preText(f.work_summary))}
-      ${detailCard("🕐 하루 일과 예시", preText(f.daily_routine))}
-      ${detailCard("💡 이런 사람에게 맞습니다", preText(f.fit_person))}`;
-  } else if (idx === 1) {
-    // 취업실전
-    const salEntry = f.salary_entry || [];
-    const salLabel = f.salary_label || [];
-    const salHtml = Array.isArray(salEntry) && salEntry.length
-      ? `<div class="salary-grid">${salEntry.map((s,i) =>
-          `<div class="salary-item">
-             <div class="amt">${s !== "0" ? s+"만원" : "창업"}</div>
-             <div class="lbl">${salLabel[i] || ""}</div>
-           </div>`).join("")}</div>` : "<p>데이터 준비 중</p>";
-
-    const companies = Array.isArray(f.companies)
-      ? f.companies.map(c => `<li>${c}</li>`).join("") : f.companies || "";
-    const certs = Array.isArray(f.certifications)
-      ? f.certifications.map(c => `<li>${c}</li>`).join("") : f.certifications || "";
-
-    body.innerHTML = `
-      ${detailCard("💰 신입 연봉 범위 (만원/년)", salHtml)}
-      ${detailCard("🏢 주요 취업처", `<ul>${companies}</ul>`)}
-      ${detailCard("📜 관련 자격증", `<ul>${certs}</ul>`)}
-      ${detailCard("⭐ 채용 우대 스펙", preText(f.preferred_spec))}
-      <div class="detail-card">
-        <h4><span class="icon">🔗</span> 채용공고 바로가기</h4>
-        <div class="link-btn-group">
-          ${f.jobkorea_url ? `<a href="${f.jobkorea_url}" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>` : ""}
-          ${f.saramin_url  ? `<a href="${f.saramin_url}"  target="_blank" class="link-btn link-btn-sar">사람인 검색</a>`  : ""}
-        </div>
-      </div>`;
-  } else if (idx === 2) {
-    // 역량개발
-    const keywords = Array.isArray(f.resume_keywords) ? f.resume_keywords : (f.resume_keywords||"").split("|");
-    const kwHtml = `<div class="keyword-cloud">${keywords.map(k=>
-      k.trim() ? `<span class="kw-tag">${k.trim()}</span>` : ""
-    ).join("")}</div>`;
-
-    body.innerHTML = `
-      ${detailCard("🎓 재학 중 추천 활동", preText(f.recommend_activity))}
-      ${detailCard("📚 추천 교육·강의", preText(f.recommend_edu))}
-      ${detailCard("👥 커뮤니티·채널", preText(f.community))}
-      ${detailCard("📝 자소서 키워드", kwHtml)}`;
-  } else if (idx === 3) {
-    // 시장현황
-    const aiClass = { "낮음":"ai-low", "중간":"ai-mid", "높음":"ai-high" }[f.ai_risk] || "ai-low";
-    body.innerHTML = `
-      <div class="detail-card">
-        <h4><span class="icon">🤖</span> AI 대체 위험도</h4>
-        <span class="ai-badge ${aiClass}">${f.ai_risk || "분석중"}</span>
-        <p>${f.ai_risk_detail || "데이터 준비 중"}</p>
-      </div>
-      <div class="detail-card">
-        <h4><span class="icon">📈</span> 취업 전망</h4>
-        <div class="outlook-box">${(f.outlook||"데이터 준비 중").replace(/\n/g,"<br>")}</div>
-      </div>
-      <div class="detail-card">
-        <h4><span class="icon">🕒</span> 최종 업데이트</h4>
-        <p>${f.updated_at || "-"}</p>
-      </div>`;
+function renderModalTab(idx){
+  const f=currentJobDetail;
+  if(!f)return;
+  const body=document.getElementById("modal-body");
+  if(idx===0){
+    body.innerHTML=
+      dc("📌 하는 일",pt(f.work_summary))+
+      dc("🕐 하루 일과 예시",pt(f.daily_routine))+
+      dc("💡 이런 사람에게 맞습니다",pt(f.fit_person));
+  } else if(idx===1){
+    const se=f.salary_entry||[];
+    const sl=f.salary_label||[];
+    const salHtml=Array.isArray(se)&&se.length
+      ?`<div class="salary-grid">${se.map((s,i)=>
+        `<div class="salary-item"><div class="amt">${s!=="0"?s+"만원":"창업"}</div><div class="lbl">${sl[i]||""}</div></div>`
+      ).join("")}</div>`:"<p>데이터 준비 중</p>";
+    const cos=Array.isArray(f.companies)?f.companies.map(c=>`<li>${c}</li>`).join(""):f.companies||"";
+    const crs=Array.isArray(f.certifications)?f.certifications.map(c=>`<li>${c}</li>`).join(""):f.certifications||"";
+    body.innerHTML=
+      dc("💰 신입 연봉 범위 (만원/년)",salHtml)+
+      dc("🏢 주요 취업처",`<ul>${cos}</ul>`)+
+      dc("📜 관련 자격증",`<ul>${crs}</ul>`)+
+      dc("⭐ 채용 우대 스펙",pt(f.preferred_spec))+
+      `<div class="detail-card"><h4>🔗 채용공고 바로가기</h4>
+       <div class="link-btn-group">
+         ${f.jobkorea_url?`<a href="${f.jobkorea_url}" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>`:""}
+         ${f.saramin_url?`<a href="${f.saramin_url}" target="_blank" class="link-btn link-btn-sar">사람인 검색</a>`:""}
+       </div></div>`;
+  } else if(idx===2){
+    const kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
+    body.innerHTML=
+      dc("🎓 재학 중 추천 활동",pt(f.recommend_activity))+
+      dc("📚 추천 교육·강의",pt(f.recommend_edu))+
+      dc("👥 커뮤니티·채널",pt(f.community))+
+      dc("📝 자소서 키워드",`<div class="keyword-cloud">${kws.map(k=>k.trim()?`<span class="kw-tag">${k.trim()}</span>`:"").join("")}</div>`);
+  } else {
+    const aiC={"낮음":"ai-low","중간":"ai-mid","높음":"ai-high"}[f.ai_risk]||"ai-low";
+    body.innerHTML=
+      `<div class="detail-card"><h4>🤖 AI 대체 위험도</h4>
+       <span class="ai-badge ${aiC}">${f.ai_risk||"분석중"}</span>
+       <p>${f.ai_risk_detail||"데이터 준비 중"}</p></div>`+
+      `<div class="detail-card"><h4>📈 취업 전망</h4>
+       <div class="outlook-box">${(f.outlook||"데이터 준비 중").replace(/\n/g,"<br>")}</div></div>`+
+      `<div class="detail-card"><h4>🕒 최종 업데이트</h4><p>${f.updated_at||"-"}</p></div>`;
   }
 }
-
-// ── 유틸 ────────────────────────────────────────────
-function detailCard(title, contentHtml) {
-  const icon = title.split(" ")[0];
-  const label = title.split(" ").slice(1).join(" ");
-  return `<div class="detail-card">
-    <h4><span class="icon">${icon}</span>${label}</h4>
-    ${contentHtml || '<p style="color:#aaa">준비 중</p>'}
-  </div>`;
+function dc(title,html){
+  return`<div class="detail-card"><h4>${title}</h4>${html||'<p style="color:#aaa">준비 중</p>'}</div>`;
 }
-function preText(str) {
-  if (!str) return '<p style="color:#aaa">준비 중</p>';
-  return `<p>${str.replace(/\n/g,"<br>")}</p>`;
+function pt(s){
+  if(!s)return'<p style="color:#aaa">준비 중</p>';
+  return`<p>${s.replace(/\n/g,"<br>")}</p>`;
 }
-function esc(str) {
-  return (str||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");
-}
+function esc(s){return(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
 </script>
 </body>
 </html>
