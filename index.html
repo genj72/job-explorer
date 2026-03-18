@@ -7,9 +7,12 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color:#1a1a2e;min-height:100vh;}
-.site-header{background:linear-gradient(135deg,#1B3A6B 0%,#2563EB 100%);color:#fff;padding:28px 24px 24px;}
-.site-header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
-.site-header p{font-size:13px;opacity:.8;margin-top:4px;}
+.site-header{background:linear-gradient(135deg,#1B3A6B 0%,#2563EB 100%);color:#fff;padding:22px 24px 18px;}
+.site-header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;display:inline;}
+.site-header p{font-size:13px;opacity:.8;margin-top:6px;}
+.update-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:3px 10px;font-size:11px;white-space:nowrap;vertical-align:middle;margin-left:10px;}
+.update-badge .dot{width:6px;height:6px;border-radius:50%;background:#4ADE80;display:inline-block;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 .tab-bar{display:flex;background:#fff;border-bottom:2px solid #E5E9F0;position:sticky;top:0;z-index:100;}
 .tab-btn{flex:1;padding:14px 8px;font-size:14px;font-weight:600;color:#888;border:none;background:none;cursor:pointer;transition:all .2s;}
 .tab-btn.active{color:#1B3A6B;border-bottom:2px solid #1B3A6B;margin-bottom:-2px;}
@@ -95,7 +98,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 <body>
 
 <div class="site-header">
-  <h1>🎯 직무탐색 서비스</h1>
+  <h1>🎯 직무탐색 서비스</h1><div class="update-badge" id="update-badge"><span class="dot"></span><span id="update-text">확인중...</span></div>
   <p>전공별 진출 직무를 탐색하고 나에게 맞는 직무를 찾아보세요</p>
 </div>
 
@@ -203,6 +206,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     initDiagTab();
     document.getElementById("loading-major").style.display = "none";
     document.getElementById("content-major").style.display = "block";
+    // 업데이트 일자 표시
+    showUpdateDate(data);
   } catch(e) {
     document.getElementById("loading-major").innerHTML =
       `<p style="color:#e53e3e;padding:20px">⚠️ 데이터를 불러오지 못했습니다.<br>잠시 후 새로고침 해보세요.</p>`;
@@ -419,6 +424,16 @@ function dc(title,html){
 function pt(s){
   if(!s)return'<p style="color:#aaa">준비 중</p>';
   return`<p>${s.replace(/\n/g,"<br>")}</p>`;
+}
+function showUpdateDate(data) {
+  if (data.timestamp) {
+    const d = new Date(data.timestamp);
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    document.getElementById("update-text").textContent = `업데이트 ${y}.${m}`;
+  } else {
+    document.getElementById("update-text").textContent = "최신 데이터";
+  }
 }
 function esc(s){return(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
 </script>
