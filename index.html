@@ -88,6 +88,37 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .link-btn-sar{background:#FF4A4A;color:#fff;}
 .keyword-cloud{display:flex;flex-wrap:wrap;gap:6px;}
 .kw-tag{font-size:11px;padding:4px 10px;background:#EFF6FF;color:#1e40af;border-radius:20px;font-weight:500;}
+
+/* ── 번호 배지 리스트 (추천 활동) ── */
+.num-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.num-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.6;color:#444;}
+.num-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;min-width:20px;background:#1B3A6B;color:#fff;border-radius:50%;font-size:11px;font-weight:700;margin-top:1px;}
+
+/* ── 별점 우대 스펙 ── */
+.star-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
+.star-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.6;padding:6px 10px;border-radius:6px;color:#444;}
+.star-list li.star3{background:#FFF7ED;border-left:3px solid #F97316;}
+.star-list li.star2{background:#FFFBEB;border-left:3px solid #FBBF24;}
+.star-list li.star1{background:#F9FAFB;border-left:3px solid #D1D5DB;}
+.star-badge{font-size:11px;font-weight:700;white-space:nowrap;min-width:30px;}
+.star-list li.star3 .star-badge{color:#EA580C;}
+.star-list li.star2 .star-badge{color:#CA8A04;}
+.star-list li.star1 .star-badge{color:#9CA3AF;}
+
+/* ── 태그 칩 (교육·커뮤니티·자격증) ── */
+.tag-group{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0;}
+.info-tag{display:inline-block;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;line-height:1.4;}
+.tag-cert{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0;}
+.tag-edu{background:#EFF6FF;color:#1e40af;border:1px solid #BFDBFE;}
+.tag-comm{background:#FDF4FF;color:#7E22CE;border:1px solid #E9D5FF;}
+
+/* ── 기업 목록 ── */
+.company-group{display:flex;flex-direction:column;gap:8px;}
+.company-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.company-label{font-size:11px;font-weight:700;color:#6B7280;min-width:56px;}
+.company-items{display:flex;flex-wrap:wrap;gap:5px;}
+.company-item{display:inline-block;padding:4px 10px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;font-size:12px;color:#334155;font-weight:500;}
+
 @media(max-width:480px){
   .salary-grid{grid-template-columns:1fr;}
   .skill-checkbox-grid{grid-template-columns:1fr;}
@@ -160,81 +191,60 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 </div>
 
 <script>
-// ★ 앱스 스크립트 배포 URL
 const API_URL = "https://script.google.com/macros/s/AKfycbziJQlX0Qn0k6u0fJx3p7v7EoQaAc9GAJv-sXS5XziSyJ3_Gd1geWYfXjiQMehAzFwrrQ/exec";
 
 let DB = { majors:[], jobs:[], skill_defs:[], env_defs:[] };
 let currentJobDetail = null;
 
-// ── JSONP 호출 함수 ─────────────────────────────────
 function jsonpFetch(params) {
-  return new Promise((resolve, reject) => {
-    const cbName = "_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-    const script = document.createElement("script");
-    const timeout = setTimeout(() => {
-      cleanup();
-      reject(new Error("timeout"));
-    }, 15000);
-
-    window[cbName] = (data) => {
-      clearTimeout(timeout);
-      cleanup();
-      resolve(data);
-    };
-
-    function cleanup() {
-      delete window[cbName];
-      if (script.parentNode) script.parentNode.removeChild(script);
-    }
-
-    const qs = Object.keys(params).map(k =>
-      encodeURIComponent(k) + "=" + encodeURIComponent(params[k])
-    ).join("&");
-
+  return new Promise(function(resolve, reject) {
+    var cbName = "_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+    var script = document.createElement("script");
+    var timeout = setTimeout(function() { cleanup(); reject(new Error("timeout")); }, 15000);
+    window[cbName] = function(data) { clearTimeout(timeout); cleanup(); resolve(data); };
+    function cleanup() { delete window[cbName]; if(script.parentNode) script.parentNode.removeChild(script); }
+    var qs = Object.keys(params).map(function(k){ return encodeURIComponent(k)+"="+encodeURIComponent(params[k]); }).join("&");
     script.src = API_URL + "?" + qs + "&callback=" + cbName;
-    script.onerror = () => { cleanup(); reject(new Error("script error")); };
+    script.onerror = function(){ cleanup(); reject(new Error("script error")); };
     document.head.appendChild(script);
   });
 }
 
-// ── 초기 로딩 ───────────────────────────────────────
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", async function() {
   try {
-    const data = await jsonpFetch({ action: "all" });
+    var data = await jsonpFetch({ action: "all" });
     DB = data;
     initMajorTab();
     initDiagTab();
     document.getElementById("loading-major").style.display = "none";
     document.getElementById("content-major").style.display = "block";
-    // 업데이트 일자 표시
     showUpdateDate(data);
   } catch(e) {
     document.getElementById("loading-major").innerHTML =
-      `<p style="color:#e53e3e;padding:20px">⚠️ 데이터를 불러오지 못했습니다.<br>잠시 후 새로고침 해보세요.</p>`;
+      '<p style="color:#e53e3e;padding:20px">⚠️ 데이터를 불러오지 못했습니다.<br>잠시 후 새로고침 해보세요.</p>';
   }
 });
 
-// ── 탭 전환 ────────────────────────────────────────
 function switchTab(tab) {
-  document.querySelectorAll(".tab-btn").forEach((b,i) =>
-    b.classList.toggle("active", (i===0&&tab==="major")||(i===1&&tab==="diag")));
-  document.getElementById("tab-major").classList.toggle("active", tab==="major");
-  document.getElementById("tab-diag").classList.toggle("active", tab==="diag");
+  document.querySelectorAll(".tab-btn").forEach(function(b,i){
+    b.classList.toggle("active",(i===0&&tab==="major")||(i===1&&tab==="diag"));
+  });
+  document.getElementById("tab-major").classList.toggle("active",tab==="major");
+  document.getElementById("tab-diag").classList.toggle("active",tab==="diag");
 }
 
-// ── 전공 탐색 ───────────────────────────────────────
 function initMajorTab() {
-  const sel = document.getElementById("major-select");
-  const groups = {};
-  DB.majors.forEach(m => {
-    if (!groups[m.group_name]) groups[m.group_name] = [];
+  var sel = document.getElementById("major-select");
+  var groups = {};
+  DB.majors.forEach(function(m){
+    if(!groups[m.group_name]) groups[m.group_name]=[];
     groups[m.group_name].push(m);
   });
-  Object.keys(groups).forEach(g => {
-    const og = document.createElement("optgroup");
+  Object.keys(groups).forEach(function(g){
+    var og = document.createElement("optgroup");
     og.label = g;
-    groups[g].forEach(m => {
-      const opt = document.createElement("option");
+    groups[g].forEach(function(m){
+      var opt = document.createElement("option");
       opt.value = m.major_id;
       opt.textContent = m.major_name;
       og.appendChild(opt);
@@ -244,208 +254,322 @@ function initMajorTab() {
 }
 
 function onMajorChange(majorId) {
-  if (!majorId) { document.getElementById("job-grid-wrap").innerHTML=""; return; }
-  renderJobGrid(DB.jobs.filter(j=>j.major_id===majorId), "job-grid-wrap");
+  if(!majorId){ document.getElementById("job-grid-wrap").innerHTML=""; return; }
+  renderJobGrid(DB.jobs.filter(function(j){ return j.major_id===majorId; }), "job-grid-wrap");
 }
 
-// ── 직무 카드 렌더링 ────────────────────────────────
-function renderJobGrid(jobs, containerId, showScore=false) {
-  const wrap = document.getElementById(containerId);
-  if (!jobs.length) {
+function renderJobGrid(jobs, containerId, showScore) {
+  var wrap = document.getElementById(containerId);
+  if(!jobs.length){
     wrap.innerHTML='<p style="color:#aaa;text-align:center;padding:30px">해당하는 직무가 없습니다.</p>';
     return;
   }
-  const envNames=["사람만남","정보탐색","창의성","변화","피드백"];
-  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
-  wrap.innerHTML = `<div class="job-grid">` + jobs.map(j => {
-    const envTags = envKeys.map((k,i) =>
-      j[k]?`<span class="env-tag env-${j[k]}">${envNames[i]} ${j[k]}</span>`:""
-    ).join("");
-    const score = showScore&&j._score!==undefined
-      ?`<span class="match-score-badge">매칭 ${j._score}점</span>`:"";
-    return `<div class="job-card" onclick="openModal('${j.job_id}','${esc(j.job_name)}','${esc(j.job_desc)}')">
-      ${score}
-      <div class="job-name">${j.job_name}</div>
-      <div class="job-desc">${j.job_desc}</div>
-      <div class="env-row">${envTags}</div>
-      <div class="skill-row">
-        ${j.skill_main?`<span class="skill-main">${j.skill_main}</span>`:""}
-        ${j.skill_sub?`<span class="skill-sub">${j.skill_sub}</span>`:""}
-      </div>
-    </div>`;
-  }).join("") + `</div>`;
+  var envNames=["사람만남","정보탐색","창의성","변화","피드백"];
+  var envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  var html='<div class="job-grid">';
+  jobs.forEach(function(j){
+    var envTags="";
+    envKeys.forEach(function(k,i){ if(j[k]) envTags+='<span class="env-tag env-'+j[k]+'">'+envNames[i]+' '+j[k]+'</span>'; });
+    var score=(showScore&&j._score!==undefined)?'<span class="match-score-badge">매칭 '+j._score+'점</span>':"";
+    html+='<div class="job-card" onclick="openModal(\''+j.job_id+'\',\''+esc(j.job_name)+'\',\''+esc(j.job_desc)+'\')">'+
+      score+
+      '<div class="job-name">'+j.job_name+'</div>'+
+      '<div class="job-desc">'+j.job_desc+'</div>'+
+      '<div class="env-row">'+envTags+'</div>'+
+      '<div class="skill-row">'+
+        (j.skill_main?'<span class="skill-main">'+j.skill_main+'</span>':'')+
+        (j.skill_sub?'<span class="skill-sub">'+j.skill_sub+'</span>':'')+
+      '</div></div>';
+  });
+  html+='</div>';
+  wrap.innerHTML=html;
 }
 
-// ── 자가진단 ────────────────────────────────────────
 function initDiagTab() {
-  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
-  const envNames=["①사람만남","②정보탐색","③창의성","④변화지향","⑤피드백속도"];
-  const envDescs=[
+  var envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  var envNames=["①사람만남","②정보탐색","③창의성","④변화지향","⑤피드백속도"];
+  var envDescs=[
     "하루 업무 중 다른 사람과 직접 소통하는 비중이 어느 정도를 좋아하나요?",
     "새로운 정보를 계속 찾는 것 vs 기존 데이터를 정리·분석하는 것?",
     "새로운 것을 창조하는 것 vs 정해진 방법을 정확히 실행하는 것?",
     "빠르게 변하는 역동적인 환경 vs 안정적으로 예측 가능한 환경?",
     "오늘 한 일의 결과를 빠르게 확인하고 싶다 vs 장기적 성과를 추구한다?"
   ];
-  const c = document.getElementById("env-questions");
-  envKeys.forEach((key,i) => {
-    c.innerHTML += `<div class="env-question">
-      <span class="q-label">${envNames[i]}</span>
-      <div class="q-desc">${envDescs[i]}</div>
-      <div class="hml-btn-group">
-        <button class="hml-btn" data-key="${key}" data-val="H" onclick="selectHML(this)">높음 (High)</button>
-        <button class="hml-btn" data-key="${key}" data-val="M" onclick="selectHML(this)">보통 (Mid)</button>
-        <button class="hml-btn" data-key="${key}" data-val="L" onclick="selectHML(this)">낮음 (Low)</button>
-      </div></div>`;
+  var c=document.getElementById("env-questions");
+  envKeys.forEach(function(key,i){
+    c.innerHTML+='<div class="env-question">'+
+      '<span class="q-label">'+envNames[i]+'</span>'+
+      '<div class="q-desc">'+envDescs[i]+'</div>'+
+      '<div class="hml-btn-group">'+
+        '<button class="hml-btn" data-key="'+key+'" data-val="H" onclick="selectHML(this)">높음 (High)</button>'+
+        '<button class="hml-btn" data-key="'+key+'" data-val="M" onclick="selectHML(this)">보통 (Mid)</button>'+
+        '<button class="hml-btn" data-key="'+key+'" data-val="L" onclick="selectHML(this)">낮음 (Low)</button>'+
+      '</div></div>';
   });
-  const sc = document.getElementById("skill-checkboxes");
-  DB.skill_defs.forEach(s => {
-    const item = document.createElement("div");
-    item.className = "skill-checkbox-item";
-    item.dataset.value = s.skill_name;
-    item.innerHTML = `<span>${s.skill_icon||"•"} ${s.skill_name}</span>`;
-    item.addEventListener("click", function(){ this.classList.toggle("checked"); });
+  var sc=document.getElementById("skill-checkboxes");
+  DB.skill_defs.forEach(function(s){
+    var item=document.createElement("div");
+    item.className="skill-checkbox-item";
+    item.dataset.value=s.skill_name;
+    item.innerHTML='<span>'+(s.skill_icon||"•")+" "+s.skill_name+'</span>';
+    item.addEventListener("click",function(){ this.classList.toggle("checked"); });
     sc.appendChild(item);
   });
 }
 
 function selectHML(btn) {
-  const key=btn.dataset.key;
-  document.querySelectorAll(`[data-key="${key}"]`).forEach(b=>b.className="hml-btn");
-  btn.classList.add(`sel-${btn.dataset.val}`);
+  var key=btn.dataset.key;
+  document.querySelectorAll('[data-key="'+key+'"]').forEach(function(b){ b.className="hml-btn"; });
+  btn.classList.add("sel-"+btn.dataset.val);
 }
+
 function runDiag() {
-  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
-  const sel={};
-  let cnt=0;
-  envKeys.forEach(k=>{
-    const b=document.querySelector(`.hml-btn.sel-H[data-key="${k}"],.hml-btn.sel-M[data-key="${k}"],.hml-btn.sel-L[data-key="${k}"]`);
-    if(b){sel[k]=b.dataset.val;cnt++;}
+  var envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  var sel={};
+  var cnt=0;
+  envKeys.forEach(function(k){
+    var b=document.querySelector('.hml-btn.sel-H[data-key="'+k+'"],.hml-btn.sel-M[data-key="'+k+'"],.hml-btn.sel-L[data-key="'+k+'"]');
+    if(b){ sel[k]=b.dataset.val; cnt++; }
   });
-  const skills=[...document.querySelectorAll(".skill-checkbox-item.checked")].map(i=>i.dataset.value);
-  if(cnt<3){alert("환경 선호도를 3개 이상 선택해 주세요.");return;}
-  if(!skills.length){alert("강점 역량을 1개 이상 선택해 주세요.");return;}
-
-  const scored=DB.jobs.map(j=>{
-    let s=0;
-    envKeys.forEach(k=>{if(sel[k]&&j[k]===sel[k])s+=2;});
-    if(skills.includes(j.skill_main))s+=3;
-    if(skills.includes(j.skill_sub))s+=1;
-    return{...j,_score:s};
-  }).filter(j=>j._score>=3).sort((a,b)=>b._score-a._score).slice(0,12);
-
-  const rd=document.getElementById("diag-result");
+  var skills=[].slice.call(document.querySelectorAll(".skill-checkbox-item.checked")).map(function(i){ return i.dataset.value; });
+  if(cnt<3){ alert("환경 선호도를 3개 이상 선택해 주세요."); return; }
+  if(!skills.length){ alert("강점 역량을 1개 이상 선택해 주세요."); return; }
+  var scored=DB.jobs.map(function(j){
+    var s=0;
+    envKeys.forEach(function(k){ if(sel[k]&&j[k]===sel[k]) s+=2; });
+    if(skills.indexOf(j.skill_main)!==-1) s+=3;
+    if(skills.indexOf(j.skill_sub)!==-1) s+=1;
+    return Object.assign({},j,{_score:s});
+  }).filter(function(j){ return j._score>=3; }).sort(function(a,b){ return b._score-a._score; }).slice(0,12);
+  var rd=document.getElementById("diag-result");
   if(!scored.length){
     rd.innerHTML='<p style="text-align:center;color:#aaa;padding:24px">조건에 맞는 직무를 찾지 못했습니다.</p>';
     return;
   }
-  rd.innerHTML=`<h3>🎯 추천 직무 TOP ${scored.length}</h3><div id="diag-result-grid"></div>`;
+  rd.innerHTML='<h3>🎯 추천 직무 TOP '+scored.length+'</h3><div id="diag-result-grid"></div>';
   renderJobGrid(scored,"diag-result-grid",true);
   rd.scrollIntoView({behavior:"smooth"});
 }
 
-// ── 모달 ────────────────────────────────────────────
 async function openModal(jobId, jobName, jobDesc) {
   document.getElementById("modal-title").textContent=jobName;
   document.getElementById("modal-sub").textContent=jobDesc;
-  document.getElementById("modal-body").innerHTML=
-    '<div class="loading"><div class="spinner"></div><p>불러오는 중...</p></div>';
+  document.getElementById("modal-body").innerHTML='<div class="loading"><div class="spinner"></div><p>불러오는 중...</p></div>';
   document.getElementById("modal-overlay").classList.add("open");
-  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===0));
+  document.querySelectorAll(".modal-tab").forEach(function(t,i){ t.classList.toggle("active",i===0); });
   try {
-    const data=await jsonpFetch({action:"job_detail",job_id:jobId});
+    var data=await jsonpFetch({action:"job_detail",job_id:jobId});
     currentJobDetail=data.fields||{};
     renderModalTab(0);
   } catch(e) {
-    document.getElementById("modal-body").innerHTML=
-      '<p style="color:#e53e3e;padding:20px">상세 데이터를 불러오지 못했습니다.</p>';
+    document.getElementById("modal-body").innerHTML='<p style="color:#e53e3e;padding:20px">상세 데이터를 불러오지 못했습니다.</p>';
   }
 }
+
 function closeModal(){
   document.getElementById("modal-overlay").classList.remove("open");
   currentJobDetail=null;
 }
 function closeModalIfOverlay(e){
-  if(e.target===document.getElementById("modal-overlay"))closeModal();
+  if(e.target===document.getElementById("modal-overlay")) closeModal();
 }
 function switchModalTab(idx){
-  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===idx));
+  document.querySelectorAll(".modal-tab").forEach(function(t,i){ t.classList.toggle("active",i===idx); });
   renderModalTab(idx);
 }
+
 function renderModalTab(idx){
-  const f=currentJobDetail;
-  if(!f)return;
-  const body=document.getElementById("modal-body");
+  var f=currentJobDetail;
+  if(!f) return;
+  var body=document.getElementById("modal-body");
+
   if(idx===0){
     body.innerHTML=
-      dc("📌 하는 일",pt(f.work_summary))+
-      dc("🕐 하루 일과 예시",pt(f.daily_routine))+
-      dc("💡 이런 사람에게 맞습니다",pt(f.fit_person));
+      dc("📌 하는 일", pt(f.work_summary))+
+      dc("🕐 하루 일과 예시", pt(f.daily_routine))+
+      dc("💡 이런 사람에게 맞습니다", pt(f.fit_person));
+
   } else if(idx===1){
-    const se=f.salary_entry||[];
-    const sl=f.salary_label||[];
-    const salHtml=Array.isArray(se)&&se.length
-      ?`<div class="salary-grid">${se.map((s,i)=>
-        `<div class="salary-item"><div class="amt">${s!=="0"?s+"만원":"창업"}</div><div class="lbl">${sl[i]||""}</div></div>`
-      ).join("")}</div>`:"<p>데이터 준비 중</p>";
-    const cos=Array.isArray(f.companies)?f.companies.map(c=>`<li>${c}</li>`).join(""):f.companies||"";
-    const crs=Array.isArray(f.certifications)?f.certifications.map(c=>`<li>${c}</li>`).join(""):f.certifications||"";
+    // ── 연봉
+    var se=f.salary_entry||[];
+    var sl=f.salary_label||[];
+    var salHtml="<p>데이터 준비 중</p>";
+    if(Array.isArray(se)&&se.length){
+      salHtml='<div class="salary-grid">';
+      for(var i=0;i<se.length;i++){
+        salHtml+='<div class="salary-item"><div class="amt">'+(se[i]!=="0"?se[i]+"만원":"창업")+'</div><div class="lbl">'+(sl[i]||"")+'</div></div>';
+      }
+      salHtml+='</div>';
+    }
+    // ── 취업처
+    var cosHtml=renderCompanies(f.companies);
+    // ── 자격증
+    var crsHtml=renderTags(f.certifications,"cert");
+    // ── 우대 스펙
+    var specHtml=renderStarList(f.preferred_spec);
+    // ── 채용 링크
+    var linkHtml='<div class="link-btn-group">';
+    if(f.jobkorea_url) linkHtml+='<a href="'+f.jobkorea_url+'" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>';
+    if(f.saramin_url)  linkHtml+='<a href="'+f.saramin_url+'" target="_blank" class="link-btn link-btn-sar">사람인 검색</a>';
+    linkHtml+='</div>';
+
     body.innerHTML=
-      dc("💰 신입 연봉 범위 (만원/년)",salHtml)+
-      dc("🏢 주요 취업처",`<ul>${cos}</ul>`)+
-      dc("📜 관련 자격증",`<ul>${crs}</ul>`)+
-      dc("⭐ 채용 우대 스펙",pt(f.preferred_spec))+
-      `<div class="detail-card"><h4>🔗 채용공고 바로가기</h4>
-       <div class="link-btn-group">
-         ${f.jobkorea_url?`<a href="${f.jobkorea_url}" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>`:""}
-         ${f.saramin_url?`<a href="${f.saramin_url}" target="_blank" class="link-btn link-btn-sar">사람인 검색</a>`:""}
-       </div></div>`;
+      dc("💰 신입 연봉 범위 (만원/년)", salHtml)+
+      dc("🏢 주요 취업처", cosHtml)+
+      dc("📜 관련 자격증", crsHtml)+
+      dc("⭐ 채용 우대 스펙", specHtml)+
+      dc("🔗 채용공고 바로가기", linkHtml);
+
   } else if(idx===2){
-    const kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
+    // ── 자소서 키워드
+    var kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
+    var kwHtml='<div class="keyword-cloud">';
+    for(var i=0;i<kws.length;i++){
+      if(kws[i].trim()) kwHtml+='<span class="kw-tag">'+kws[i].trim()+'</span>';
+    }
+    kwHtml+='</div>';
+
     body.innerHTML=
-      dc("🎓 재학 중 추천 활동",pt(f.recommend_activity))+
-      dc("📚 추천 교육·강의",pt(f.recommend_edu))+
-      dc("👥 커뮤니티·채널",pt(f.community))+
-      dc("📝 자소서 키워드",`<div class="keyword-cloud">${kws.map(k=>k.trim()?`<span class="kw-tag">${k.trim()}</span>`:"").join("")}</div>`);
+      dc("🎓 재학 중 추천 활동", renderNumList(f.recommend_activity))+
+      dc("📚 추천 교육·강의", renderTags(f.recommend_edu,"edu"))+
+      dc("👥 커뮤니티·채널", renderTags(f.community,"comm"))+
+      dc("📝 자소서 키워드", kwHtml);
+
   } else {
-    const aiC={"낮음":"ai-low","중간":"ai-mid","높음":"ai-high"}[f.ai_risk]||"ai-low";
+    var aiC={"낮음":"ai-low","중간":"ai-mid","높음":"ai-high"}[f.ai_risk]||"ai-low";
     body.innerHTML=
-      `<div class="detail-card"><h4>🤖 AI 대체 위험도</h4>
-       <span class="ai-badge ${aiC}">${f.ai_risk||"분석중"}</span>
-       <p>${f.ai_risk_detail||"데이터 준비 중"}</p></div>`+
-      `<div class="detail-card"><h4>📈 취업 전망</h4>
-       <div class="outlook-box">${(f.outlook||"데이터 준비 중").replace(/\n/g,"<br>")}</div></div>`+
-      `<div class="detail-card"><h4>🕒 최종 업데이트</h4><p>${(f.updated_at||"-").replace("-",".")}</p></div>`;
+      dc("🤖 AI 대체 위험도",
+        '<span class="ai-badge '+aiC+'">'+(f.ai_risk||"분석중")+'</span>'+
+        '<p>'+(f.ai_risk_detail||"데이터 준비 중")+'</p>')+
+      dc("📈 취업 전망",
+        '<div class="outlook-box">'+((f.outlook||"데이터 준비 중").replace(/\n/g,"<br>"))+'</div>')+
+      dc("🕒 최종 업데이트",
+        '<p>'+((f.updated_at||"-").replace("-","."))+'</p>');
   }
 }
-function dc(title,html){
-  return`<div class="detail-card"><h4>${title}</h4>${html||'<p style="color:#aaa">준비 중</p>'}</div>`;
+
+/* ── 공통 카드 래퍼 ── */
+function dc(title, html){
+  return '<div class="detail-card"><h4>'+title+'</h4>'+(html||'<p style="color:#aaa">준비 중</p>')+'</div>';
 }
+
+/* ── 기본 텍스트 (줄바꿈 → <br>) ── */
 function pt(s){
-  if(!s)return'<p style="color:#aaa">준비 중</p>';
-  return`<p>${s.replace(/\n/g,"<br>")}</p>`;
+  if(!s) return '<p style="color:#aaa">준비 중</p>';
+  return '<p>'+s.replace(/\n/g,"<br>")+'</p>';
 }
-function showUpdateDate(data) {
-  let displayDate = "";
 
-  // 1순위: job_details의 실제 updated_at 최신값
-  if (data.last_updated && data.last_updated.trim()) {
-    displayDate = data.last_updated.trim(); // 예: "2025-03"
-    // YYYY-MM 형식을 YYYY.MM으로 변환
-    displayDate = displayDate.replace("-", ".");
+/* ── 번호 항목(①②③) → 번호 배지 리스트 ── */
+function renderNumList(s){
+  if(!s) return '<p style="color:#aaa">준비 중</p>';
+  var lines=s.split("\n");
+  var numReg=/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/;
+  var html='<ol class="num-list">';
+  var idx=1;
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line) continue;
+    var text=line.replace(numReg,"");
+    html+='<li><span class="num-badge">'+idx+'</span>'+text+'</li>';
+    idx++;
   }
-  // 2순위: 서버 응답 시각 (fallback)
-  else if (data.timestamp) {
-    const d = new Date(data.timestamp);
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    displayDate = y + "." + m;
-  }
-
-  const el = document.getElementById("update-text");
-  if (el) el.textContent = displayDate ? `업데이트 ${displayDate}` : "최신 데이터";
+  html+='</ol>';
+  return html;
 }
-function esc(s){return(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
+
+/* ── ★ 우대 스펙 → 별점 리스트 ── */
+function renderStarList(s){
+  if(!s) return '<p style="color:#aaa">준비 중</p>';
+  var lines=s.split("\n");
+  var html='<ul class="star-list">';
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line) continue;
+    var m=line.match(/^(★+)\s*/);
+    if(m){
+      var cnt=m[1].length;
+      var cls=cnt===3?"star3":cnt===2?"star2":"star1";
+      var text=line.replace(/^★+\s*/,"");
+      html+='<li class="'+cls+'"><span class="star-badge">'+m[1]+'</span>'+text+'</li>';
+    } else {
+      html+='<li>'+line+'</li>';
+    }
+  }
+  html+='</ul>';
+  return html;
+}
+
+/* ── 파이프·줄바꿈 구분 → 태그 칩 ── */
+function renderTags(s, type){
+  if(!s) return '<p style="color:#aaa">준비 중</p>';
+  var items=[];
+  var lines=s.split("\n");
+  for(var i=0;i<lines.length;i++){
+    var parts=lines[i].split("|");
+    for(var j=0;j<parts.length;j++){
+      var t=parts[j].trim();
+      if(t) items.push(t);
+    }
+  }
+  if(!items.length) return '<p style="color:#aaa">준비 중</p>';
+  var cls=type==="cert"?"tag-cert":type==="edu"?"tag-edu":type==="comm"?"tag-comm":"tag-cert";
+  var html='<div class="tag-group">';
+  for(var i=0;i<items.length;i++){
+    html+='<span class="info-tag '+cls+'">'+items[i]+'</span>';
+  }
+  html+='</div>';
+  return html;
+}
+
+/* ── 기업 목록: 카테고리 라벨 + 배지 ── */
+function renderCompanies(s){
+  if(!s) return '<p style="color:#aaa">준비 중</p>';
+  if(Array.isArray(s)){
+    var h='<ul>';
+    for(var i=0;i<s.length;i++) h+='<li>'+s[i]+'</li>';
+    return h+'</ul>';
+  }
+  var lines=s.split("\n");
+  var html='<div class="company-group">';
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line) continue;
+    var parts=line.split("|");
+    var first=parts[0].trim();
+    html+='<div class="company-row">';
+    if(first.indexOf(":")!==-1){
+      var ci=first.indexOf(":");
+      var label=first.substring(0,ci+1);
+      var rest=first.substring(ci+1).trim();
+      var items=rest?[rest]:[];
+      for(var j=1;j<parts.length;j++){ if(parts[j].trim()) items.push(parts[j].trim()); }
+      html+='<span class="company-label">'+label+'</span><span class="company-items">';
+      for(var j=0;j<items.length;j++) html+='<span class="company-item">'+items[j]+'</span>';
+      html+='</span>';
+    } else {
+      html+='<span class="company-items">';
+      for(var j=0;j<parts.length;j++){ if(parts[j].trim()) html+='<span class="company-item">'+parts[j].trim()+'</span>'; }
+      html+='</span>';
+    }
+    html+='</div>';
+  }
+  html+='</div>';
+  return html;
+}
+
+function showUpdateDate(data){
+  var displayDate="";
+  if(data.last_updated&&data.last_updated.trim()){
+    displayDate=data.last_updated.trim().replace("-",".");
+  } else if(data.timestamp){
+    var d=new Date(data.timestamp);
+    displayDate=d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0");
+  }
+  var el=document.getElementById("update-text");
+  if(el) el.textContent=displayDate?"업데이트 "+displayDate:"최신 데이터";
+}
+
+function esc(s){ return (s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
 </script>
 </body>
 </html>
