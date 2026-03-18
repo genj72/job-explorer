@@ -158,7 +158,8 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 
 <script>
 // ★ 앱스 스크립트 배포 URL
-const API_URL = "https://script.google.com/macros/s/AKfycbziJQlX0Qn0k6u0fJx3p7v7EoQaAc9GAJv-sXS5XziSyJ3_Gd1geWYfXjiQMehAzFwrrQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxWxGrkMdhxOiOdUyMofzmhPG5ZMWH0Yv7gMlGV08DPhN9F9fL1XyGmHHecLjsKFV2w/exec";
+
 let DB = { majors:[], jobs:[], skill_defs:[], env_defs:[] };
 let currentJobDetail = null;
 
@@ -294,9 +295,12 @@ function initDiagTab() {
   });
   const sc = document.getElementById("skill-checkboxes");
   DB.skill_defs.forEach(s => {
-    sc.innerHTML += `<label class="skill-checkbox-item" onclick="toggleSkill(this)">
-      <input type="checkbox" value="${s.skill_name}">
-      <span>${s.skill_icon||"•"} ${s.skill_name}</span></label>`;
+    const item = document.createElement("div");
+    item.className = "skill-checkbox-item";
+    item.dataset.value = s.skill_name;
+    item.innerHTML = `<span>${s.skill_icon||"•"} ${s.skill_name}</span>`;
+    item.addEventListener("click", function(){ this.classList.toggle("checked"); });
+    sc.appendChild(item);
   });
 }
 
@@ -304,10 +308,6 @@ function selectHML(btn) {
   const key=btn.dataset.key;
   document.querySelectorAll(`[data-key="${key}"]`).forEach(b=>b.className="hml-btn");
   btn.classList.add(`sel-${btn.dataset.val}`);
-}
-function toggleSkill(label) {
-  label.classList.toggle("checked");
-  label.querySelector("input").checked=label.classList.contains("checked");
 }
 function runDiag() {
   const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
@@ -317,7 +317,7 @@ function runDiag() {
     const b=document.querySelector(`.hml-btn.sel-H[data-key="${k}"],.hml-btn.sel-M[data-key="${k}"],.hml-btn.sel-L[data-key="${k}"]`);
     if(b){sel[k]=b.dataset.val;cnt++;}
   });
-  const skills=[...document.querySelectorAll(".skill-checkbox-item.checked input")].map(i=>i.value);
+  const skills=[...document.querySelectorAll(".skill-checkbox-item.checked")].map(i=>i.dataset.value);
   if(cnt<3){alert("환경 선호도를 3개 이상 선택해 주세요.");return;}
   if(!skills.length){alert("강점 역량을 1개 이상 선택해 주세요.");return;}
 
