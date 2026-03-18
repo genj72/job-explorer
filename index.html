@@ -413,31 +413,38 @@ function renderModalTab(idx){
       dc("🕐 하루 일과 예시",pt(f.daily_routine))+
       dc("💡 이런 사람에게 맞습니다",pt(f.fit_person));
   } else if(idx===1){
-    const se=f.salary_entry||[];
-    const sl=f.salary_label||[];
-    const salHtml=Array.isArray(se)&&se.length
-      ?`<div class="salary-grid">${se.map((s,i)=>
-        `<div class="salary-item"><div class="amt">${s!=="0"?s+"만원":"창업"}</div><div class="lbl">${sl[i]||""}</div></div>`
-      ).join("")}</div>`:"<p>데이터 준비 중</p>";
-    const cos=renderCompanies(f.companies);
-    const crs=renderTags(f.certifications,"cert");
+    var se=f.salary_entry||[];
+    var sl=f.salary_label||[];
+    var salHtml="<p>데이터 준비 중</p>";
+    if(Array.isArray(se)&&se.length){
+      salHtml='<div class="salary-grid">';
+      se.forEach(function(s,i){
+        salHtml+='<div class="salary-item"><div class="amt">'+(s!=="0"?s+"만원":"창업")+'</div><div class="lbl">'+(sl[i]||"")+'</div></div>';
+      });
+      salHtml+='</div>';
+    }
+    var cos=renderCompanies(f.companies);
+    var crs=renderTags(f.certifications,"cert");
+    var linkHtml='<div class="detail-card"><h4>🔗 채용공고 바로가기</h4><div class="link-btn-group">';
+    if(f.jobkorea_url) linkHtml+='<a href="'+f.jobkorea_url+'" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>';
+    if(f.saramin_url)  linkHtml+='<a href="'+f.saramin_url+'" target="_blank" class="link-btn link-btn-sar">사람인 검색</a>';
+    linkHtml+='</div></div>';
     body.innerHTML=
       dc("💰 신입 연봉 범위 (만원/년)",salHtml)+
       dc("🏢 주요 취업처",cos)+
       dc("📜 관련 자격증",crs)+
       dc("⭐ 채용 우대 스펙",ptStar(f.preferred_spec))+
-      `<div class="detail-card"><h4>🔗 채용공고 바로가기</h4>
-       <div class="link-btn-group">
-         ${f.jobkorea_url?`<a href="${f.jobkorea_url}" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>`:""}
-         ${f.saramin_url?`<a href="${f.saramin_url}" target="_blank" class="link-btn link-btn-sar">사람인 검색</a>`:""}
-       </div></div>`;
+      linkHtml;
   } else if(idx===2){
-    const kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
+    var kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
+    var kwHtml='<div class="keyword-cloud">';
+    kws.forEach(function(k){if(k.trim())kwHtml+='<span class="kw-tag">'+k.trim()+'</span>';});
+    kwHtml+='</div>';
     body.innerHTML=
       dc("🎓 재학 중 추천 활동",ptNum(f.recommend_activity))+
       dc("📚 추천 교육·강의",renderTags(f.recommend_edu,"edu"))+
       dc("👥 커뮤니티·채널",renderTags(f.community,"comm"))+
-      dc("📝 자소서 키워드",`<div class="keyword-cloud">${kws.map(k=>k.trim()?`<span class="kw-tag">${k.trim()}</span>`:"").join("")}</div>`);
+      dc("📝 자소서 키워드",kwHtml);
   } else {
     const aiC={"낮음":"ai-low","중간":"ai-mid","높음":"ai-high"}[f.ai_risk]||"ai-low";
     body.innerHTML=
