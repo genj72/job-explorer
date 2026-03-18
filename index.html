@@ -415,7 +415,7 @@ function renderModalTab(idx){
        <p>${f.ai_risk_detail||"데이터 준비 중"}</p></div>`+
       `<div class="detail-card"><h4>📈 취업 전망</h4>
        <div class="outlook-box">${(f.outlook||"데이터 준비 중").replace(/\n/g,"<br>")}</div></div>`+
-      `<div class="detail-card"><h4>🕒 최종 업데이트</h4><p>${f.updated_at||"-"}</p></div>`;
+      `<div class="detail-card"><h4>🕒 최종 업데이트</h4><p>${(f.updated_at||"-").replace("-",".")}</p></div>`;
   }
 }
 function dc(title,html){
@@ -426,14 +426,24 @@ function pt(s){
   return`<p>${s.replace(/\n/g,"<br>")}</p>`;
 }
 function showUpdateDate(data) {
-  if (data.timestamp) {
+  let displayDate = "";
+
+  // 1순위: job_details의 실제 updated_at 최신값
+  if (data.last_updated && data.last_updated.trim()) {
+    displayDate = data.last_updated.trim(); // 예: "2025-03"
+    // YYYY-MM 형식을 YYYY.MM으로 변환
+    displayDate = displayDate.replace("-", ".");
+  }
+  // 2순위: 서버 응답 시각 (fallback)
+  else if (data.timestamp) {
     const d = new Date(data.timestamp);
     const y = d.getFullYear();
     const m = String(d.getMonth()+1).padStart(2,"0");
-    document.getElementById("update-text").textContent = `업데이트 ${y}.${m}`;
-  } else {
-    document.getElementById("update-text").textContent = "최신 데이터";
+    displayDate = y + "." + m;
   }
+
+  const el = document.getElementById("update-text");
+  if (el) el.textContent = displayDate ? `업데이트 ${displayDate}` : "최신 데이터";
 }
 function esc(s){return(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
 </script>
