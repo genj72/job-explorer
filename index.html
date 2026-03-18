@@ -88,6 +88,37 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .link-btn-sar{background:#FF4A4A;color:#fff;}
 .keyword-cloud{display:flex;flex-wrap:wrap;gap:6px;}
 .kw-tag{font-size:11px;padding:4px 10px;background:#EFF6FF;color:#1e40af;border-radius:20px;font-weight:500;}
+
+/* ── 번호 배지 리스트 ── */
+.num-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.num-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;}
+.num-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;min-width:20px;background:#1B3A6B;color:#fff;border-radius:50%;font-size:11px;font-weight:700;margin-top:1px;}
+
+/* ── 별점 우대 스펙 리스트 ── */
+.star-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
+.star-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;padding:5px 8px;border-radius:6px;}
+.star-list li.star3{background:#FFF7ED;border-left:3px solid #F97316;}
+.star-list li.star2{background:#FFFBEB;border-left:3px solid #FBD76B;}
+.star-list li.star1{background:#F9FAFB;border-left:3px solid #D1D5DB;}
+.star-badge{font-size:11px;font-weight:700;white-space:nowrap;min-width:28px;}
+.star-list li.star3 .star-badge{color:#EA580C;}
+.star-list li.star2 .star-badge{color:#CA8A04;}
+.star-list li.star1 .star-badge{color:#6B7280;}
+
+/* ── 태그 칩 (교육·커뮤니티) ── */
+.tag-group{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0;}
+.info-tag{display:inline-block;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;line-height:1.4;}
+.tag-cert{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0;}
+.tag-edu{background:#EFF6FF;color:#1e40af;border:1px solid #BFDBFE;}
+.tag-comm{background:#FDF4FF;color:#7E22CE;border:1px solid #E9D5FF;}
+.tag-default{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;}
+
+/* ── 기업 그룹 ── */
+.company-group{display:flex;flex-direction:column;gap:8px;}
+.company-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.company-label{font-size:11px;font-weight:700;color:#6B7280;white-space:nowrap;min-width:60px;}
+.company-items{display:flex;flex-wrap:wrap;gap:5px;}
+.company-item{display:inline-block;padding:4px 10px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;font-size:12px;color:#334155;font-weight:500;}
 @media(max-width:480px){
   .salary-grid{grid-template-columns:1fr;}
   .skill-checkbox-grid{grid-template-columns:1fr;}
@@ -388,13 +419,13 @@ function renderModalTab(idx){
       ?`<div class="salary-grid">${se.map((s,i)=>
         `<div class="salary-item"><div class="amt">${s!=="0"?s+"만원":"창업"}</div><div class="lbl">${sl[i]||""}</div></div>`
       ).join("")}</div>`:"<p>데이터 준비 중</p>";
-    const cos=Array.isArray(f.companies)?f.companies.map(c=>`<li>${c}</li>`).join(""):f.companies||"";
-    const crs=Array.isArray(f.certifications)?f.certifications.map(c=>`<li>${c}</li>`).join(""):f.certifications||"";
+    const cos=renderCompanies(f.companies);
+    const crs=renderTags(f.certifications,"cert");
     body.innerHTML=
       dc("💰 신입 연봉 범위 (만원/년)",salHtml)+
-      dc("🏢 주요 취업처",`<ul>${cos}</ul>`)+
-      dc("📜 관련 자격증",`<ul>${crs}</ul>`)+
-      dc("⭐ 채용 우대 스펙",pt(f.preferred_spec))+
+      dc("🏢 주요 취업처",cos)+
+      dc("📜 관련 자격증",crs)+
+      dc("⭐ 채용 우대 스펙",ptStar(f.preferred_spec))+
       `<div class="detail-card"><h4>🔗 채용공고 바로가기</h4>
        <div class="link-btn-group">
          ${f.jobkorea_url?`<a href="${f.jobkorea_url}" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>`:""}
@@ -403,9 +434,9 @@ function renderModalTab(idx){
   } else if(idx===2){
     const kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
     body.innerHTML=
-      dc("🎓 재학 중 추천 활동",pt(f.recommend_activity))+
-      dc("📚 추천 교육·강의",pt(f.recommend_edu))+
-      dc("👥 커뮤니티·채널",pt(f.community))+
+      dc("🎓 재학 중 추천 활동",ptNum(f.recommend_activity))+
+      dc("📚 추천 교육·강의",renderTags(f.recommend_edu,"edu"))+
+      dc("👥 커뮤니티·채널",renderTags(f.community,"comm"))+
       dc("📝 자소서 키워드",`<div class="keyword-cloud">${kws.map(k=>k.trim()?`<span class="kw-tag">${k.trim()}</span>`:"").join("")}</div>`);
   } else {
     const aiC={"낮음":"ai-low","중간":"ai-mid","높음":"ai-high"}[f.ai_risk]||"ai-low";
@@ -424,6 +455,56 @@ function dc(title,html){
 function pt(s){
   if(!s)return'<p style="color:#aaa">준비 중</p>';
   return`<p>${s.replace(/\n/g,"<br>")}</p>`;
+}
+/* 번호 항목(①②③) → 번호 배지 리스트 */
+function ptNum(s){
+  if(!s)return'<p style="color:#aaa">준비 중</p>';
+  const lines=s.split("\n").filter(l=>l.trim());
+  const numReg=/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/;
+  if(lines.some(l=>numReg.test(l.trim()))){
+    return`<ol class="num-list">${lines.map((l,i)=>`<li><span class="num-badge">${i+1}</span>${l.replace(numReg,"").trim()}</li>`).join("")}</ol>`;
+  }
+  return`<p>${s.replace(/\n/g,"<br>")}</p>`;
+}
+/* ★ 우대 스펙 → 별 강조 리스트 */
+function ptStar(s){
+  if(!s)return'<p style="color:#aaa">준비 중</p>';
+  const lines=s.split("\n").filter(l=>l.trim());
+  return`<ul class="star-list">${lines.map(l=>{
+    const m=l.match(/^(★+)\s*/);
+    if(m){
+      const cls=["","star1","star2","star3"][m[1].length]||"star1";
+      return`<li class="${cls}"><span class="star-badge">${m[1]}</span>${l.replace(/^★+\s*/,"")}</li>`;
+    }
+    return`<li>${l}</li>`;
+  }).join("")}</ul>`;
+}
+/* 파이프·줄바꿈 구분 → 태그 칩 */
+function renderTags(s,type){
+  if(!s)return'<p style="color:#aaa">준비 중</p>';
+  const items=[];
+  s.split("\n").forEach(line=>line.split("|").forEach(item=>{const t=item.trim();if(t)items.push(t);}));
+  if(!items.length)return'<p style="color:#aaa">준비 중</p>';
+  const cls={"cert":"tag-cert","edu":"tag-edu","comm":"tag-comm"}[type]||"tag-default";
+  return`<div class="tag-group">${items.map(t=>`<span class="info-tag ${cls}">${t}</span>`).join("")}</div>`;
+}
+/* 기업 목록: 카테고리 라벨 + 태그 칩 */
+function renderCompanies(s){
+  if(!s)return'<p style="color:#aaa">준비 중</p>';
+  if(Array.isArray(s))return`<ul>${s.map(c=>`<li>${c}</li>`).join("")}</ul>`;
+  const lines=s.split("\n").filter(l=>l.trim());
+  return`<div class="company-group">${lines.map(line=>{
+    const parts=line.split("|");
+    const first=parts[0].trim();
+    if(first.includes(":")){
+      const ci=first.indexOf(":");
+      const label=first.substring(0,ci+1);
+      const rest=first.substring(ci+1).trim();
+      const items=[rest,...parts.slice(1)].filter(p=>p.trim());
+      return`<div class="company-row"><span class="company-label">${label}</span><span class="company-items">${items.map(p=>`<span class="company-item">${p.trim()}</span>`).join("")}</span></div>`;
+    }
+    return`<div class="company-row"><span class="company-items">${parts.map(p=>`<span class="company-item">${p.trim()}</span>`).join("")}</span></div>`;
+  }).join("")}</div>`;
 }
 function showUpdateDate(data) {
   let displayDate = "";
