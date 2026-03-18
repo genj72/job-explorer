@@ -459,52 +459,83 @@ function pt(s){
 /* 번호 항목(①②③) → 번호 배지 리스트 */
 function ptNum(s){
   if(!s)return'<p style="color:#aaa">준비 중</p>';
-  const lines=s.split("\n").filter(l=>l.trim());
-  const numReg=/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/;
-  if(lines.some(l=>numReg.test(l.trim()))){
-    return`<ol class="num-list">${lines.map((l,i)=>`<li><span class="num-badge">${i+1}</span>${l.replace(numReg,"").trim()}</li>`).join("")}</ol>`;
+  var lines=s.split("\n").filter(function(l){return l.trim();});
+  var numReg=/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/;
+  if(!lines.some(function(l){return numReg.test(l.trim());})){
+    return'<p>'+s.replace(/\n/g,"<br>")+'</p>';
   }
-  return`<p>${s.replace(/\n/g,"<br>")}</p>`;
+  var html='<ol class="num-list">';
+  lines.forEach(function(l,i){
+    html+='<li><span class="num-badge">'+(i+1)+'</span>'+l.replace(numReg,"").trim()+'</li>';
+  });
+  html+='</ol>';
+  return html;
 }
 /* ★ 우대 스펙 → 별 강조 리스트 */
 function ptStar(s){
   if(!s)return'<p style="color:#aaa">준비 중</p>';
-  const lines=s.split("\n").filter(l=>l.trim());
-  return`<ul class="star-list">${lines.map(l=>{
-    const m=l.match(/^(★+)\s*/);
+  var lines=s.split("\n").filter(function(l){return l.trim();});
+  var html='<ul class="star-list">';
+  lines.forEach(function(l){
+    var m=l.match(/^(★+)\s*/);
     if(m){
-      const cls=["","star1","star2","star3"][m[1].length]||"star1";
-      return`<li class="${cls}"><span class="star-badge">${m[1]}</span>${l.replace(/^★+\s*/,"")}</li>`;
+      var cls=["","star1","star2","star3"][m[1].length]||"star1";
+      html+='<li class="'+cls+'"><span class="star-badge">'+m[1]+'</span>'+l.replace(/^★+\s*/,"")+'</li>';
+    } else {
+      html+='<li>'+l+'</li>';
     }
-    return`<li>${l}</li>`;
-  }).join("")}</ul>`;
+  });
+  html+='</ul>';
+  return html;
 }
 /* 파이프·줄바꿈 구분 → 태그 칩 */
 function renderTags(s,type){
   if(!s)return'<p style="color:#aaa">준비 중</p>';
-  const items=[];
-  s.split("\n").forEach(line=>line.split("|").forEach(item=>{const t=item.trim();if(t)items.push(t);}));
+  var items=[];
+  s.split("\n").forEach(function(line){
+    line.split("|").forEach(function(item){
+      var t=item.trim();
+      if(t)items.push(t);
+    });
+  });
   if(!items.length)return'<p style="color:#aaa">준비 중</p>';
-  const cls={"cert":"tag-cert","edu":"tag-edu","comm":"tag-comm"}[type]||"tag-default";
-  return`<div class="tag-group">${items.map(t=>`<span class="info-tag ${cls}">${t}</span>`).join("")}</div>`;
+  var cls={"cert":"tag-cert","edu":"tag-edu","comm":"tag-comm"}[type]||"tag-default";
+  var html='<div class="tag-group">';
+  items.forEach(function(t){ html+='<span class="info-tag '+cls+'">'+t+'</span>'; });
+  html+='</div>';
+  return html;
 }
 /* 기업 목록: 카테고리 라벨 + 태그 칩 */
 function renderCompanies(s){
   if(!s)return'<p style="color:#aaa">준비 중</p>';
-  if(Array.isArray(s))return`<ul>${s.map(c=>`<li>${c}</li>`).join("")}</ul>`;
-  const lines=s.split("\n").filter(l=>l.trim());
-  return`<div class="company-group">${lines.map(line=>{
-    const parts=line.split("|");
-    const first=parts[0].trim();
-    if(first.includes(":")){
-      const ci=first.indexOf(":");
-      const label=first.substring(0,ci+1);
-      const rest=first.substring(ci+1).trim();
-      const items=[rest,...parts.slice(1)].filter(p=>p.trim());
-      return`<div class="company-row"><span class="company-label">${label}</span><span class="company-items">${items.map(p=>`<span class="company-item">${p.trim()}</span>`).join("")}</span></div>`;
+  if(Array.isArray(s)){
+    var h='<ul>';
+    s.forEach(function(c){h+='<li>'+c+'</li>';});
+    return h+'</ul>';
+  }
+  var lines=s.split("\n").filter(function(l){return l.trim();});
+  var html='<div class="company-group">';
+  lines.forEach(function(line){
+    var parts=line.split("|");
+    var first=parts[0].trim();
+    html+='<div class="company-row">';
+    if(first.indexOf(":")!==-1){
+      var ci=first.indexOf(":");
+      var label=first.substring(0,ci+1);
+      var rest=first.substring(ci+1).trim();
+      var items=[rest].concat(parts.slice(1)).filter(function(p){return p.trim();});
+      html+='<span class="company-label">'+label+'</span><span class="company-items">';
+      items.forEach(function(p){html+='<span class="company-item">'+p.trim()+'</span>';});
+      html+='</span>';
+    } else {
+      html+='<span class="company-items">';
+      parts.forEach(function(p){if(p.trim())html+='<span class="company-item">'+p.trim()+'</span>';});
+      html+='</span>';
     }
-    return`<div class="company-row"><span class="company-items">${parts.map(p=>`<span class="company-item">${p.trim()}</span>`).join("")}</span></div>`;
-  }).join("")}</div>`;
+    html+='</div>';
+  });
+  html+='</div>';
+  return html;
 }
 function showUpdateDate(data) {
   let displayDate = "";
