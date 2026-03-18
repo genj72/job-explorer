@@ -430,7 +430,7 @@ function showUpdateDate(data) {
 
   // 1순위: job_details의 실제 updated_at 최신값
   if (data.last_updated && data.last_updated.trim()) {
-    displayDate = data.last_updated.trim(); // 예: "2025-03"
+    displayDate = data.last_updated.trim(); 
     // YYYY-MM 형식을 YYYY.MM으로 변환
     displayDate = displayDate.replace("-", ".");
   }
