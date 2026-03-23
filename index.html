@@ -60,6 +60,116 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
   color:#64748B;
 }
 
+/* ── 스텝 UI ── */
+.step-progress{padding:20px 0 8px;max-width:500px;margin:0 auto;}
+.step-track{display:flex;align-items:center;justify-content:center;gap:0;}
+.step-node{
+  width:32px;height:32px;border-radius:50%;
+  background:#E5E9F0;color:#aaa;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;
+  transition:all .3s;flex-shrink:0;
+}
+.step-node.active{background:#1B3A6B;color:#fff;box-shadow:0 2px 8px rgba(27,58,107,.3);}
+.step-node.done{background:#2563EB;color:#fff;}
+.step-line{flex:1;height:3px;background:#E5E9F0;transition:background .3s;max-width:60px;}
+.step-line.done{background:#2563EB;}
+.step-labels{display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;}
+.step-labels span{font-size:10px;color:#aaa;font-weight:600;text-align:center;flex:1;}
+.step-labels span:first-child{text-align:left;}
+.step-labels span:last-child{text-align:right;}
+
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+
+.step-card{
+  background:#fff;border-radius:16px;
+  padding:24px 20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  margin-bottom:16px;
+}
+.step-eyebrow{
+  font-size:11px;font-weight:700;
+  color:#2563EB;letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.step-title{
+  font-size:18px;font-weight:800;
+  color:#1B3A6B;margin-bottom:8px;line-height:1.3;
+}
+.step-desc{font-size:13px;color:#666;line-height:1.7;margin-bottom:20px;}
+
+/* 설문 문항 */
+.survey-q-wrap{display:flex;flex-direction:column;gap:10px;}
+.survey-q-item{
+  background:#F8FAFC;border-radius:10px;
+  padding:14px 16px;
+  border:1.5px solid #E5E9F0;
+}
+.survey-q-num{font-size:10px;color:#aaa;font-weight:600;margin-bottom:4px;}
+.survey-q-text{font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:12px;line-height:1.5;}
+.survey-q-btns{display:flex;gap:8px;}
+.sq-btn{
+  flex:1;padding:9px 6px;
+  border:1.5px solid #E5E9F0;border-radius:8px;
+  font-size:12px;font-weight:600;
+  background:#fff;cursor:pointer;
+  transition:all .15s;text-align:center;
+  line-height:1.4;
+}
+.sq-btn .sq-main{display:block;font-size:13px;font-weight:700;}
+.sq-btn .sq-sub{display:block;font-size:10px;color:#aaa;margin-top:2px;}
+.sq-btn.sel-H{background:#E8F5E9;border-color:#1B5E20;color:#1B5E20;}
+.sq-btn.sel-H .sq-sub{color:#4CAF50;}
+.sq-btn.sel-M{background:#FFF9C4;border-color:#7B5E00;color:#7B5E00;}
+.sq-btn.sel-M .sq-sub{color:#A0832A;}
+.sq-btn.sel-L{background:#E3F2FD;border-color:#1565C0;color:#1565C0;}
+.sq-btn.sel-L .sq-sub{color:#5B9BD5;}
+
+/* 미니 진행 도트 */
+.env-mini-progress{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:16px;padding-top:14px;
+  border-top:1px solid #F1F5F9;
+}
+.env-mini-progress span{font-size:12px;color:#888;font-weight:600;}
+.mini-dots{display:flex;gap:5px;}
+.mini-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#E5E9F0;transition:all .2s;
+}
+.mini-dot.done{background:#2563EB;}
+.mini-dot.active{background:#1B3A6B;transform:scale(1.3);}
+
+/* 네비 버튼 */
+.step-nav{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;
+}
+.btn-next{
+  padding:13px 32px;
+  background:#1B3A6B;color:#fff;
+  border:none;border-radius:10px;
+  font-size:14px;font-weight:700;
+  cursor:pointer;transition:background .2s;
+}
+.btn-next:hover{background:#2563EB;}
+.btn-prev{
+  padding:13px 24px;
+  background:#fff;color:#666;
+  border:1.5px solid #E5E9F0;border-radius:10px;
+  font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-prev:hover{border-color:#aaa;color:#333;}
+
+@media(max-width:480px){
+  .step-title{font-size:16px;}
+  .survey-q-text{font-size:13px;}
+  .sq-btn .sq-sub{display:none;}
+  .btn-next,.btn-prev{padding:12px 18px;font-size:13px;}
+}
+
 /* ── 계열 선택 ── */
 .group-btn-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
 .group-btn{
@@ -240,40 +350,85 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 
 <div id="tab-diag" class="tab-panel">
   <div class="container">
-    <div id="content-diag">
 
-      <!-- 안내문 (신규 추가) -->
-      <div class="diag-intro">
-        직업은 <strong>무슨 일을 하는가</strong>만큼, <strong>어떤 환경에서 일하는가</strong>도 중요합니다.<br>
-        아래 질문에 솔직하게 답하면 나에게 잘 맞는 직무를 추천해 드립니다.
+    <!-- 진행률 바 -->
+    <div class="step-progress">
+      <div class="step-track">
+        <div class="step-node active" id="sn1"><span>1</span></div>
+        <div class="step-line" id="sl1"></div>
+        <div class="step-node" id="sn2"><span>2</span></div>
+        <div class="step-line" id="sl2"></div>
+        <div class="step-node" id="sn3"><span>3</span></div>
+        <div class="step-line" id="sl3"></div>
+        <div class="step-node" id="sn4"><span>🎯</span></div>
       </div>
+      <div class="step-labels">
+        <span>계열선택</span>
+        <span>환경설문</span>
+        <span>역량설문</span>
+        <span>결과확인</span>
+      </div>
+    </div>
 
-      <!-- ③ 계열 선택 (신규) -->
-      <div class="diag-section" id="group-section">
-        <h3>① 내 계열 선택 <span style="font-size:13px;color:#888;font-weight:400">(선택 사항)</span></h3>
-        <div class="section-desc">내 전공 계열을 선택하면 해당 계열 내에서 추천합니다. 선택하지 않으면 전체 직무에서 추천합니다.</div>
+    <!-- STEP 1: 계열 선택 -->
+    <div class="step-panel active" id="step1">
+      <div class="step-card">
+        <div class="step-eyebrow">STEP 1 / 4</div>
+        <h2 class="step-title">내 전공 계열을 선택하세요</h2>
+        <p class="step-desc">계열을 선택하면 해당 계열 내에서 직무를 추천합니다.<br>선택하지 않으면 전체 직무에서 추천합니다.</p>
         <div class="group-btn-wrap" id="group-btns"></div>
       </div>
-
-      <!-- 업무 환경 선호도 -->
-      <div class="diag-section">
-        <h3>② 나의 업무 환경 선호도</h3>
-        <div class="section-desc">각 항목에서 나와 가장 가까운 것을 선택하세요. (3개 이상 필수)</div>
-        <div id="env-questions"></div>
+      <div class="step-nav">
+        <div></div>
+        <button class="btn-next" onclick="goStep(2)">다음 →</button>
       </div>
-
-      <!-- 강점 역량 -->
-      <div class="diag-section">
-        <h3>③ 나의 강점 역량 <span style="font-size:13px;color:#888;font-weight:400">(1~3개 선택)</span></h3>
-        <div class="skill-section-desc">
-          💡 학교·일상에서 칭찬받거나 자신 있었던 것을 고르세요. 직업 경험이 없어도 됩니다.
-        </div>
-        <div class="skill-checkbox-grid" id="skill-checkboxes"></div>
-      </div>
-
-      <button class="diag-result-btn" onclick="runDiag()">🎯 나에게 맞는 직무 찾기</button>
-      <div class="match-result-section" id="diag-result"></div>
     </div>
+
+    <!-- STEP 2: 환경 설문 -->
+    <div class="step-panel" id="step2">
+      <div class="step-card">
+        <div class="step-eyebrow">STEP 2 / 4 &nbsp;·&nbsp; 업무 환경 선호도</div>
+        <h2 class="step-title" id="env-step-title"></h2>
+        <p class="step-desc" id="env-step-hint"></p>
+        <div class="survey-q-wrap" id="env-q-items"></div>
+        <div class="env-mini-progress">
+          <span id="env-progress-text"></span>
+          <div class="mini-dots" id="env-dots"></div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-prev" onclick="envPrev()">← 이전</button>
+        <button class="btn-next" id="env-next-btn" onclick="envNext()">다음 →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: 역량 설문 -->
+    <div class="step-panel" id="step3">
+      <div class="step-card">
+        <div class="step-eyebrow">STEP 3 / 4 &nbsp;·&nbsp; 강점 역량</div>
+        <h2 class="step-title" id="skill-step-title"></h2>
+        <p class="step-desc" id="skill-step-hint"></p>
+        <div class="survey-q-wrap" id="skill-q-items"></div>
+        <div class="env-mini-progress">
+          <span id="skill-progress-text"></span>
+          <div class="mini-dots" id="skill-dots"></div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-prev" onclick="skillPrev()">← 이전</button>
+        <button class="btn-next" id="skill-next-btn" onclick="skillNext()">다음 →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: 결과 -->
+    <div class="step-panel" id="step4">
+      <div id="diag-result"></div>
+      <div class="step-nav" style="margin-top:16px">
+        <button class="btn-prev" onclick="goStep(1);resetDiag()">↺ 다시하기</button>
+        <div></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -387,10 +542,68 @@ function renderJobGrid(jobs, containerId, showScore=false) {
   }).join("") + `</div>`;
 }
 
-// ★★★ 핵심 개선: 자가진단 탭 초기화 ★★★
-function initDiagTab() {
+// ★★★ 스텝 UI 자가진단 ★★★
+const ENV_SURVEY = [
+  { key:"env_people", icon:"🤝", label:"사람만남",
+    qs:["낯선 사람과 이야기하는 상황도 크게 부담스럽지 않다",
+        "혼자 하는 일보다 사람들과 소통하며 하는 일이 더 잘 맞는다",
+        "하루 종일 사람을 많이 만나도 비교적 덜 피곤하다"] },
+  { key:"env_info", icon:"🔎", label:"자료조사·정보탐색",
+    qs:["궁금한 것이 생기면 스스로 자료를 찾아보고 비교하는 편이다",
+        "새로운 정보나 변화를 꾸준히 찾아보는 일이 크게 귀찮지 않다",
+        "여러 자료를 모아 핵심만 정리하고 요약하는 일이 잘 맞는다"] },
+  { key:"env_creative", icon:"💡", label:"창의성",
+    qs:["정해진 방법만 따르기보다 새로운 방식을 생각해보는 편이다",
+        "아이디어를 내거나 새롭게 기획하는 일이 비교적 잘 맞는다",
+        "문제가 생기면 다른 방법으로 풀 수 없는지 먼저 생각해본다"] },
+  { key:"env_change", icon:"⚡", label:"업무변화",
+    qs:["다양한 업무를 접할 때가 더 재미있다",
+        "예상하지 못한 상황이 생겨도 비교적 유연하게 대응하는 편이다",
+        "한 가지 일만 반복하기보다 상황에 따라 다른 업무를 맡는 편이 더 잘 맞는다"] },
+  { key:"env_feedback", icon:"📊", label:"피드백속도",
+    qs:["내가 한 일의 결과를 비교적 빨리 확인할 수 있을 때 더 만족스럽다",
+        "성과를 오래 기다려야 하는 일보다 반응이 빠른 일이 더 잘 맞는다",
+        "장기 목표도 중요하지만, 중간중간 결과가 보일 때 더 힘이 난다"] },
+];
+const SKILL_SURVEY = [
+  { key:"①말하기·설득",   icon:"🎤", label:"말하기·설득",   sub:"전달력",
+    qs:["여러 사람 앞에서 말할 때 핵심을 비교적 분명하게 전달하는 편이다",
+        "내 생각을 말로 설명하면 상대방이 이해하기 쉽다는 말을 듣는 편이다",
+        "주변 사람(친구, 가족, 동료)을 설득해서 의견을 바꾸게 한 적이 있다"] },
+  { key:"②글쓰기·표현",   icon:"✍️", label:"글쓰기·표현",   sub:"표현력",
+    qs:["글이나 문서로 생각을 정리하는 것이 비교적 편하다",
+        "글쓰기나 문서 정리로 좋은 평가를 받은 적이 있다",
+        "복잡한 내용도 글로 쉽게 풀어 설명할 수 있는 편이다"] },
+  { key:"③수·논리·분석",  icon:"📐", label:"수·논리·분석",  sub:"분석력",
+    qs:["숫자나 데이터를 보면 패턴이나 규칙을 비교적 잘 찾는 편이다",
+        "문제의 원인을 따질 때 논리적으로 정리해보는 편이다",
+        "계산하거나 분석이 필요한 과제나 과목이 비교적 잘 맞는 편이었다"] },
+  { key:"④손·몸·감각",    icon:"🤲", label:"손·몸·감각",    sub:"현장수행력",
+    qs:["손으로 직접 만들거나 다루는 일을 비교적 잘하는 편이다",
+        "몸을 움직이거나 현장에서 직접 하는 일을 비교적 잘 해내는 편이다",
+        "손기술이 섬세하거나 몸의 균형감각·반응이 좋다는 말을 들은 적이 있다"] },
+  { key:"⑤그리기·꾸미기", icon:"🎨", label:"그리기·꾸미기", sub:"시각감각",
+    qs:["색감, 배치, 디자인의 차이를 비교적 잘 알아보는 편이다",
+        "발표 자료나 공간을 보기 좋게 꾸민다는 말을 듣는 편이다",
+        "시각적으로 보기 좋게 정리하거나 구성하는 데 감각이 있는 편이다"] },
+  { key:"⑥돌보기·공감",   icon:"🫶", label:"돌보기·공감",   sub:"공감력",
+    qs:["주변 사람의 상태나 감정 변화를 비교적 잘 알아차리는 편이다",
+        "다른 사람의 입장을 잘 이해하고 공감한다는 말을 듣는 편이다",
+        "누군가를 도와주거나 가르칠 때 보람을 느끼는 편이다"] },
+  { key:"⑦관리·조율·정리",icon:"📋", label:"관리·조율·정리",sub:"조직력",
+    qs:["할 일을 목록으로 정리하고 일정에 맞게 관리하는 편이다",
+        "팀 활동에서 역할 분담이나 진행 순서를 조율하는 편이다",
+        "복잡한 내용을 순서 있게 정리하고 체계화하는 편이다"] },
+  { key:"⑧탐구·연구·실험",icon:"🔬", label:"탐구·연구·실험",sub:"탐구력",
+    qs:["어떤 현상의 원인이나 원리를 궁금해하며 끝까지 파고드는 편이다",
+        "실험하거나 가설을 확인해보는 과정이 재미있다",
+        "새로운 사실이나 원리를 알아내는 과정에 흥미를 느끼고 오래 파고드는 편이다"] },
+];
 
-  // 계열 버튼 초기화
+let envIdx=0, skillIdx=0;
+let envAnswers={}, skillAnswers={};
+
+function initDiagTab() {
   const groups = [...new Set(DB.majors.map(m => m.group_name).filter(Boolean))].sort();
   const gbWrap = document.getElementById("group-btns");
 
@@ -410,6 +623,12 @@ function initDiagTab() {
     "보건·의료":"🏥","사회과학":"🏛️","서비스·관광":"✈️",
     "예술·디자인":"🎨","인문학":"📚","자연과학":"🔭","체육·스포츠":"⚽"
   };
+  const allBtn = document.createElement("button");
+  allBtn.className = "group-btn all-btn selected";
+  allBtn.dataset.group = "";
+  allBtn.textContent = "🌐 전체 보기";
+  allBtn.onclick = () => selectGroup(allBtn);
+  gbWrap.appendChild(allBtn);
   groups.forEach(g => {
     const btn = document.createElement("button");
     btn.className = "group-btn";
@@ -418,339 +637,202 @@ function initDiagTab() {
     btn.onclick = () => selectGroup(btn);
     gbWrap.appendChild(btn);
   });
+  ENV_SURVEY.forEach(e => { envAnswers[e.key] = {}; });
+  SKILL_SURVEY.forEach(s => { skillAnswers[s.key] = {}; });
+  renderEnvQuestion(0);
+  renderSkillQuestion(0);
+}
 
-  // 5개 환경 — 1인칭 질문으로 전면 개선
-  const envConfig = [
-    {
-      key: "env_people",
-      icon: "🤝",
-      label: "① 사람만남",
-      statement: "하루 종일 사람을 만나고 대화해도 에너지가 생긴다.",
-      hint: "고객·학생·환자 등 다른 사람과의 소통이 업무의 중심인가요?",
-      H: "자주 만남",  Hsub: "소통이 원동력",
-      M: "적당히",     Msub: "필요할 때만",
-      L: "혼자가 편함", Lsub: "집중 작업 선호"
-    },
-    {
-      key: "env_info",
-      icon: "🔎",
-      label: "② 자료조사·정보탐색",
-      statement: "자료를 찾고 비교하고 정리하는 일이 재미있고 잘 맞는다.",
-      hint: "시장 조사, 문헌 검색, 트렌드 파악 등 탐색 업무가 많은 직무입니다.",
-      H: "탐색 즐김",  Hsub: "찾는 게 재밌다",
-      M: "가끔 필요",  Msub: "필요할 때만",
-      L: "별로 안 좋아함", Lsub: "실행이 더 맞음"
-    },
-    {
-      key: "env_creative",
-      icon: "💡",
-      label: "③ 창의성",
-      statement: "정해진 방식보다 새로운 아이디어를 내고 시도하는 게 좋다.",
-      hint: "예술적 재능만이 아닙니다. 기획 아이디어, 문제를 다르게 푸는 능력도 포함합니다.",
-      H: "항상 새롭게", Hsub: "창조가 원동력",
-      M: "때에 따라",   Msub: "균형이 좋음",
-      L: "안정이 편함", Lsub: "정해진 방식 선호"
-    },
-    {
-      key: "env_change",
-      icon: "⚡",
-      label: "④ 업무변화",
-      statement: "매일 다른 일이 생기고 변수가 많은 환경이 오히려 재밌다.",
-      hint: "비슷한 패턴이 편한지, 매일 다른 일이 재밌는지 — 진로 만족도와 직결됩니다.",
-      H: "변화 환영",  Hsub: "역동적 환경 선호",
-      M: "적당한 변화", Msub: "중간이 좋음",
-      L: "반복이 편함", Lsub: "안정적 루틴 선호"
-    },
-    {
-      key: "env_feedback",
-      icon: "📊",
-      label: "⑤ 피드백속도",
-      statement: "내가 한 일의 결과를 빠르게 확인하고 싶다.",
-      hint: "판매·서비스는 바로 반응이 오고, 연구·정책 개발은 결과가 오래 걸립니다.",
-      H: "즉시 확인",  Hsub: "빠른 피드백 선호",
-      M: "어느 정도",  Msub: "기다릴 수 있음",
-      L: "장기 성과",  Lsub: "느린 피드백 OK"
-    }
-  ];
+function goStep(n) {
+  document.querySelectorAll(".step-panel").forEach((p,i) =>
+    p.classList.toggle("active", i+1 === n));
+  for(let i=1; i<=4; i++) {
+    const node = document.getElementById("sn"+i);
+    const line = document.getElementById("sl"+i);
+    if(node){ node.classList.toggle("active", i===n); node.classList.toggle("done", i<n); }
+    if(line) line.classList.toggle("done", i<n);
+  }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
 
-  const c = document.getElementById("env-questions");
-  envConfig.forEach(cfg => {
-    c.innerHTML += `
-    <div class="env-question">
-      <div class="q-label">
-        <span class="q-icon">${cfg.icon}</span>
-        ${cfg.label}
-      </div>
-      <div class="q-statement">"${cfg.statement}"</div>
-      <div class="q-hint">💬 ${cfg.hint}</div>
-      <div class="hml-btn-group">
-        <button class="hml-btn" data-key="${cfg.key}" data-val="H" onclick="selectHML(this)">
-          <span class="btn-main">✓ 그렇다</span>
-          <span class="btn-sub">${cfg.H} · ${cfg.Hsub}</span>
+function renderEnvQuestion(idx) {
+  const env = ENV_SURVEY[idx];
+  document.getElementById("env-step-title").textContent = `${env.icon} ${env.label}`;
+  document.getElementById("env-step-hint").textContent =
+    `${idx+1} / ${ENV_SURVEY.length}번째 항목입니다. 나와 가장 가까운 것을 선택하세요.`;
+  const wrap = document.getElementById("env-q-items");
+  wrap.innerHTML = env.qs.map((q, qi) => {
+    const saved = envAnswers[env.key][qi];
+    return `<div class="survey-q-item">
+      <div class="survey-q-num">Q${qi+1}</div>
+      <div class="survey-q-text">${q}</div>
+      <div class="survey-q-btns">
+        <button class="sq-btn ${saved==='H'?'sel-H':''}" onclick="setEnvAns(${qi},'H',this)">
+          <span class="sq-main">✓ 그렇다</span><span class="sq-sub">잘 맞는다</span>
         </button>
-        <button class="hml-btn" data-key="${cfg.key}" data-val="M" onclick="selectHML(this)">
-          <span class="btn-main">△ 보통</span>
-          <span class="btn-sub">${cfg.M} · ${cfg.Msub}</span>
+        <button class="sq-btn ${saved==='M'?'sel-M':''}" onclick="setEnvAns(${qi},'M',this)">
+          <span class="sq-main">△ 보통</span><span class="sq-sub">상황에 따라</span>
         </button>
-        <button class="hml-btn" data-key="${cfg.key}" data-val="L" onclick="selectHML(this)">
-          <span class="btn-main">✗ 아니다</span>
-          <span class="btn-sub">${cfg.L} · ${cfg.Lsub}</span>
+        <button class="sq-btn ${saved==='L'?'sel-L':''}" onclick="setEnvAns(${qi},'L',this)">
+          <span class="sq-main">✗ 아니다</span><span class="sq-sub">잘 안 맞는다</span>
         </button>
       </div>
     </div>`;
-  });
-
-  // 역량 체크박스 — 아이콘 + 설명 추가
-  const skillMeta = {
-    "①말하기·설득":   { icon:"🎤", ex:"발표, 영업, 상담, 협상" },
-    "②글쓰기·표현":   { icon:"✍️", ex:"기획안, 기사, 카피, 콘텐츠" },
-    "③수·논리·분석":  { icon:"📐", ex:"데이터 분석, 회계, 문제 해결" },
-    "④손·몸·감각":    { icon:"🤲", ex:"요리, 정비, 물리치료, 현장작업" },
-    "⑤그리기·꾸미기": { icon:"🎨", ex:"디자인, 영상, 인테리어, 패션" },
-    "⑥돌보기·공감":   { icon:"🫶", ex:"간호, 상담, 교육, 사회복지" },
-    "⑦관리·조율·정리":{ icon:"📋", ex:"기획, 행정, PM, 운영관리" },
-    "⑧탐구·연구·실험":{ icon:"🔬", ex:"연구원, R&D, 과학, 분석연구" }
-  };
-
-  const sc = document.getElementById("skill-checkboxes");
-  DB.skill_defs.forEach(s => {
-    const meta = skillMeta[s.skill_name] || { icon:"•", ex:"" };
-    const item = document.createElement("div");
-    item.className = "skill-checkbox-item";
-    item.dataset.value = s.skill_name;
-    item.innerHTML = `
-      <span class="skill-item-icon">${meta.icon}</span>
-      <div class="skill-item-text">
-        <span class="skill-item-name">${s.skill_name}</span>
-        <span class="skill-item-ex">${meta.ex}</span>
-      </div>`;
-    item.addEventListener("click", function(){
-      const checked = document.querySelectorAll(".skill-checkbox-item.checked").length;
-      if (!this.classList.contains("checked") && checked >= 3) {
-        this.style.animation = "shake .3s ease";
-        setTimeout(()=>this.style.animation="",300);
-        return;
-      }
-      this.classList.toggle("checked");
-    });
-    sc.appendChild(item);
-  });
+  }).join("");
+  document.getElementById("env-dots").innerHTML = ENV_SURVEY.map((_,i) =>
+    `<div class="mini-dot ${i<idx?'done':i===idx?'active':''}"></div>`).join("");
+  document.getElementById("env-progress-text").textContent = `${idx+1} / ${ENV_SURVEY.length}`;
+  document.getElementById("env-next-btn").textContent =
+    idx === ENV_SURVEY.length-1 ? "역량 설문으로 →" : "다음 →";
 }
 
-function selectHML(btn) {
-  const key=btn.dataset.key;
-  document.querySelectorAll(`[data-key="${key}"]`).forEach(b=>b.className="hml-btn");
-  btn.classList.add(`sel-${btn.dataset.val}`);
+function setEnvAns(qi, val, btn) {
+  envAnswers[ENV_SURVEY[envIdx].key][qi] = val;
+  btn.closest(".survey-q-btns").querySelectorAll(".sq-btn").forEach(b => b.className="sq-btn");
+  btn.classList.add(`sel-${val}`);
 }
 
-function getScoreBadge(score) {
-  if (score >= 11) return `<span class="match-score-badge badge-gold">⭐ 매우 적합</span>`;
-  if (score >= 8)  return `<span class="match-score-badge badge-green">✅ 적합</span>`;
-  return `<span class="match-score-badge badge-blue">🔍 참고해보세요</span>`;
+function envNext() {
+  const env = ENV_SURVEY[envIdx];
+  if(Object.keys(envAnswers[env.key]).length < 3) {
+    alert(`"${env.label}" 항목의 3개 문항을 모두 선택해 주세요.`); return;
+  }
+  if(envIdx < ENV_SURVEY.length-1) { envIdx++; renderEnvQuestion(envIdx); }
+  else { goStep(3); skillIdx=0; renderSkillQuestion(0); }
 }
 
-function selectGroup(btn) {
-  document.querySelectorAll(".group-btn").forEach(b => b.classList.remove("selected"));
-  btn.classList.add("selected");
+function envPrev() {
+  if(envIdx > 0) { envIdx--; renderEnvQuestion(envIdx); } else goStep(1);
 }
 
-function getSelectedGroup() {
-  const btn = document.querySelector(".group-btn.selected");
-  return btn ? btn.dataset.group : "";
+function renderSkillQuestion(idx) {
+  const sk = SKILL_SURVEY[idx];
+  document.getElementById("skill-step-title").textContent = `${sk.icon} ${sk.label}`;
+  document.getElementById("skill-step-hint").textContent =
+    `${idx+1} / ${SKILL_SURVEY.length}번째 역량입니다. 나와 가장 가까운 것을 선택하세요.`;
+  const wrap = document.getElementById("skill-q-items");
+  wrap.innerHTML = sk.qs.map((q, qi) => {
+    const saved = skillAnswers[sk.key][qi];
+    return `<div class="survey-q-item">
+      <div class="survey-q-num">Q${qi+1}</div>
+      <div class="survey-q-text">${q}</div>
+      <div class="survey-q-btns">
+        <button class="sq-btn ${saved==='H'?'sel-H':''}" onclick="setSkillAns(${qi},'H',this)">
+          <span class="sq-main">✓ 그렇다</span><span class="sq-sub">자신 있다</span>
+        </button>
+        <button class="sq-btn ${saved==='M'?'sel-M':''}" onclick="setSkillAns(${qi},'M',this)">
+          <span class="sq-main">△ 보통</span><span class="sq-sub">그럭저럭</span>
+        </button>
+        <button class="sq-btn ${saved==='L'?'sel-L':''}" onclick="setSkillAns(${qi},'L',this)">
+          <span class="sq-main">✗ 아니다</span><span class="sq-sub">잘 모르겠다</span>
+        </button>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("skill-dots").innerHTML = SKILL_SURVEY.map((_,i) =>
+    `<div class="mini-dot ${i<idx?'done':i===idx?'active':''}"></div>`).join("");
+  document.getElementById("skill-progress-text").textContent = `${idx+1} / ${SKILL_SURVEY.length}`;
+  document.getElementById("skill-next-btn").textContent =
+    idx === SKILL_SURVEY.length-1 ? "🎯 결과 확인하기" : "다음 →";
+}
+
+function setSkillAns(qi, val, btn) {
+  skillAnswers[SKILL_SURVEY[skillIdx].key][qi] = val;
+  btn.closest(".survey-q-btns").querySelectorAll(".sq-btn").forEach(b => b.className="sq-btn");
+  btn.classList.add(`sel-${val}`);
+}
+
+function skillNext() {
+  const sk = SKILL_SURVEY[skillIdx];
+  if(Object.keys(skillAnswers[sk.key]).length < 3) {
+    alert(`"${sk.label}" 항목의 3개 문항을 모두 선택해 주세요.`); return;
+  }
+  if(skillIdx < SKILL_SURVEY.length-1) { skillIdx++; renderSkillQuestion(skillIdx); }
+  else runDiag();
+}
+
+function skillPrev() {
+  if(skillIdx > 0) { skillIdx--; renderSkillQuestion(skillIdx); }
+  else { goStep(2); envIdx=ENV_SURVEY.length-1; renderEnvQuestion(envIdx); }
+}
+
+function calcHML(answers) {
+  const score = Object.values(answers).reduce((s,v)=>s+(v==='H'?2:v==='M'?1:0),0);
+  return score>=5?'H':score>=3?'M':'L';
+}
+
+function resetDiag() {
+  envIdx=0; skillIdx=0;
+  ENV_SURVEY.forEach(e=>{envAnswers[e.key]={};});
+  SKILL_SURVEY.forEach(s=>{skillAnswers[s.key]={};});
+  renderEnvQuestion(0); renderSkillQuestion(0);
+  document.querySelectorAll(".group-btn").forEach(b=>b.classList.remove("selected"));
+  document.querySelector(".all-btn").classList.add("selected");
 }
 
 function runDiag() {
-  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
-  const sel={};
-  let cnt=0;
-  envKeys.forEach(k=>{
-    const b=document.querySelector(`.hml-btn.sel-H[data-key="${k}"],.hml-btn.sel-M[data-key="${k}"],.hml-btn.sel-L[data-key="${k}"]`);
-    if(b){sel[k]=b.dataset.val;cnt++;}
+  goStep(4);
+  const envSel={};
+  ENV_SURVEY.forEach(e=>{ envSel[e.key]=calcHML(envAnswers[e.key]); });
+  const skillScores={};
+  SKILL_SURVEY.forEach(s=>{
+    skillScores[s.key]=Object.values(skillAnswers[s.key]).reduce((sum,v)=>sum+(v==='H'?2:v==='M'?1:0),0);
   });
-  const skills=[...document.querySelectorAll(".skill-checkbox-item.checked")].map(i=>i.dataset.value);
-  if(cnt<3){alert("환경 선호도를 3개 이상 선택해 주세요.");return;}
-  if(!skills.length){alert("강점 역량을 1개 이상 선택해 주세요.");return;}
+  const sorted=Object.entries(skillScores).sort((a,b)=>b[1]-a[1]);
+  let topSkills=sorted.filter(([,v])=>v>=5).map(([k])=>k);
+  if(!topSkills.length) topSkills=sorted.slice(0,3).map(([k])=>k);
 
-  const selectedGroup = getSelectedGroup();
+  const selectedGroup=getSelectedGroup();
+  let allowedMajorIds=null;
+  if(selectedGroup) allowedMajorIds=new Set(DB.majors.filter(m=>m.group_name===selectedGroup).map(m=>m.major_id));
 
-  // 계열 필터: 선택된 계열의 major_id 목록 추출
-  let allowedMajorIds = null;
-  if (selectedGroup) {
-    allowedMajorIds = new Set(
-      DB.majors.filter(m => m.group_name === selectedGroup).map(m => m.major_id)
-    );
-  }
+  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  const allScored=DB.jobs
+    .filter(j=>!allowedMajorIds||allowedMajorIds.has(j.major_id))
+    .map(j=>{
+      let s=0;
+      envKeys.forEach(k=>{if(envSel[k]&&j[k]===envSel[k])s+=2;});
+      if(topSkills.includes(j.skill_main))s+=3;
+      if(topSkills.includes(j.skill_sub))s+=1;
+      return{...j,_score:s};
+    }).filter(j=>j._score>=3).sort((a,b)=>b._score-a._score);
 
-  const allScored = DB.jobs
-    .filter(j => !allowedMajorIds || allowedMajorIds.has(j.major_id))
-    .map(j => {
-      let s = 0;
-      envKeys.forEach(k => { if(sel[k] && j[k]===sel[k]) s += 2; });
-      if(skills.includes(j.skill_main)) s += 3;
-      if(skills.includes(j.skill_sub))  s += 1;
-      return {...j, _score:s};
-    })
-    .filter(j => j._score >= 3)
-    .sort((a,b) => b._score - a._score);
+  const veryFit=allScored.filter(j=>j._score>=11);
+  const fit=allScored.filter(j=>j._score>=8&&j._score<11).slice(0,12);
+  const ref=allScored.filter(j=>j._score>=3&&j._score<8).slice(0,6);
 
-  // 등급 분류
-  const veryFit = allScored.filter(j => j._score >= 11);           // ⭐ 매우 적합 — 전부 표시
-  const fit     = allScored.filter(j => j._score >= 8 && j._score < 11); // ✅ 적합
-  const ref     = allScored.filter(j => j._score >= 3 && j._score < 8);  // 🔍 참고
-
-  // 계열 선택 시: 각 등급 TOP 12 / 전체 보기: 매우 적합 전부 + 적합 TOP 12
-  const fitLimit = selectedGroup ? 12 : 12;
-  const fitShow  = fit.slice(0, fitLimit);
-  const refShow  = selectedGroup ? ref.slice(0, 6) : [];  // 계열 선택 시만 참고 6개 표시
-
-  const rd = document.getElementById("diag-result");
-  if(!allScored.length) {
-    rd.innerHTML='<p style="text-align:center;color:#aaa;padding:24px">조건에 맞는 직무를 찾지 못했습니다.<br><small>선택 조건을 조금 바꿔 다시 시도해보세요.</small></p>';
+  const rd=document.getElementById("diag-result");
+  if(!allScored.length){
+    rd.innerHTML='<p style="text-align:center;color:#aaa;padding:40px">조건에 맞는 직무를 찾지 못했습니다.<br><small>다시하기를 눌러 조건을 바꿔보세요.</small></p>';
     return;
   }
 
-  const groupLabel = selectedGroup
-    ? `<span style="font-size:13px;font-weight:400;color:#2563EB;margin-left:8px">· ${selectedGroup} 계열</span>`
-    : `<span style="font-size:13px;font-weight:400;color:#888;margin-left:8px">· 전체 계열</span>`;
+  const topSkillLabels=topSkills.slice(0,3).map(k=>{
+    const f=SKILL_SURVEY.find(s=>s.key===k);
+    return f?`${f.icon} ${f.label}`:k;
+  }).join(" · ");
+  const envSummary=ENV_SURVEY.map(e=>
+    `<span class="kw-tag">${e.icon} ${e.label} <b>${envSel[e.key]}</b></span>`).join("");
+  const groupLabel=selectedGroup
+    ?`<span style="font-size:13px;font-weight:400;color:#2563EB;margin-left:8px">· ${selectedGroup} 계열</span>`
+    :`<span style="font-size:13px;font-weight:400;color:#888;margin-left:8px">· 전체 계열</span>`;
 
-  let html = `<h3 style="margin-bottom:20px">🎯 직무 추천 결과${groupLabel}</h3>`;
+  let html=`
+    <div style="background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:12px;font-weight:700;color:#1B3A6B;margin-bottom:8px">📋 내 진단 결과 요약</div>
+      <div style="font-size:12px;color:#555;margin-bottom:8px">강점 역량: <strong style="color:#1B3A6B">${topSkillLabels}</strong></div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">${envSummary}</div>
+    </div>
+    <h3 style="margin-bottom:20px;font-size:17px;font-weight:800;color:#1B3A6B">🎯 직무 추천 결과${groupLabel}</h3>`;
 
-  // ⭐ 매우 적합
-  if(veryFit.length) {
-    html += `
-      <div class="result-group">
-        <div class="result-group-header gold">
-          <span class="result-group-icon">⭐</span>
-          <span class="result-group-title">매우 적합</span>
-          <span class="result-group-count">${veryFit.length}개</span>
-        </div>
-        <div id="result-very-fit"></div>
-      </div>`;
-  }
+  if(veryFit.length) html+=`<div class="result-group"><div class="result-group-header gold"><span class="result-group-icon">⭐</span><span class="result-group-title">매우 적합</span><span class="result-group-count">${veryFit.length}개</span></div><div id="result-very-fit"></div></div>`;
+  if(fit.length)     html+=`<div class="result-group"><div class="result-group-header green"><span class="result-group-icon">✅</span><span class="result-group-title">적합</span><span class="result-group-count">${fit.length}개</span></div><div id="result-fit"></div></div>`;
+  if(ref.length)     html+=`<div class="result-group"><div class="result-group-header blue"><span class="result-group-icon">🔍</span><span class="result-group-title">참고해보세요</span><span class="result-group-count">${ref.length}개</span></div><div id="result-ref"></div></div>`;
 
-  // ✅ 적합
-  if(fitShow.length) {
-    const moreCount = fit.length - fitShow.length;
-    html += `
-      <div class="result-group">
-        <div class="result-group-header green">
-          <span class="result-group-icon">✅</span>
-          <span class="result-group-title">적합</span>
-          <span class="result-group-count">${fitShow.length}개${moreCount > 0 ? ` <span style="font-size:11px;opacity:.7">외 ${moreCount}개</span>` : ''}</span>
-        </div>
-        <div id="result-fit"></div>
-      </div>`;
-  }
-
-  // 🔍 참고 (계열 선택 시만)
-  if(refShow.length) {
-    html += `
-      <div class="result-group">
-        <div class="result-group-header blue">
-          <span class="result-group-icon">🔍</span>
-          <span class="result-group-title">참고해보세요</span>
-          <span class="result-group-count">${refShow.length}개</span>
-        </div>
-        <div id="result-ref"></div>
-      </div>`;
-  }
-
-  rd.innerHTML = html;
-
-  if(veryFit.length)  renderJobGrid(veryFit,  "result-very-fit", true);
-  if(fitShow.length)  renderJobGrid(fitShow,   "result-fit",      true);
-  if(refShow.length)  renderJobGrid(refShow,   "result-ref",      true);
-
-  rd.scrollIntoView({behavior:"smooth"});
+  rd.innerHTML=html;
+  if(veryFit.length) renderJobGrid(veryFit,"result-very-fit",true);
+  if(fit.length)     renderJobGrid(fit,"result-fit",true);
+  if(ref.length)     renderJobGrid(ref,"result-ref",true);
 }
 
-async function openModal(jobId, jobName, jobDesc) {
-  document.getElementById("modal-title").textContent=jobName;
-  document.getElementById("modal-sub").textContent=jobDesc;
-  document.getElementById("modal-body").innerHTML=
-    '<div class="loading"><div class="spinner"></div><p>불러오는 중...</p></div>';
-  document.getElementById("modal-overlay").classList.add("open");
-  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===0));
-  try {
-    const data=await jsonpFetch({action:"job_detail",job_id:jobId});
-    currentJobDetail=data.fields||{};
-    renderModalTab(0);
-  } catch(e) {
-    document.getElementById("modal-body").innerHTML=
-      '<p style="color:#e53e3e;padding:20px">상세 데이터를 불러오지 못했습니다.</p>';
-  }
-}
-function closeModal(){document.getElementById("modal-overlay").classList.remove("open");currentJobDetail=null;}
-function closeModalIfOverlay(e){if(e.target===document.getElementById("modal-overlay"))closeModal();}
-function switchModalTab(idx){
-  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===idx));
-  renderModalTab(idx);
-}
-function renderModalTab(idx){
-  const f=currentJobDetail;
-  if(!f)return;
-  const body=document.getElementById("modal-body");
-  if(idx===0){
-    body.innerHTML=
-      dc("📌 하는 일",pt(f.work_summary))+
-      dc("🕐 하루 일과 예시",pt(f.daily_routine))+
-      dc("💡 이런 사람에게 맞습니다",pt(f.fit_person));
-  } else if(idx===1){
-    const se=f.salary_entry||[];
-    const sl=f.salary_label||[];
-    const salHtml=Array.isArray(se)&&se.length
-      ?`<div class="salary-grid">${se.map((s,i)=>
-        `<div class="salary-item"><div class="amt">${s!=="0"?s+"만원":"창업"}</div><div class="lbl">${sl[i]||""}</div></div>`
-      ).join("")}</div>`:"<p>데이터 준비 중</p>";
-    const cos=Array.isArray(f.companies)?f.companies.map(c=>`<li>${c}</li>`).join(""):f.companies||"";
-    const crs=Array.isArray(f.certifications)?f.certifications.map(c=>`<li>${c}</li>`).join(""):f.certifications||"";
-    body.innerHTML=
-      dc("💰 신입 연봉 범위 (만원/년)",salHtml)+
-      dc("🏢 주요 취업처",`<ul>${cos}</ul>`)+
-      dc("📜 관련 자격증",`<ul>${crs}</ul>`)+
-      dc("⭐ 채용 우대 스펙",pt(f.preferred_spec))+
-      `<div class="detail-card"><h4>🔗 채용공고 바로가기</h4>
-       <div class="link-btn-group">
-         ${f.jobkorea_url?`<a href="${f.jobkorea_url}" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>`:""}
-         ${f.saramin_url?`<a href="${f.saramin_url}" target="_blank" class="link-btn link-btn-sar">사람인 검색</a>`:""}
-       </div></div>`;
-  } else if(idx===2){
-    const kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
-    body.innerHTML=
-      dc("🎓 재학 중 추천 활동",pt(f.recommend_activity))+
-      dc("📚 추천 교육·강의",pt(f.recommend_edu))+
-      dc("👥 커뮤니티·채널",pt(f.community))+
-      dc("📝 자소서 키워드",`<div class="keyword-cloud">${kws.map(k=>k.trim()?`<span class="kw-tag">${k.trim()}</span>`:"").join("")}</div>`);
-  } else {
-    const aiC={"낮음":"ai-low","중간":"ai-mid","높음":"ai-high"}[f.ai_risk]||"ai-low";
-    body.innerHTML=
-      `<div class="detail-card"><h4>🤖 AI 대체 위험도</h4>
-       <span class="ai-badge ${aiC}">${f.ai_risk||"분석중"}</span>
-       <p>${f.ai_risk_detail||"데이터 준비 중"}</p></div>`+
-      `<div class="detail-card"><h4>📈 취업 전망</h4>
-       <div class="outlook-box">${(f.outlook||"데이터 준비 중").replace(/\n/g,"<br>")}</div></div>`+
-      `<div class="detail-card"><h4>🕒 최종 업데이트</h4><p>${(f.updated_at||"-").replace("-",".")}</p></div>`;
-  }
-}
-function dc(title,html){return`<div class="detail-card"><h4>${title}</h4>${html||'<p style="color:#aaa">준비 중</p>'}</div>`;}
-function pt(s){if(!s)return'<p style="color:#aaa">준비 중</p>';return`<p>${s.replace(/\n/g,"<br>")}</p>`;}
-function showUpdateDate(data) {
-  let displayDate = "";
-  if (data.last_updated && data.last_updated.trim()) {
-    displayDate = data.last_updated.trim().replace("-", ".");
-  } else if (data.timestamp) {
-    const d = new Date(data.timestamp);
-    displayDate = d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0");
-  }
-  const el = document.getElementById("update-text");
-  if (el) el.textContent = displayDate ? `업데이트 ${displayDate}` : "최신 데이터";
-}
-function esc(s){return(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
-
-/* 역량 3개 초과 선택 방지 흔들기 */
-const style = document.createElement("style");
-style.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}`;
-document.head.appendChild(style);
-</script>
-</body>
-</html>
+async function openModal
