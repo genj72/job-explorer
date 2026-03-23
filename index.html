@@ -40,6 +40,25 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .skill-main{font-size:11px;padding:3px 9px;border-radius:20px;background:#E8F5E9;color:#1B5E20;font-weight:600;}
 .skill-sub{font-size:11px;padding:3px 9px;border-radius:20px;background:#FFEBEE;color:#B71C1C;font-weight:600;}
 
+/* ── 계열 선택 ── */
+.group-btn-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.group-btn{
+  padding:7px 14px;
+  border:1.5px solid #E5E9F0;
+  border-radius:20px;
+  font-size:12px;font-weight:600;
+  color:#555;background:#fff;
+  cursor:pointer;transition:all .15s;
+}
+.group-btn:hover{border-color:#2563EB;color:#2563EB;}
+.group-btn.selected{background:#1B3A6B;border-color:#1B3A6B;color:#fff;}
+.group-btn.all-btn{border-style:dashed;color:#888;}
+.group-btn.all-btn.selected{background:#64748B;border-color:#64748B;color:#fff;border-style:solid;}
+.group-selected-label{
+  display:inline-block;margin-top:10px;
+  font-size:12px;color:#2563EB;font-weight:600;
+}
+
 /* ── 자가진단 개선 스타일 ── */
 .diag-intro{
   background:linear-gradient(135deg,#EFF6FF,#F0FDF4);
@@ -206,6 +225,13 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
         아래 질문에 솔직하게 답하면 나에게 잘 맞는 직무를 추천해 드립니다.
       </div>
 
+      <!-- ③ 계열 선택 (신규) -->
+      <div class="diag-section" id="group-section">
+        <h3>③ 내 계열 선택 <span style="font-size:13px;color:#888;font-weight:400">(선택 사항)</span></h3>
+        <div class="section-desc">내 전공 계열을 선택하면 해당 계열 내에서 추천합니다. 선택하지 않으면 전체 직무에서 추천합니다.</div>
+        <div class="group-btn-wrap" id="group-btns"></div>
+      </div>
+
       <!-- 업무 환경 선호도 -->
       <div class="diag-section">
         <h3>① 나의 업무 환경 선호도</h3>
@@ -342,6 +368,35 @@ function renderJobGrid(jobs, containerId, showScore=false) {
 // ★★★ 핵심 개선: 자가진단 탭 초기화 ★★★
 function initDiagTab() {
 
+  // 계열 버튼 초기화
+  const groups = [...new Set(DB.majors.map(m => m.group_name).filter(Boolean))].sort();
+  const gbWrap = document.getElementById("group-btns");
+
+  // 전체보기 버튼
+  const allBtn = document.createElement("button");
+  allBtn.className = "group-btn all-btn selected";
+  allBtn.dataset.group = "";
+  allBtn.textContent = "🌐 전체 보기";
+  allBtn.onclick = () => selectGroup(allBtn);
+  gbWrap.appendChild(allBtn);
+
+  // 계열별 버튼
+  const groupIcons = {
+    "경영·경제·금융":"💼","공연·콘텐츠":"🎭","공학-건설·환경":"🏗️",
+    "공학-기계·산업":"⚙️","공학-전기·전자·IT":"💻","공학-화학·소재":"🧪",
+    "교육":"📖","농·축·산림":"🌿","바이오·생명공학":"🧬",
+    "보건·의료":"🏥","사회과학":"🏛️","서비스·관광":"✈️",
+    "예술·디자인":"🎨","인문학":"📚","자연과학":"🔭","체육·스포츠":"⚽"
+  };
+  groups.forEach(g => {
+    const btn = document.createElement("button");
+    btn.className = "group-btn";
+    btn.dataset.group = g;
+    btn.textContent = (groupIcons[g]||"•") + " " + g;
+    btn.onclick = () => selectGroup(btn);
+    gbWrap.appendChild(btn);
+  });
+
   // 5개 환경 — 1인칭 질문으로 전면 개선
   const envConfig = [
     {
@@ -466,6 +521,16 @@ function selectHML(btn) {
   btn.classList.add(`sel-${btn.dataset.val}`);
 }
 
+function selectGroup(btn) {
+  document.querySelectorAll(".group-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+}
+
+function getSelectedGroup() {
+  const btn = document.querySelector(".group-btn.selected");
+  return btn ? btn.dataset.group : "";
+}
+
 function runDiag() {
   const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
   const sel={};
@@ -478,7 +543,19 @@ function runDiag() {
   if(cnt<3){alert("환경 선호도를 3개 이상 선택해 주세요.");return;}
   if(!skills.length){alert("강점 역량을 1개 이상 선택해 주세요.");return;}
 
-  const scored=DB.jobs.map(j=>{
+  const selectedGroup = getSelectedGroup();
+
+  // 계열 필터: 선택된 계열의 major_id 목록 추출
+  let allowedMajorIds = null;
+  if (selectedGroup) {
+    allowedMajorIds = new Set(
+      DB.majors.filter(m => m.group_name === selectedGroup).map(m => m.major_id)
+    );
+  }
+
+  const scored=DB.jobs
+    .filter(j => !allowedMajorIds || allowedMajorIds.has(j.major_id))
+    .map(j=>{
     let s=0;
     envKeys.forEach(k=>{if(sel[k]&&j[k]===sel[k])s+=2;});
     if(skills.includes(j.skill_main))s+=3;
@@ -491,7 +568,8 @@ function runDiag() {
     rd.innerHTML='<p style="text-align:center;color:#aaa;padding:24px">조건에 맞는 직무를 찾지 못했습니다.<br><small>선택 조건을 조금 바꿔 다시 시도해보세요.</small></p>';
     return;
   }
-  rd.innerHTML=`<h3>🎯 추천 직무 TOP ${scored.length}</h3><div id="diag-result-grid"></div>`;
+  const groupLabel = selectedGroup ? `<span style="font-size:13px;font-weight:400;color:#2563EB;margin-left:8px">· ${selectedGroup} 계열</span>` : `<span style="font-size:13px;font-weight:400;color:#888;margin-left:8px">· 전체 계열</span>`;
+  rd.innerHTML=`<h3>🎯 추천 직무 TOP ${scored.length}${groupLabel}</h3><div id="diag-result-grid"></div>`;
   renderJobGrid(scored,"diag-result-grid",true);
   rd.scrollIntoView({behavior:"smooth"});
 }
