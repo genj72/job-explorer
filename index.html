@@ -40,6 +40,26 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .skill-main{font-size:11px;padding:3px 9px;border-radius:20px;background:#E8F5E9;color:#1B5E20;font-weight:600;}
 .skill-sub{font-size:11px;padding:3px 9px;border-radius:20px;background:#FFEBEE;color:#B71C1C;font-weight:600;}
 
+/* ── 등급별 결과 그룹 ── */
+.result-group{margin-bottom:28px;}
+.result-group-header{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px;
+  border-radius:10px 10px 0 0;
+  margin-bottom:12px;
+  border-left:4px solid transparent;
+}
+.result-group-header.gold{background:#FFFBEB;border-color:#F59E0B;}
+.result-group-header.green{background:#F0FDF4;border-color:#22C55E;}
+.result-group-header.blue{background:#EFF6FF;border-color:#3B82F6;}
+.result-group-icon{font-size:16px;}
+.result-group-title{font-size:15px;font-weight:700;color:#1a1a2e;}
+.result-group-count{
+  margin-left:auto;
+  font-size:13px;font-weight:600;
+  color:#64748B;
+}
+
 /* ── 계열 선택 ── */
 .group-btn-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
 .group-btn{
@@ -561,24 +581,86 @@ function runDiag() {
     );
   }
 
-  const scored=DB.jobs
+  const allScored = DB.jobs
     .filter(j => !allowedMajorIds || allowedMajorIds.has(j.major_id))
-    .map(j=>{
-    let s=0;
-    envKeys.forEach(k=>{if(sel[k]&&j[k]===sel[k])s+=2;});
-    if(skills.includes(j.skill_main))s+=3;
-    if(skills.includes(j.skill_sub))s+=1;
-    return{...j,_score:s};
-  }).filter(j=>j._score>=3).sort((a,b)=>b._score-a._score).slice(0,12);
+    .map(j => {
+      let s = 0;
+      envKeys.forEach(k => { if(sel[k] && j[k]===sel[k]) s += 2; });
+      if(skills.includes(j.skill_main)) s += 3;
+      if(skills.includes(j.skill_sub))  s += 1;
+      return {...j, _score:s};
+    })
+    .filter(j => j._score >= 3)
+    .sort((a,b) => b._score - a._score);
 
-  const rd=document.getElementById("diag-result");
-  if(!scored.length){
+  // 등급 분류
+  const veryFit = allScored.filter(j => j._score >= 11);           // ⭐ 매우 적합 — 전부 표시
+  const fit     = allScored.filter(j => j._score >= 8 && j._score < 11); // ✅ 적합
+  const ref     = allScored.filter(j => j._score >= 3 && j._score < 8);  // 🔍 참고
+
+  // 계열 선택 시: 각 등급 TOP 12 / 전체 보기: 매우 적합 전부 + 적합 TOP 12
+  const fitLimit = selectedGroup ? 12 : 12;
+  const fitShow  = fit.slice(0, fitLimit);
+  const refShow  = selectedGroup ? ref.slice(0, 6) : [];  // 계열 선택 시만 참고 6개 표시
+
+  const rd = document.getElementById("diag-result");
+  if(!allScored.length) {
     rd.innerHTML='<p style="text-align:center;color:#aaa;padding:24px">조건에 맞는 직무를 찾지 못했습니다.<br><small>선택 조건을 조금 바꿔 다시 시도해보세요.</small></p>';
     return;
   }
-  const groupLabel = selectedGroup ? `<span style="font-size:13px;font-weight:400;color:#2563EB;margin-left:8px">· ${selectedGroup} 계열</span>` : `<span style="font-size:13px;font-weight:400;color:#888;margin-left:8px">· 전체 계열</span>`;
-  rd.innerHTML=`<h3>🎯 추천 직무 TOP ${scored.length}${groupLabel}</h3><div id="diag-result-grid"></div>`;
-  renderJobGrid(scored,"diag-result-grid",true);
+
+  const groupLabel = selectedGroup
+    ? `<span style="font-size:13px;font-weight:400;color:#2563EB;margin-left:8px">· ${selectedGroup} 계열</span>`
+    : `<span style="font-size:13px;font-weight:400;color:#888;margin-left:8px">· 전체 계열</span>`;
+
+  let html = `<h3 style="margin-bottom:20px">🎯 직무 추천 결과${groupLabel}</h3>`;
+
+  // ⭐ 매우 적합
+  if(veryFit.length) {
+    html += `
+      <div class="result-group">
+        <div class="result-group-header gold">
+          <span class="result-group-icon">⭐</span>
+          <span class="result-group-title">매우 적합</span>
+          <span class="result-group-count">${veryFit.length}개</span>
+        </div>
+        <div id="result-very-fit"></div>
+      </div>`;
+  }
+
+  // ✅ 적합
+  if(fitShow.length) {
+    const moreCount = fit.length - fitShow.length;
+    html += `
+      <div class="result-group">
+        <div class="result-group-header green">
+          <span class="result-group-icon">✅</span>
+          <span class="result-group-title">적합</span>
+          <span class="result-group-count">${fitShow.length}개${moreCount > 0 ? ` <span style="font-size:11px;opacity:.7">외 ${moreCount}개</span>` : ''}</span>
+        </div>
+        <div id="result-fit"></div>
+      </div>`;
+  }
+
+  // 🔍 참고 (계열 선택 시만)
+  if(refShow.length) {
+    html += `
+      <div class="result-group">
+        <div class="result-group-header blue">
+          <span class="result-group-icon">🔍</span>
+          <span class="result-group-title">참고해보세요</span>
+          <span class="result-group-count">${refShow.length}개</span>
+        </div>
+        <div id="result-ref"></div>
+      </div>`;
+  }
+
+  rd.innerHTML = html;
+
+  if(veryFit.length)  renderJobGrid(veryFit,  "result-very-fit", true);
+  if(fitShow.length)  renderJobGrid(fitShow,   "result-fit",      true);
+  if(refShow.length)  renderJobGrid(refShow,   "result-ref",      true);
+
   rd.scrollIntoView({behavior:"smooth"});
 }
 
