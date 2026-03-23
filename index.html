@@ -146,7 +146,10 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .diag-result-btn:hover{background:#2563EB;}
 .match-result-section{margin-top:20px;}
 .match-result-section h3{font-size:16px;font-weight:700;color:#1B3A6B;margin-bottom:14px;}
-.match-score-badge{position:absolute;top:12px;right:12px;background:#1B3A6B;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.match-score-badge{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.badge-gold{background:#FEF9C3;color:#92400E;border:1px solid #FCD34D;}
+.badge-green{background:#DCFCE7;color:#166534;border:1px solid #86EFAC;}
+.badge-blue{background:#EFF6FF;color:#1e40af;border:1px solid #BFDBFE;}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;overflow-y:auto;padding:20px 12px;}
 .modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:680px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);}
@@ -227,21 +230,21 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 
       <!-- ③ 계열 선택 (신규) -->
       <div class="diag-section" id="group-section">
-        <h3>③ 내 계열 선택 <span style="font-size:13px;color:#888;font-weight:400">(선택 사항)</span></h3>
+        <h3>① 내 계열 선택 <span style="font-size:13px;color:#888;font-weight:400">(선택 사항)</span></h3>
         <div class="section-desc">내 전공 계열을 선택하면 해당 계열 내에서 추천합니다. 선택하지 않으면 전체 직무에서 추천합니다.</div>
         <div class="group-btn-wrap" id="group-btns"></div>
       </div>
 
       <!-- 업무 환경 선호도 -->
       <div class="diag-section">
-        <h3>① 나의 업무 환경 선호도</h3>
+        <h3>② 나의 업무 환경 선호도</h3>
         <div class="section-desc">각 항목에서 나와 가장 가까운 것을 선택하세요. (3개 이상 필수)</div>
         <div id="env-questions"></div>
       </div>
 
       <!-- 강점 역량 -->
       <div class="diag-section">
-        <h3>② 나의 강점 역량 <span style="font-size:13px;color:#888;font-weight:400">(1~3개 선택)</span></h3>
+        <h3>③ 나의 강점 역량 <span style="font-size:13px;color:#888;font-weight:400">(1~3개 선택)</span></h3>
         <div class="skill-section-desc">
           💡 학교·일상에서 칭찬받거나 자신 있었던 것을 고르세요. 직업 경험이 없어도 됩니다.
         </div>
@@ -350,8 +353,7 @@ function renderJobGrid(jobs, containerId, showScore=false) {
     const envTags = envKeys.map((k,i) =>
       j[k]?`<span class="env-tag env-${j[k]}">${envNames[i]} ${j[k]}</span>`:""
     ).join("");
-    const score = showScore&&j._score!==undefined
-      ?`<span class="match-score-badge">매칭 ${j._score}점</span>`:"";
+    const score = showScore&&j._score!==undefined ? getScoreBadge(j._score) : "";
     return `<div class="job-card" onclick="openModal('${j.job_id}','${esc(j.job_name)}','${esc(j.job_desc)}')">
       ${score}
       <div class="job-name">${j.job_name}</div>
@@ -519,6 +521,12 @@ function selectHML(btn) {
   const key=btn.dataset.key;
   document.querySelectorAll(`[data-key="${key}"]`).forEach(b=>b.className="hml-btn");
   btn.classList.add(`sel-${btn.dataset.val}`);
+}
+
+function getScoreBadge(score) {
+  if (score >= 11) return `<span class="match-score-badge badge-gold">⭐ 매우 적합</span>`;
+  if (score >= 8)  return `<span class="match-score-badge badge-green">✅ 적합</span>`;
+  return `<span class="match-score-badge badge-blue">🔍 참고해보세요</span>`;
 }
 
 function selectGroup(btn) {
