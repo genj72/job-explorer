@@ -607,14 +607,6 @@ function initDiagTab() {
   const groups = [...new Set(DB.majors.map(m => m.group_name).filter(Boolean))].sort();
   const gbWrap = document.getElementById("group-btns");
 
-  // 전체보기 버튼
-  const allBtn = document.createElement("button");
-  allBtn.className = "group-btn all-btn selected";
-  allBtn.dataset.group = "";
-  allBtn.textContent = "🌐 전체 보기";
-  allBtn.onclick = () => selectGroup(allBtn);
-  gbWrap.appendChild(allBtn);
-
   // 계열별 버튼
   const groupIcons = {
     "경영·경제·금융":"💼","공연·콘텐츠":"🎭","공학-건설·환경":"🏗️",
