@@ -146,7 +146,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color
 .diag-result-btn:hover{background:#2563EB;}
 .match-result-section{margin-top:20px;}
 .match-result-section h3{font-size:16px;font-weight:700;color:#1B3A6B;margin-bottom:14px;}
-.match-score-badge{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.match-score-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:8px;}
 .badge-gold{background:#FEF9C3;color:#92400E;border:1px solid #FCD34D;}
 .badge-green{background:#DCFCE7;color:#166534;border:1px solid #86EFAC;}
 .badge-blue{background:#EFF6FF;color:#1e40af;border:1px solid #BFDBFE;}
@@ -355,7 +355,7 @@ function renderJobGrid(jobs, containerId, showScore=false) {
     ).join("");
     const score = showScore&&j._score!==undefined ? getScoreBadge(j._score) : "";
     return `<div class="job-card" onclick="openModal('${j.job_id}','${esc(j.job_name)}','${esc(j.job_desc)}')">
-      ${score}
+      ${score ? `<div>${score}</div>` : ""}
       <div class="job-name">${j.job_name}</div>
       <div class="job-desc">${j.job_desc}</div>
       <div class="env-row">${envTags}</div>
