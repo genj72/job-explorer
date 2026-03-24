@@ -3,430 +3,924 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>고세요 — 직무탐색 파트너</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<title>직무탐색 서비스</title>
 <style>
-:root{--primary:#2563eb;--primary-dark:#1d4ed8;--primary-light:#eff6ff;--navy:#1B3A6B;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--bg:#f8fafc;--white:#ffffff;--green:#16a34a;--amber:#d97706;--red:#dc2626;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:14px;}
-/* NAV */
-nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;padding:0 20px;height:54px;gap:4px;}
-.logo{font-size:18px;font-weight:900;color:var(--primary);margin-right:20px;letter-spacing:-.5px;flex-shrink:0;cursor:pointer;}
-.logo span{color:var(--text);font-weight:300;}
-.nav-menus{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;}
-.nav-menus::-webkit-scrollbar{display:none;}
-.nav-btn{padding:7px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--muted);border:none;background:none;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
-.nav-btn:hover{background:var(--primary-light);color:var(--primary);}
-.nav-btn.active{background:var(--primary);color:#fff;font-weight:700;}
-.nav-right{margin-left:auto;flex-shrink:0;}
-.update-badge{display:inline-flex;align-items:center;gap:5px;background:var(--primary-light);border:1px solid #bfdbfe;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--primary);}
-.update-badge .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#F4F6FA;color:#1a1a2e;min-height:100vh;}
+.site-header{background:linear-gradient(135deg,#1B3A6B 0%,#2563EB 100%);color:#fff;padding:22px 24px 18px;}
+.site-header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;display:inline;}
+.site-header p{font-size:13px;opacity:.8;margin-top:6px;}
+.update-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:3px 10px;font-size:11px;white-space:nowrap;vertical-align:middle;margin-left:10px;}
+.update-badge .dot{width:6px;height:6px;border-radius:50%;background:#4ADE80;display:inline-block;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-/* HERO */
-.hero{background:var(--white);border-bottom:1px solid var(--border);padding:32px 20px 28px;}
-.hero-inner{max-width:1100px;margin:0 auto;}
-.hero-tag{display:inline-block;background:var(--primary-light);color:var(--primary);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;}
-.hero h1{font-size:24px;font-weight:900;line-height:1.35;margin-bottom:8px;}
-.hero h1 span{color:var(--primary);}
-.hero p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px;}
-.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
-.btn-p{padding:11px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-.btn-p:hover{background:var(--primary-dark);}
-.btn-o{padding:11px 24px;background:#fff;color:var(--primary);border:1.5px solid var(--primary);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-.btn-o:hover{background:var(--primary-light);}
-/* MAIN */
-.main{max-width:1100px;margin:0 auto;padding:28px 20px;}
-.page{display:none;}.page.active{display:block;}
-.sec-title{font-size:17px;font-weight:900;color:var(--text);margin-bottom:4px;}
-.sec-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
-/* HOME MENU */
-.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
-.menu-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 16px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:8px;}
-.menu-card:hover{border-color:var(--primary);box-shadow:0 4px 16px rgba(37,99,235,.1);transform:translateY(-2px);}
-.menu-icon{font-size:22px;}.menu-name{font-size:14px;font-weight:700;}.menu-desc{font-size:12px;color:var(--muted);line-height:1.5;}
-.menu-badge{align-self:flex-start;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
-.badge-ready{background:#dcfce7;color:#166534;}.badge-soon{background:#fef9c3;color:#854d0e;}
-/* LOADING */
-.loading{text-align:center;padding:60px 20px;color:var(--muted);}
-.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #E5E9F0;position:sticky;top:0;z-index:100;}
+.tab-btn{flex:1;padding:14px 8px;font-size:14px;font-weight:600;color:#888;border:none;background:none;cursor:pointer;transition:all .2s;}
+.tab-btn.active{color:#1B3A6B;border-bottom:2px solid #1B3A6B;margin-bottom:-2px;}
+.container{max-width:900px;margin:0 auto;padding:20px 16px;}
+.loading{text-align:center;padding:60px 20px;color:#888;}
+.loading .spinner{width:36px;height:36px;border:4px solid #E5E9F0;border-top-color:#2563EB;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-/* MAJOR */
-.major-sel-wrap{background:var(--white);border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid var(--border);}
-.major-sel-wrap label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:8px;}
-.major-sel{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23888' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 12px center;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-/* JOB CARDS */
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.major-select-wrap{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.major-select-wrap label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:8px;}
+.major-select{width:100%;padding:10px 14px;border:1.5px solid #E5E9F0;border-radius:8px;font-size:14px;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23888' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 12px center;cursor:pointer;}
+.major-select:focus{outline:none;border-color:#2563EB;}
 .job-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
-.job-card{background:var(--white);border-radius:12px;padding:18px;cursor:pointer;border:1.5px solid var(--border);transition:all .2s;}
-.job-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 4px 16px rgba(37,99,235,.12);}
-.jname{font-size:15px;font-weight:700;margin-bottom:6px;line-height:1.4;}
-.jdesc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px;}
-.env-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
-.etag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;}
-.eH{background:#dcfce7;color:#166534;}.eM{background:#fef9c3;color:#7b5e00;}.eL{background:#dbeafe;color:#1565c0;}
-.skrow{display:flex;gap:6px;flex-wrap:wrap;}
-.skm{font-size:11px;padding:3px 9px;border-radius:20px;background:#dcfce7;color:#166534;font-weight:600;}
-.sks{font-size:11px;padding:3px 9px;border-radius:20px;background:#ffebee;color:#b71c1c;font-weight:600;}
-/* STEP */
-.step-prog{padding:16px 0 8px;max-width:520px;margin:0 auto;}
-.step-track{display:flex;align-items:center;}
-.step-node{width:32px;height:32px;border-radius:50%;background:var(--border);color:#aaa;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .3s;flex-shrink:0;}
-.step-node.active{background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(27,58,107,.3);}
-.step-node.done{background:var(--primary);color:#fff;}
-.step-line{flex:1;height:3px;background:var(--border);max-width:55px;transition:background .3s;}
-.step-line.done{background:var(--primary);}
-.step-labels{display:flex;justify-content:space-between;margin-top:6px;}
+.job-card{background:#fff;border-radius:12px;padding:18px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1.5px solid transparent;transition:all .2s;position:relative;}
+.job-card:hover{border-color:#2563EB;transform:translateY(-2px);box-shadow:0 4px 16px rgba(37,99,235,.12);}
+.job-card .job-name{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:6px;line-height:1.4;}
+.job-card .job-desc{font-size:12px;color:#666;line-height:1.5;margin-bottom:10px;}
+.job-card .env-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+.env-tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;}
+.env-H{background:#E8F5E9;color:#1B5E20;}
+.env-M{background:#FFF9C4;color:#7B5E00;}
+.env-L{background:#E3F2FD;color:#1565C0;}
+.job-card .skill-row{display:flex;gap:6px;flex-wrap:wrap;}
+.skill-main{font-size:11px;padding:3px 9px;border-radius:20px;background:#E8F5E9;color:#1B5E20;font-weight:600;}
+.skill-sub{font-size:11px;padding:3px 9px;border-radius:20px;background:#FFEBEE;color:#B71C1C;font-weight:600;}
+
+/* ── 등급별 결과 그룹 ── */
+.result-group{margin-bottom:28px;}
+.result-group-header{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px;
+  border-radius:10px 10px 0 0;
+  margin-bottom:12px;
+  border-left:4px solid transparent;
+}
+.result-group-header.gold{background:#FFFBEB;border-color:#F59E0B;}
+.result-group-header.green{background:#F0FDF4;border-color:#22C55E;}
+.result-group-header.blue{background:#EFF6FF;border-color:#3B82F6;}
+.result-group-icon{font-size:16px;}
+.result-group-title{font-size:15px;font-weight:700;color:#1a1a2e;}
+.result-group-count{
+  margin-left:auto;
+  font-size:13px;font-weight:600;
+  color:#64748B;
+}
+
+/* ── 스텝 UI ── */
+.step-progress{padding:20px 0 8px;max-width:500px;margin:0 auto;}
+.step-track{display:flex;align-items:center;justify-content:center;gap:0;}
+.step-node{
+  width:32px;height:32px;border-radius:50%;
+  background:#E5E9F0;color:#aaa;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;
+  transition:all .3s;flex-shrink:0;
+}
+.step-node.active{background:#1B3A6B;color:#fff;box-shadow:0 2px 8px rgba(27,58,107,.3);}
+.step-node.done{background:#2563EB;color:#fff;}
+.step-line{flex:1;height:3px;background:#E5E9F0;transition:background .3s;max-width:60px;}
+.step-line.done{background:#2563EB;}
+.step-labels{display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;}
 .step-labels span{font-size:10px;color:#aaa;font-weight:600;text-align:center;flex:1;}
-.step-panel{display:none;}.step-panel.active{display:block;}
-.step-card{background:var(--white);border-radius:16px;padding:24px 20px;border:1px solid var(--border);margin-bottom:16px;}
-.step-eyebrow{font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;margin-bottom:8px;}
-.step-title{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:8px;line-height:1.3;}
-.step-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;}
-.step-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;}
-.btn-next{padding:12px 28px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-.btn-next:hover{background:var(--primary);}
-.btn-prev{padding:12px 20px;background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-.btn-prev:hover{border-color:var(--muted);}
-/* GROUP BTNS */
-.gbwrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
-.gbtn{padding:7px 14px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;color:#555;background:#fff;cursor:pointer;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
-.gbtn:hover{border-color:var(--primary);color:var(--primary);}
-.gbtn.sel{background:var(--navy);border-color:var(--navy);color:#fff;}
-.gbtn.all{border-style:dashed;color:#888;}
-.gbtn.all.sel{background:#64748b;border-color:#64748b;color:#fff;border-style:solid;}
-/* SURVEY */
-.sv-intro{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#1e40af;line-height:1.7;}
-.sv-intro strong{color:var(--navy);}
-.sv-prog{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-.sv-bg{flex:1;height:6px;background:var(--border);border-radius:3px;}
-.sv-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s;}
-.sv-lbl{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
-.qi{background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:10px;border:1.5px solid var(--border);}
-.qnum{font-size:10px;color:#aaa;font-weight:600;margin-bottom:4px;}
-.qtxt{font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.5;}
-.ab-group{display:flex;flex-direction:column;gap:8px;}
-.ab{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;background:#fff;cursor:pointer;text-align:left;color:var(--text);line-height:1.5;font-family:'Noto Sans KR',sans-serif;width:100%;transition:all .15s;}
-.ab:hover{border-color:var(--primary);background:var(--primary-light);}
-.abm{width:22px;height:22px;border-radius:50%;background:var(--border);color:#aaa;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;transition:all .15s;}
-.ab.selA{border-color:var(--navy);background:var(--primary-light);}
-.ab.selA .abm{background:var(--navy);color:#fff;}
-.ab.selB{border-color:#059669;background:#f0fdf4;}
-.ab.selB .abm{background:#059669;color:#fff;}
-/* SKILL Q */
-.sqwrap{display:flex;gap:8px;}
-.sqbtn{flex:1;padding:9px 6px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;background:#fff;cursor:pointer;text-align:center;font-family:'Noto Sans KR',sans-serif;transition:all .15s;}
-.sqm{display:block;font-size:13px;font-weight:700;}
-.sqsub{display:block;font-size:10px;color:#aaa;margin-top:2px;}
-.sqbtn.sH{background:#dcfce7;border-color:#166534;color:#166534;}
-.sqbtn.sM{background:#fef9c3;border-color:#7b5e00;color:#7b5e00;}
-.sqbtn.sL{background:#dbeafe;border-color:#1565c0;color:#1565c0;}
-.mdots{display:flex;gap:5px;}
-.mdot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .2s;}
-.mdot.done{background:var(--primary);}.mdot.curr{background:var(--navy);transform:scale(1.3);}
-/* RESULT */
-.type-card{background:var(--white);border-radius:12px;padding:18px 20px;margin-bottom:14px;border:1px solid var(--border);border-left:4px solid var(--primary);}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
-.chip{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;}
-.ch-mbti{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
-.ch-temp{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}
-.type-desc{font-size:13px;color:var(--muted);line-height:1.7;}
-.env-wrap{background:var(--white);border-radius:12px;padding:18px 20px;margin-bottom:14px;border:1px solid var(--border);}
-.erow{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
-.elbl{font-size:12px;font-weight:700;width:112px;flex-shrink:0;}
-.ebar-bg{flex:1;height:8px;background:var(--border);border-radius:4px;}
-.ebar{height:100%;border-radius:4px;transition:width .4s;}
-.bH{background:var(--green);}.bM{background:var(--amber);}.bL{background:var(--primary);}
-.eval{font-size:11px;font-weight:700;width:22px;}
-.vH{color:var(--green);}.vM{color:var(--amber);}.vL{color:var(--primary);}
-.edesc{font-size:11px;color:var(--muted);line-height:1.5;padding-left:124px;margin-bottom:10px;}
-.rgroup{margin-bottom:24px;}
-.rgh{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px 10px 0 0;margin-bottom:12px;border-left:4px solid transparent;}
-.rgh.gold{background:#fffbeb;border-color:#f59e0b;}
-.rgh.green{background:#f0fdf4;border-color:#22c55e;}
-.rgh.blue{background:var(--primary-light);border-color:#3b82f6;}
-.rgh-icon{font-size:16px;}.rgh-title{font-size:15px;font-weight:700;}.rgh-cnt{margin-left:auto;font-size:13px;font-weight:600;color:var(--muted);}
-.sbadge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:6px;}
-.sg{background:#fef9c3;color:#92400e;border:1px solid #fcd34d;}
-.sgr{background:#dcfce7;color:#166534;border:1px solid #86efac;}
-.sbl{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;}
-/* COMING */
-.coming{text-align:center;padding:60px 20px;background:var(--white);border:1px solid var(--border);border-radius:12px;}
-.coming-icon{font-size:48px;margin-bottom:16px;}.coming-title{font-size:18px;font-weight:900;margin-bottom:8px;}
-.coming-desc{font-size:13px;color:var(--muted);line-height:1.8;}
-/* MODAL */
-.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;overflow-y:auto;padding:20px 12px;}
-.mo.open{display:flex;align-items:flex-start;justify-content:center;}
+.step-labels span:first-child{text-align:left;}
+.step-labels span:last-child{text-align:right;}
+
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+
+.step-card{
+  background:#fff;border-radius:16px;
+  padding:24px 20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  margin-bottom:16px;
+}
+.step-eyebrow{
+  font-size:11px;font-weight:700;
+  color:#2563EB;letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.step-title{
+  font-size:18px;font-weight:800;
+  color:#1B3A6B;margin-bottom:8px;line-height:1.3;
+}
+.step-desc{font-size:13px;color:#666;line-height:1.7;margin-bottom:20px;}
+
+/* 설문 문항 */
+.survey-q-wrap{display:flex;flex-direction:column;gap:10px;}
+.survey-q-item{
+  background:#F8FAFC;border-radius:10px;
+  padding:14px 16px;
+  border:1.5px solid #E5E9F0;
+}
+.survey-q-num{font-size:10px;color:#aaa;font-weight:600;margin-bottom:4px;}
+.survey-q-text{font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:12px;line-height:1.5;}
+.survey-q-btns{display:flex;gap:8px;}
+.sq-btn{
+  flex:1;padding:9px 6px;
+  border:1.5px solid #E5E9F0;border-radius:8px;
+  font-size:12px;font-weight:600;
+  background:#fff;cursor:pointer;
+  transition:all .15s;text-align:center;
+  line-height:1.4;
+}
+.sq-btn .sq-main{display:block;font-size:13px;font-weight:700;}
+.sq-btn .sq-sub{display:block;font-size:10px;color:#aaa;margin-top:2px;}
+.sq-btn.sel-H{background:#E8F5E9;border-color:#1B5E20;color:#1B5E20;}
+.sq-btn.sel-H .sq-sub{color:#4CAF50;}
+.sq-btn.sel-M{background:#FFF9C4;border-color:#7B5E00;color:#7B5E00;}
+.sq-btn.sel-M .sq-sub{color:#A0832A;}
+.sq-btn.sel-L{background:#E3F2FD;border-color:#1565C0;color:#1565C0;}
+.sq-btn.sel-L .sq-sub{color:#5B9BD5;}
+
+/* 미니 진행 도트 */
+.env-mini-progress{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:16px;padding-top:14px;
+  border-top:1px solid #F1F5F9;
+}
+.env-mini-progress span{font-size:12px;color:#888;font-weight:600;}
+.mini-dots{display:flex;gap:5px;}
+.mini-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#E5E9F0;transition:all .2s;
+}
+.mini-dot.done{background:#2563EB;}
+.mini-dot.active{background:#1B3A6B;transform:scale(1.3);}
+
+/* 네비 버튼 */
+.step-nav{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;
+}
+.btn-next{
+  padding:13px 32px;
+  background:#1B3A6B;color:#fff;
+  border:none;border-radius:10px;
+  font-size:14px;font-weight:700;
+  cursor:pointer;transition:background .2s;
+}
+.btn-next:hover{background:#2563EB;}
+.btn-prev{
+  padding:13px 24px;
+  background:#fff;color:#666;
+  border:1.5px solid #E5E9F0;border-radius:10px;
+  font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-prev:hover{border-color:#aaa;color:#333;}
+
+@media(max-width:480px){
+  .step-title{font-size:16px;}
+  .survey-q-text{font-size:13px;}
+  .sq-btn .sq-sub{display:none;}
+  .btn-next,.btn-prev{padding:12px 18px;font-size:13px;}
+}
+
+/* ── 계열 선택 ── */
+.group-btn-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.group-btn{
+  padding:7px 14px;
+  border:1.5px solid #E5E9F0;
+  border-radius:20px;
+  font-size:12px;font-weight:600;
+  color:#555;background:#fff;
+  cursor:pointer;transition:all .15s;
+}
+.group-btn:hover{border-color:#2563EB;color:#2563EB;}
+.group-btn.selected{background:#1B3A6B;border-color:#1B3A6B;color:#fff;}
+.group-btn.all-btn{border-style:dashed;color:#888;}
+.group-btn.all-btn.selected{background:#64748B;border-color:#64748B;color:#fff;border-style:solid;}
+.group-selected-label{
+  display:inline-block;margin-top:10px;
+  font-size:12px;color:#2563EB;font-weight:600;
+}
+
+/* ── 자가진단 개선 스타일 ── */
+.diag-intro{
+  background:linear-gradient(135deg,#EFF6FF,#F0FDF4);
+  border:1px solid #BFDBFE;
+  border-radius:12px;
+  padding:16px 20px;
+  margin-bottom:16px;
+  font-size:13px;
+  color:#1e40af;
+  line-height:1.7;
+}
+.diag-intro strong{color:#1B3A6B;}
+.diag-section{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.diag-section h3{font-size:15px;font-weight:700;margin-bottom:4px;color:#1B3A6B;}
+.diag-section .section-desc{font-size:12px;color:#888;margin-bottom:16px;line-height:1.6;}
+.env-question{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #F1F5F9;}
+.env-question:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.env-question .q-label{font-size:13px;font-weight:700;color:#1B3A6B;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.env-question .q-label .q-icon{font-size:16px;}
+
+/* 핵심 개선: 1인칭 질문 문장 */
+.env-question .q-statement{
+  font-size:14px;
+  font-weight:600;
+  color:#1a1a2e;
+  margin-bottom:6px;
+  line-height:1.5;
+  padding:10px 14px;
+  background:#F8FAFC;
+  border-left:3px solid #2563EB;
+  border-radius:0 8px 8px 0;
+}
+.env-question .q-hint{
+  font-size:11px;
+  color:#94A3B8;
+  margin-bottom:10px;
+  padding-left:2px;
+}
+
+/* HML 버튼 — 레이블 개선 */
+.hml-btn-group{display:flex;gap:8px;}
+.hml-btn{
+  flex:1;
+  padding:10px 6px;
+  border:1.5px solid #E5E9F0;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  background:#fff;
+  transition:all .15s;
+  text-align:center;
+  line-height:1.4;
+}
+.hml-btn .btn-main{display:block;font-size:12px;font-weight:700;}
+.hml-btn .btn-sub{display:block;font-size:10px;color:#aaa;margin-top:2px;font-weight:400;}
+.hml-btn.sel-H{background:#E8F5E9;border-color:#1B5E20;color:#1B5E20;}
+.hml-btn.sel-H .btn-sub{color:#4CAF50;}
+.hml-btn.sel-M{background:#FFF9C4;border-color:#7B5E00;color:#7B5E00;}
+.hml-btn.sel-M .btn-sub{color:#A0832A;}
+.hml-btn.sel-L{background:#E3F2FD;border-color:#1565C0;color:#1565C0;}
+.hml-btn.sel-L .btn-sub{color:#5B9BD5;}
+
+/* 역량 체크박스 개선 */
+.skill-section-desc{font-size:12px;color:#888;margin-bottom:12px;line-height:1.6;padding:10px 14px;background:#FFF9C4;border-radius:8px;border-left:3px solid #F59E0B;}
+.skill-checkbox-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.skill-checkbox-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 14px;
+  border:1.5px solid #E5E9F0;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all .15s;
+}
+.skill-checkbox-item.checked{border-color:#2563EB;background:#EFF6FF;color:#1e40af;font-weight:600;}
+.skill-checkbox-item input{display:none;}
+.skill-item-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.skill-item-text{}
+.skill-item-name{font-size:13px;font-weight:600;color:#1a1a2e;display:block;}
+.skill-checkbox-item.checked .skill-item-name{color:#1e40af;}
+.skill-item-ex{font-size:11px;color:#94A3B8;margin-top:2px;line-height:1.4;}
+.skill-checkbox-item.checked .skill-item-ex{color:#6EA8FE;}
+
+.diag-result-btn{width:100%;padding:14px;background:#1B3A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s;}
+.diag-result-btn:hover{background:#2563EB;}
+.match-result-section{margin-top:20px;}
+.match-result-section h3{font-size:16px;font-weight:700;color:#1B3A6B;margin-bottom:14px;}
+.match-score-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:8px;}
+.badge-gold{background:#FEF9C3;color:#92400E;border:1px solid #FCD34D;}
+.badge-green{background:#DCFCE7;color:#166534;border:1px solid #86EFAC;}
+.badge-blue{background:#EFF6FF;color:#1e40af;border:1px solid #BFDBFE;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;overflow-y:auto;padding:20px 12px;}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:680px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);}
-.mhd{background:linear-gradient(135deg,#1B3A6B,#2563EB);color:#fff;padding:22px 24px;}
-.mhd h2{font-size:18px;font-weight:700;}
-.msub{font-size:12px;opacity:.8;margin-top:4px;}
-.mcls{float:right;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;margin-left:12px;}
-.mtabs{display:flex;border-bottom:2px solid var(--border);background:#fff;}
-.mtab{flex:1;padding:12px 4px;font-size:12px;font-weight:600;color:#888;border:none;background:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;}
-.mtab.active{color:var(--navy);border-bottom:2px solid var(--navy);margin-bottom:-2px;}
-.mbody{padding:20px 24px;max-height:70vh;overflow-y:auto;}
-.dc{background:#f8f9fc;border-radius:10px;padding:16px;margin-bottom:14px;}
-.dc h4{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;}
-.dc p,.dc li{font-size:13px;color:#444;line-height:1.7;}
-.dc ul{padding-left:16px;}
-.sal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
-.si{text-align:center;background:#fff;border-radius:8px;padding:12px 6px;border:1px solid var(--border);}
-.si .amt{font-size:18px;font-weight:800;color:var(--navy);}
-.si .lbl{font-size:10px;color:#888;margin-top:3px;}
-.ai-b{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:8px;}
-.ai-lo{background:#dcfce7;color:#166534;}.ai-mi{background:#fef9c3;color:#7b5e00;}.ai-hi{background:#ffebee;color:#b71c1c;}
-.obox{background:#eff6ff;border-radius:8px;padding:12px 14px;font-size:13px;color:#1e40af;line-height:1.7;}
-.lbg{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
-.lb{display:inline-block;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;}
-.lbj{background:#FF6B35;color:#fff;}.lbs{background:#FF4A4A;color:#fff;}
-.kc{display:flex;flex-wrap:wrap;gap:6px;}
-.kt{font-size:11px;padding:4px 10px;background:#eff6ff;color:#1e40af;border-radius:20px;font-weight:500;}
-@media(max-width:700px){
-  .menu-grid{grid-template-columns:repeat(2,1fr);}
-  .hero h1{font-size:20px;}
-  .nav-btn{padding:6px 9px;font-size:12px;}
-  .sal-grid{grid-template-columns:1fr;}
+.modal-header{background:linear-gradient(135deg,#1B3A6B,#2563EB);color:#fff;padding:22px 24px;}
+.modal-header h2{font-size:18px;font-weight:700;}
+.modal-header .modal-sub{font-size:12px;opacity:.8;margin-top:4px;}
+.modal-close{float:right;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;margin-left:12px;}
+.modal-tabs{display:flex;border-bottom:2px solid #E5E9F0;background:#fff;}
+.modal-tab{flex:1;padding:12px 4px;font-size:12px;font-weight:600;color:#888;border:none;background:none;cursor:pointer;transition:all .2s;}
+.modal-tab.active{color:#1B3A6B;border-bottom:2px solid #1B3A6B;margin-bottom:-2px;}
+.modal-body{padding:20px 24px;max-height:70vh;overflow-y:auto;}
+.detail-card{background:#F8F9FC;border-radius:10px;padding:16px;margin-bottom:14px;}
+.detail-card h4{font-size:13px;font-weight:700;color:#1B3A6B;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.detail-card p,.detail-card li{font-size:13px;color:#444;line-height:1.7;}
+.detail-card ul{padding-left:16px;}
+.salary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
+.salary-item{text-align:center;background:#fff;border-radius:8px;padding:12px 6px;border:1px solid #E5E9F0;}
+.salary-item .amt{font-size:18px;font-weight:800;color:#1B3A6B;}
+.salary-item .lbl{font-size:10px;color:#888;margin-top:3px;}
+.ai-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:8px;}
+.ai-low{background:#E8F5E9;color:#1B5E20;}
+.ai-mid{background:#FFF9C4;color:#7B5E00;}
+.ai-high{background:#FFEBEE;color:#B71C1C;}
+.outlook-box{background:#EFF6FF;border-radius:8px;padding:12px 14px;font-size:13px;color:#1e40af;line-height:1.7;}
+.link-btn-group{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+.link-btn{display:inline-block;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s;}
+.link-btn-job{background:#FF6B35;color:#fff;}
+.link-btn-sar{background:#FF4A4A;color:#fff;}
+.keyword-cloud{display:flex;flex-wrap:wrap;gap:6px;}
+.kw-tag{font-size:11px;padding:4px 10px;background:#EFF6FF;color:#1e40af;border-radius:20px;font-weight:500;}
+@media(max-width:480px){
+  .salary-grid{grid-template-columns:1fr;}
+  .skill-checkbox-grid{grid-template-columns:1fr;}
+  .modal-body{padding:16px;}
+  .hml-btn .btn-sub{display:none;}
 }
 </style>
 </head>
 <body>
-<nav>
-  <div class="nav-inner">
-    <div class="logo" onclick="goPage('home')">고세요<span>.kr</span></div>
-    <div class="nav-menus">
-      <button class="nav-btn" onclick="goPage('self')">🧠 자기탐색</button>
-      <button class="nav-btn" onclick="goPage('major')">📚 전공정보</button>
-      <button class="nav-btn" onclick="goPage('job')">💼 직무정보</button>
-      <button class="nav-btn" onclick="goPage('docs')">📝 입사서류준비</button>
-      <button class="nav-btn" onclick="goPage('interview')">🎤 면접준비</button>
-      <button class="nav-btn" onclick="goPage('industry')">📊 산업동향</button>
-      <button class="nav-btn" onclick="goPage('terms')">📖 직무용어</button>
-      <button class="nav-btn" onclick="goPage('career')">🏢 경력취업</button>
+
+<div class="site-header">
+  <h1>🎯 직무탐색 서비스</h1><div class="update-badge" id="update-badge"><span class="dot"></span><span id="update-text">확인중...</span></div>
+  <p>전공별 진출 직무를 탐색하고 나에게 맞는 직무를 찾아보세요</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('major')">📚 전공으로 탐색</button>
+  <button class="tab-btn" onclick="switchTab('diag')">🔍 자가진단으로 탐색</button>
+</div>
+
+<div id="tab-major" class="tab-panel active">
+  <div class="container">
+    <div id="loading-major" class="loading">
+      <div class="spinner"></div>
+      <p>데이터를 불러오는 중...</p>
     </div>
-    <div class="nav-right">
-      <div class="update-badge"><span class="dot"></span><span id="udate">확인중...</span></div>
-    </div>
-  </div>
-</nav>
-<div class="hero" id="heroArea">
-  <div class="hero-inner">
-    <div class="hero-tag">직무탐색 파트너</div>
-    <h1>나에게 맞는 직무,<br><span>지금 바로 찾아보세요</span></h1>
-    <p>성격·기질 설문과 역량 진단으로 나의 유형을 파악하고,<br>전공별 직무 중 나에게 꼭 맞는 직무를 추천받습니다.</p>
-    <div class="hero-btns">
-      <button class="btn-p" onclick="goPage('self')">🧠 자기탐색 시작하기</button>
-      <button class="btn-o" onclick="goPage('major')">📚 전공별 직무 보기</button>
+    <div id="content-major" style="display:none">
+      <div class="major-select-wrap">
+        <label>전공을 선택하세요</label>
+        <select class="major-select" id="major-select" onchange="onMajorChange(this.value)">
+          <option value="">-- 전공 선택 --</option>
+        </select>
+      </div>
+      <div id="job-grid-wrap"></div>
     </div>
   </div>
 </div>
-<div class="main">
-  <!-- HOME -->
-  <div id="page-home" class="page active">
-    <div style="margin-bottom:20px;"><div class="sec-title">무엇을 도와드릴까요?</div><div class="sec-sub">아래 메뉴에서 원하는 서비스를 선택하세요</div></div>
-    <div class="menu-grid">
-      <div class="menu-card" onclick="goPage('self')"><div class="menu-icon">🧠</div><div class="menu-name">자기탐색</div><div class="menu-desc">MBTI·기질·역량 설문으로 나의 유형을 파악하고 맞춤 직무 추천</div><span class="menu-badge badge-ready">✅ 이용 가능</span></div>
-      <div class="menu-card" onclick="goPage('major')"><div class="menu-icon">📚</div><div class="menu-name">전공정보</div><div class="menu-desc">학과별 진출 직무와 환경·역량 특성 탐색</div><span class="menu-badge badge-ready">✅ 이용 가능</span></div>
-      <div class="menu-card" onclick="goPage('job')"><div class="menu-icon">💼</div><div class="menu-name">직무정보</div><div class="menu-desc">직무별 상세정보·취업실전·역량개발·시장현황</div><span class="menu-badge badge-ready">✅ 이용 가능</span></div>
-      <div class="menu-card" onclick="goPage('docs')"><div class="menu-icon">📝</div><div class="menu-name">입사서류준비</div><div class="menu-desc">자기소개서·이력서 작성법 및 직무별 키워드</div><span class="menu-badge badge-soon">🔜 준비 중</span></div>
-      <div class="menu-card" onclick="goPage('interview')"><div class="menu-icon">🎤</div><div class="menu-name">면접준비</div><div class="menu-desc">직무별 면접 질문·답변 전략·기출 정리</div><span class="menu-badge badge-soon">🔜 준비 중</span></div>
-      <div class="menu-card" onclick="goPage('industry')"><div class="menu-icon">📊</div><div class="menu-name">산업동향</div><div class="menu-desc">AI·채용트렌드·산업별 최신 변화 분석</div><span class="menu-badge badge-soon">🔜 준비 중</span></div>
-      <div class="menu-card" onclick="goPage('terms')"><div class="menu-icon">📖</div><div class="menu-name">직무용어</div><div class="menu-desc">JD·NCS·블라인드채용 등 취업 필수 용어 해설</div><span class="menu-badge badge-soon">🔜 준비 중</span></div>
-      <div class="menu-card" onclick="goPage('career')"><div class="menu-icon">🏢</div><div class="menu-name">경력취업</div><div class="menu-desc">경력직 이직 전략·포트폴리오·연봉협상</div><span class="menu-badge badge-soon">🔜 준비 중</span></div>
-    </div>
-  </div>
-  <!-- SELF -->
-  <div id="page-self" class="page">
-    <div style="margin-bottom:16px;"><div class="sec-title">🧠 자기탐색</div><div class="sec-sub">성격·기질 설문 18문항 + 역량 진단으로 나에게 맞는 직무를 추천받습니다</div></div>
-    <div style="max-width:680px;margin:0 auto;">
-      <div class="step-prog">
-        <div class="step-track">
-          <div class="step-node active" id="sn1">1</div><div class="step-line" id="sl1"></div>
-          <div class="step-node" id="sn2">2</div><div class="step-line" id="sl2"></div>
-          <div class="step-node" id="sn3">3</div><div class="step-line" id="sl3"></div>
-          <div class="step-node" id="sn4">🎯</div>
-        </div>
-        <div class="step-labels"><span>계열선택</span><span>성격·기질</span><span>강점역량</span><span>결과확인</span></div>
+
+<div id="tab-diag" class="tab-panel">
+  <div class="container">
+
+    <!-- 진행률 바 -->
+    <div class="step-progress">
+      <div class="step-track">
+        <div class="step-node active" id="sn1"><span>1</span></div>
+        <div class="step-line" id="sl1"></div>
+        <div class="step-node" id="sn2"><span>2</span></div>
+        <div class="step-line" id="sl2"></div>
+        <div class="step-node" id="sn3"><span>3</span></div>
+        <div class="step-line" id="sl3"></div>
+        <div class="step-node" id="sn4"><span>🎯</span></div>
       </div>
-      <div class="step-panel active" id="step1">
-        <div class="step-card">
-          <div class="step-eyebrow">STEP 1 / 4</div>
-          <h2 class="step-title">내 전공 계열을 선택하세요</h2>
-          <p class="step-desc">계열을 선택하면 해당 계열 내에서 직무를 추천합니다.<br>선택하지 않으면 전체 직무에서 추천합니다.</p>
-          <div class="gbwrap" id="gbwrap"></div>
-        </div>
-        <div class="step-nav"><div></div><button class="btn-next" onclick="goStep(2)">다음 →</button></div>
-      </div>
-      <div class="step-panel" id="step2">
-        <div class="step-card">
-          <div class="step-eyebrow">STEP 2 / 4 · 성격·기질 설문</div>
-          <h2 class="step-title" id="sv-title">① 에너지 방향 (E/I)</h2>
-          <div class="sv-intro"><strong>다음 문항은 정답이 없습니다.</strong><br>평소의 나에게 조금이라도 더 가까운 쪽을 선택해 주세요.<br>둘 다 비슷하더라도, 실제로 내가 더 자주 보이는 모습을 기준으로 골라주세요.</div>
-          <div class="sv-prog"><div class="sv-bg"><div class="sv-fill" id="svFill" style="width:0%"></div></div><div class="sv-lbl" id="svLbl">0 / 18</div></div>
-          <div id="sv-qs"></div>
-        </div>
-        <div class="step-nav"><button class="btn-prev" onclick="svPrev()">← 이전</button><button class="btn-next" id="sv-next" onclick="svNext()">다음 →</button></div>
-      </div>
-      <div class="step-panel" id="step3">
-        <div class="step-card">
-          <div class="step-eyebrow">STEP 3 / 4 · 강점 역량</div>
-          <h2 class="step-title" id="sk-title"></h2>
-          <p class="step-desc" id="sk-hint"></p>
-          <div id="sk-qs"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
-            <span id="sk-prog" style="font-size:12px;color:var(--muted);font-weight:700;"></span>
-            <div id="sk-dots" class="mdots"></div>
-          </div>
-        </div>
-        <div class="step-nav"><button class="btn-prev" onclick="skPrev()">← 이전</button><button class="btn-next" id="sk-next" onclick="skNext()">다음 →</button></div>
-      </div>
-      <div class="step-panel" id="step4">
-        <div id="diag-result"></div>
-        <div class="step-nav" style="margin-top:16px;"><button class="btn-prev" onclick="goStep(1);resetDiag()">↺ 다시하기</button><div></div></div>
+      <div class="step-labels">
+        <span>계열선택</span>
+        <span>환경설문</span>
+        <span>역량설문</span>
+        <span>결과확인</span>
       </div>
     </div>
-  </div>
-  <!-- MAJOR -->
-  <div id="page-major" class="page">
-    <div style="margin-bottom:16px;"><div class="sec-title">📚 전공정보</div><div class="sec-sub">전공을 선택하면 진출 가능한 직무 목록을 확인할 수 있습니다</div></div>
-    <div id="ldg-major" class="loading"><div class="spinner"></div><p>데이터를 불러오는 중...</p></div>
-    <div id="cnt-major" style="display:none;">
-      <div class="major-sel-wrap"><label>전공을 선택하세요</label><select class="major-sel" id="major-sel" onchange="onMajorChange(this.value)"><option value="">-- 전공 선택 --</option></select></div>
-      <div id="job-grid"></div>
+
+    <!-- STEP 1: 계열 선택 -->
+    <div class="step-panel active" id="step1">
+      <div class="step-card">
+        <div class="step-eyebrow">STEP 1 / 4</div>
+        <h2 class="step-title">내 전공 계열을 선택하세요</h2>
+        <p class="step-desc">계열을 선택하면 해당 계열 내에서 직무를 추천합니다.<br>선택하지 않으면 전체 직무에서 추천합니다.</p>
+        <div class="group-btn-wrap" id="group-btns"></div>
+      </div>
+      <div class="step-nav">
+        <div></div>
+        <button class="btn-next" onclick="goStep(2)">다음 →</button>
+      </div>
     </div>
+
+    <!-- STEP 2: 환경 설문 -->
+    <div class="step-panel" id="step2">
+      <div class="step-card">
+        <div class="step-eyebrow">STEP 2 / 4 &nbsp;·&nbsp; 업무 환경 선호도</div>
+        <h2 class="step-title" id="env-step-title"></h2>
+        <p class="step-desc" id="env-step-hint"></p>
+        <div class="survey-q-wrap" id="env-q-items"></div>
+        <div class="env-mini-progress">
+          <span id="env-progress-text"></span>
+          <div class="mini-dots" id="env-dots"></div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-prev" onclick="envPrev()">← 이전</button>
+        <button class="btn-next" id="env-next-btn" onclick="envNext()">다음 →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: 역량 설문 -->
+    <div class="step-panel" id="step3">
+      <div class="step-card">
+        <div class="step-eyebrow">STEP 3 / 4 &nbsp;·&nbsp; 강점 역량</div>
+        <h2 class="step-title" id="skill-step-title"></h2>
+        <p class="step-desc" id="skill-step-hint"></p>
+        <div class="survey-q-wrap" id="skill-q-items"></div>
+        <div class="env-mini-progress">
+          <span id="skill-progress-text"></span>
+          <div class="mini-dots" id="skill-dots"></div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-prev" onclick="skillPrev()">← 이전</button>
+        <button class="btn-next" id="skill-next-btn" onclick="skillNext()">다음 →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: 결과 -->
+    <div class="step-panel" id="step4">
+      <div id="diag-result"></div>
+      <div class="step-nav" style="margin-top:16px">
+        <button class="btn-prev" onclick="goStep(1);resetDiag()">↺ 다시하기</button>
+        <div></div>
+      </div>
+    </div>
+
   </div>
-  <!-- JOB -->
-  <div id="page-job" class="page">
-    <div style="margin-bottom:16px;"><div class="sec-title">💼 직무정보</div><div class="sec-sub">직무를 클릭하면 하는 일·취업실전·역량개발·시장현황을 확인할 수 있습니다</div></div>
-    <div id="ldg-job" class="loading"><div class="spinner"></div><p>데이터를 불러오는 중...</p></div>
-    <div id="all-jobs" style="display:none;"></div>
-  </div>
-  <div id="page-docs" class="page"><div class="coming"><div class="coming-icon">📝</div><div class="coming-title">입사서류준비</div><div class="coming-desc">자기소개서·이력서 작성법, 직무별 핵심 키워드<br>곧 서비스됩니다</div></div></div>
-  <div id="page-interview" class="page"><div class="coming"><div class="coming-icon">🎤</div><div class="coming-title">면접준비</div><div class="coming-desc">직무별 예상 질문, 답변 전략, 기출 모음<br>곧 서비스됩니다</div></div></div>
-  <div id="page-industry" class="page"><div class="coming"><div class="coming-icon">📊</div><div class="coming-title">산업동향</div><div class="coming-desc">AI 확산, 채용 트렌드, 산업별 최신 변화<br>곧 서비스됩니다</div></div></div>
-  <div id="page-terms" class="page"><div class="coming"><div class="coming-icon">📖</div><div class="coming-title">직무용어</div><div class="coming-desc">JD, NCS, 블라인드채용, 직무기술서 등 필수 용어<br>곧 서비스됩니다</div></div></div>
-  <div id="page-career" class="page"><div class="coming"><div class="coming-icon">🏢</div><div class="coming-title">경력취업</div><div class="coming-desc">경력직 이직 전략, 포트폴리오, 연봉협상 가이드<br>곧 서비스됩니다</div></div></div>
 </div>
-<!-- MODAL -->
-<div class="mo" id="mo" onclick="moClose(event)">
+
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalIfOverlay(event)">
   <div class="modal">
-    <div class="mhd"><button class="mcls" onclick="closeModal()">×</button><h2 id="m-title"></h2><div class="msub" id="m-sub"></div></div>
-    <div class="mtabs">
-      <button class="mtab active" onclick="switchMTab(0)">📋 직무이해</button>
-      <button class="mtab" onclick="switchMTab(1)">💼 취업실전</button>
-      <button class="mtab" onclick="switchMTab(2)">🚀 역량개발</button>
-      <button class="mtab" onclick="switchMTab(3)">📊 시장현황</button>
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h2 id="modal-title"></h2>
+      <div class="modal-sub" id="modal-sub"></div>
     </div>
-    <div class="mbody" id="m-body"></div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchModalTab(0)">📋 직무이해</button>
+      <button class="modal-tab" onclick="switchModalTab(1)">💼 취업실전</button>
+      <button class="modal-tab" onclick="switchModalTab(2)">🚀 역량개발</button>
+      <button class="modal-tab" onclick="switchModalTab(3)">📊 시장현황</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
+
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbziJQlX0Qn0k6u0fJx3p7v7EoQaAc9GAJv-sXS5XziSyJ3_Gd1geWYfXjiQMehAzFwrrQ/exec";
-let DB={majors:[],jobs:[]},curJobDetail=null;
-function jsonpFetch(p){return new Promise((res,rej)=>{const cb="_cb_"+Date.now()+"_"+Math.random().toString(36).slice(2);const sc=document.createElement("script");const to=setTimeout(()=>{cl();rej(new Error("timeout"));},15000);window[cb]=(d)=>{clearTimeout(to);cl();res(d);};function cl(){delete window[cb];if(sc.parentNode)sc.parentNode.removeChild(sc);}const qs=Object.keys(p).map(k=>encodeURIComponent(k)+"="+encodeURIComponent(p[k])).join("&");sc.src=API_URL+"?"+qs+"&callback="+cb;sc.onerror=()=>{cl();rej(new Error("err"));};document.head.appendChild(sc);});}
-window.addEventListener("DOMContentLoaded",async()=>{
-  try{const d=await jsonpFetch({action:"all"});DB=d;buildMajor();buildAllJobs();buildGroupBtns();showUdate(d);
-  ["ldg-major","ldg-job"].forEach(id=>document.getElementById(id).style.display="none");
-  ["cnt-major","all-jobs"].forEach(id=>document.getElementById(id).style.display="block");
-  }catch(e){["ldg-major","ldg-job"].forEach(id=>{document.getElementById(id).innerHTML='<p style="color:#e53e3e;padding:20px">⚠️ 데이터를 불러오지 못했습니다.<br>잠시 후 새로고침 해보세요.</p>';});}
+const API_URL = "https://script.google.com/macros/s/AKfycbziJQlX0Qn0k6u0fJx3p7v7EoQaAc9GAJv-sXS5XziSyJ3_Gd1geWYfXjiQMehAzFwrrQ/exec";
+
+let DB = { majors:[], jobs:[], skill_defs:[], env_defs:[] };
+let currentJobDetail = null;
+
+function jsonpFetch(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = "_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+    const script = document.createElement("script");
+    const timeout = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, 15000);
+    window[cbName] = (data) => { clearTimeout(timeout); cleanup(); resolve(data); };
+    function cleanup() { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); }
+    const qs = Object.keys(params).map(k => encodeURIComponent(k)+"="+encodeURIComponent(params[k])).join("&");
+    script.src = API_URL + "?" + qs + "&callback=" + cbName;
+    script.onerror = () => { cleanup(); reject(new Error("script error")); };
+    document.head.appendChild(script);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const data = await jsonpFetch({ action: "all" });
+    DB = data;
+    initMajorTab();
+    initDiagTab();
+    document.getElementById("loading-major").style.display = "none";
+    document.getElementById("content-major").style.display = "block";
+    showUpdateDate(data);
+  } catch(e) {
+    document.getElementById("loading-major").innerHTML =
+      `<p style="color:#e53e3e;padding:20px">⚠️ 데이터를 불러오지 못했습니다.<br>잠시 후 새로고침 해보세요.</p>`;
+  }
 });
-const PAGES=['self','major','job','docs','interview','industry','terms','career'];
-function goPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  if(id==='home'){document.getElementById('page-home').classList.add('active');document.getElementById('heroArea').style.display='block';}
-  else{document.getElementById('page-'+id).classList.add('active');document.getElementById('heroArea').style.display='none';const i=PAGES.indexOf(id);if(i>=0)document.querySelectorAll('.nav-btn')[i].classList.add('active');}
-  window.scrollTo({top:0,behavior:'smooth'});
+
+function switchTab(tab) {
+  document.querySelectorAll(".tab-btn").forEach((b,i) =>
+    b.classList.toggle("active", (i===0&&tab==="major")||(i===1&&tab==="diag")));
+  document.getElementById("tab-major").classList.toggle("active", tab==="major");
+  document.getElementById("tab-diag").classList.toggle("active", tab==="diag");
 }
-function buildMajor(){const sel=document.getElementById("major-sel");const gs={};DB.majors.forEach(m=>{if(!gs[m.group_name])gs[m.group_name]=[];gs[m.group_name].push(m);});Object.keys(gs).forEach(g=>{const og=document.createElement("optgroup");og.label=g;gs[g].forEach(m=>{const o=document.createElement("option");o.value=m.major_id;o.textContent=m.major_name;og.appendChild(o);});sel.appendChild(og);});}
-function onMajorChange(id){if(!id){document.getElementById("job-grid").innerHTML="";return;}renderGrid(DB.jobs.filter(j=>j.major_id===id),"job-grid");}
-function buildAllJobs(){renderGrid(DB.jobs,"all-jobs");}
-const EN=["사람만남","자료조사","창의성","업무변화","피드백속도"],EK=["env_people","env_info","env_creative","env_change","env_feedback"];
-function renderGrid(jobs,cid,showScore=false){const w=document.getElementById(cid);if(!jobs.length){w.innerHTML='<p style="color:var(--muted);text-align:center;padding:30px;">해당하는 직무가 없습니다.</p>';return;}w.innerHTML='<div class="job-grid">'+jobs.map(j=>{const et=EK.map((k,i)=>j[k]?`<span class="etag e${j[k]}">${EN[i]} ${j[k]}</span>`:"").join("");const sc=showScore&&j._score!==undefined?getScoreBadge(j._score):"";return`<div class="job-card" onclick="openModal('${j.job_id}','${esc(j.job_name)}','${esc(j.job_desc)}')">${sc?`<div>${sc}</div>`:""}<div class="jname">${j.job_name}</div><div class="jdesc">${j.job_desc}</div><div class="env-row">${et}</div><div class="skrow">${j.skill_main?`<span class="skm">${j.skill_main}</span>`:""}${j.skill_sub?`<span class="sks">${j.skill_sub}</span>`:""}</div></div>`;}).join('')+'</div>';}
-// SURVEY GROUPS
-const SVG=[
-  {label:'① 에너지 방향 (E / I)',key:'EI',qs:[{q:'회의나 모임이 끝난 뒤 나는',a:['사람들과 더 이야기하거나 어울리며 에너지가 도는 편이다','혼자 조용히 쉬면서 에너지를 회복하는 편이다'],val:['E','I']},{q:'낯선 사람들과 함께 있는 자리에서 나는',a:['먼저 말을 꺼내거나 분위기에 자연스럽게 섞이는 편이다','먼저 다가가기보다 상대를 보며 천천히 적응하는 편이다'],val:['E','I']},{q:'친한 친구가 갑자기 연락해서 잠깐 보자고 하면 나는',a:['반갑고 바로 만날 생각이 드는 편이다','반갑긴 하지만, 내 시간과 컨디션을 먼저 생각하는 편이다'],val:['E','I']}]},
-  {label:'② 정보 인식 방식 (S / N)',key:'SN',qs:[{q:'새로운 기기나 프로그램을 처음 접하면 나는',a:['사용법과 실제 작동 방식을 먼저 확인하는 편이다','전체 구조와 어떻게 활용할 수 있을지를 먼저 감으로 보는 편이다'],val:['S','N']},{q:'설명을 들을 때 나는',a:['구체적인 예시와 실제 사례가 있어야 이해가 잘 된다','큰 그림과 핵심 개념, 앞으로의 가능성을 함께 떠올리며 이해한다'],val:['S','N']},{q:'문제를 볼 때 나는',a:['지금 드러난 사실과 조건을 먼저 본다','숨은 의미나 앞으로의 가능성까지 함께 떠올린다'],val:['S','N']}]},
-  {label:'③ 판단 기준 (T / F)',key:'TF',qs:[{q:'내가 실수했을 때 나는',a:['왜 이런 일이 생겼는지 원인부터 분석하는 편이다','이 일로 주변 사람들이 어떻게 느꼈을지가 먼저 신경 쓰이는 편이다'],val:['T','F']},{q:'어떤 결정을 내려야 할 때 나는',a:['기준과 합리성이 더 중요하다고 느낀다','사람에게 미치는 영향과 관계가 더 중요하다고 느낀다'],val:['T','F']},{q:'의견이 갈릴 때 나는',a:['맞는지 틀린지, 논리적으로 따져보는 편이다','분위기와 상대 감정을 함께 고려하는 편이다'],val:['T','F']}]},
-  {label:'④ 생활 양식 (J / P)',key:'JP',qs:[{q:'일정이나 계획이 생기면 나는',a:['미리 세부 일정을 정리하고 준비하는 편이 마음이 편하다','큰 방향만 잡고 상황에 따라 유연하게 조정하는 편이 더 편하다'],val:['J','P']},{q:'여행이나 모임을 준비할 때 나는',a:['미리 일정과 순서를 정해두는 편이다','가면서 상황에 맞게 정하는 편이 더 편하다'],val:['J','P']},{q:'예상치 못한 변수가 생기면 나는',a:['계획이 흐트러지는 것이 다소 불편하게 느껴진다','상황에 맞게 바로 조정해 가는 편이 더 자연스럽다'],val:['J','P']}]},
-  {label:'⑤ 관계 중심 ↔ 과업 중심',key:'REL',qs:[{q:'팀으로 무언가를 할 때 나는',a:['사람들 분위기와 관계가 어떤지 먼저 살피는 편이다','해야 할 일과 목표가 무엇인지 먼저 보는 편이다'],val:['관계','과업']},{q:'회의나 대화 자리에서 나는',a:['사람 반응과 관계 흐름을 꽤 신경 쓰는 편이다','감정보다 결론과 방향을 더 신경 쓰는 편이다'],val:['관계','과업']},{q:'무언가 잘 해냈을 때 더 만족스러운 것은',a:['사람들과의 관계가 좋아지고 좋은 반응을 얻는 것이다','목표를 달성하고 결과가 분명하게 보이는 것이다'],val:['관계','과업']}]},
-  {label:'⑥ 빠른 시도·도전 ↔ 신중·정확',key:'ACT',qs:[{q:'일을 시작할 때 나는',a:['완벽하지 않아도 일단 해보면서 맞춰가는 편이다','어느 정도 준비와 정리가 되어야 시작하는 편이다'],val:['시도','신중']},{q:'새로운 방식이나 일이 생기면 나는',a:['일단 빠르게 시도해 보면서 감을 잡는 편이다','충분히 이해하고 준비한 뒤 차분하게 시작하는 편이다'],val:['시도','신중']},{q:'선택해야 할 것이 많을 때 나는',a:['우선 하나를 정하고 빠르게 진행해 보는 편이다','여러 가능성을 비교한 뒤 신중하게 결정하는 편이다'],val:['시도','신중']}]},
+
+function initMajorTab() {
+  const sel = document.getElementById("major-select");
+  const groups = {};
+  DB.majors.forEach(m => {
+    if (!groups[m.group_name]) groups[m.group_name] = [];
+    groups[m.group_name].push(m);
+  });
+  Object.keys(groups).forEach(g => {
+    const og = document.createElement("optgroup");
+    og.label = g;
+    groups[g].forEach(m => {
+      const opt = document.createElement("option");
+      opt.value = m.major_id;
+      opt.textContent = m.major_name;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function onMajorChange(majorId) {
+  if (!majorId) { document.getElementById("job-grid-wrap").innerHTML=""; return; }
+  renderJobGrid(DB.jobs.filter(j=>j.major_id===majorId), "job-grid-wrap");
+}
+
+function renderJobGrid(jobs, containerId, showScore=false) {
+  const wrap = document.getElementById(containerId);
+  if (!jobs.length) {
+    wrap.innerHTML='<p style="color:#aaa;text-align:center;padding:30px">해당하는 직무가 없습니다.</p>';
+    return;
+  }
+  const envNames=["사람만남","자료조사","창의성","업무변화","피드백속도"];
+  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  wrap.innerHTML = `<div class="job-grid">` + jobs.map(j => {
+    const envTags = envKeys.map((k,i) =>
+      j[k]?`<span class="env-tag env-${j[k]}">${envNames[i]} ${j[k]}</span>`:""
+    ).join("");
+    const score = showScore&&j._score!==undefined ? getScoreBadge(j._score) : "";
+    return `<div class="job-card" onclick="openModal('${j.job_id}','${esc(j.job_name)}','${esc(j.job_desc)}')">
+      ${score ? `<div>${score}</div>` : ""}
+      <div class="job-name">${j.job_name}</div>
+      <div class="job-desc">${j.job_desc}</div>
+      <div class="env-row">${envTags}</div>
+      <div class="skill-row">
+        ${j.skill_main?`<span class="skill-main">${j.skill_main}</span>`:""}
+        ${j.skill_sub?`<span class="skill-sub">${j.skill_sub}</span>`:""}
+      </div>
+    </div>`;
+  }).join("") + `</div>`;
+}
+
+// ★★★ 스텝 UI 자가진단 ★★★
+const ENV_SURVEY = [
+  { key:"env_people", icon:"🤝", label:"사람만남",
+    qs:["낯선 사람과 이야기하는 상황도 크게 부담스럽지 않다",
+        "혼자 하는 일보다 사람들과 소통하며 하는 일이 더 잘 맞는다",
+        "하루 종일 사람을 많이 만나도 비교적 덜 피곤하다"] },
+  { key:"env_info", icon:"🔎", label:"자료조사·정보탐색",
+    qs:["궁금한 것이 생기면 스스로 자료를 찾아보고 비교하는 편이다",
+        "새로운 정보나 변화를 꾸준히 찾아보는 일이 크게 귀찮지 않다",
+        "여러 자료를 모아 핵심만 정리하고 요약하는 일이 잘 맞는다"] },
+  { key:"env_creative", icon:"💡", label:"창의성",
+    qs:["정해진 방법만 따르기보다 새로운 방식을 생각해보는 편이다",
+        "아이디어를 내거나 새롭게 기획하는 일이 비교적 잘 맞는다",
+        "문제가 생기면 다른 방법으로 풀 수 없는지 먼저 생각해본다"] },
+  { key:"env_change", icon:"⚡", label:"업무변화",
+    qs:["다양한 업무를 접할 때가 더 재미있다",
+        "예상하지 못한 상황이 생겨도 비교적 유연하게 대응하는 편이다",
+        "한 가지 일만 반복하기보다 상황에 따라 다른 업무를 맡는 편이 더 잘 맞는다"] },
+  { key:"env_feedback", icon:"📊", label:"피드백속도",
+    qs:["내가 한 일의 결과를 비교적 빨리 확인할 수 있을 때 더 만족스럽다",
+        "성과를 오래 기다려야 하는 일보다 반응이 빠른 일이 더 잘 맞는다",
+        "장기 목표도 중요하지만, 중간중간 결과가 보일 때 더 힘이 난다"] },
 ];
-let svIdx=0,svAns={};
-function initSurvey(){SVG.forEach(g=>{svAns[g.key]=[null,null,null];});svIdx=0;renderSvGroup(0);}
-function renderSvGroup(idx){const g=SVG[idx];document.getElementById('sv-title').textContent=g.label;const done=Object.values(svAns).flat().filter(v=>v!==null).length;document.getElementById('svFill').style.width=(done/18*100)+'%';document.getElementById('svLbl').textContent=`${done} / 18`;const sv=svAns[g.key];document.getElementById('sv-qs').innerHTML=g.qs.map((q,qi)=>`<div class="qi"><div class="qnum">Q${idx*3+qi+1} / 18</div><div class="qtxt">${q.q}</div><div class="ab-group"><button class="ab ${sv[qi]===0?'selA':''}" onclick="setSvAns(${qi},0,this)"><span class="abm">A</span>${q.a[0]}</button><button class="ab ${sv[qi]===1?'selB':''}" onclick="setSvAns(${qi},1,this)"><span class="abm">B</span>${q.a[1]}</button></div></div>`).join('');document.getElementById('sv-next').textContent=idx===SVG.length-1?'역량 설문으로 →':'다음 →';}
-function setSvAns(qi,val,btn){const g=SVG[svIdx];svAns[g.key][qi]=val;btn.closest('.ab-group').querySelectorAll('.ab').forEach(b=>b.classList.remove('selA','selB'));btn.classList.add(val===0?'selA':'selB');const done=Object.values(svAns).flat().filter(v=>v!==null).length;document.getElementById('svFill').style.width=(done/18*100)+'%';document.getElementById('svLbl').textContent=`${done} / 18`;}
-function svNext(){const g=SVG[svIdx];if(svAns[g.key].some(v=>v===null)){alert(`"${g.label}" 그룹의 3개 문항을 모두 선택해 주세요.`);return;}if(svIdx<SVG.length-1){svIdx++;renderSvGroup(svIdx);window.scrollTo({top:0,behavior:'smooth'});}else{goStep(3);skIdx=0;renderSkQ(0);}}
-function svPrev(){if(svIdx>0){svIdx--;renderSvGroup(svIdx);}else goStep(1);}
-// SKILL SURVEY
-const SKS=[
-  {key:"①말하기·설득",icon:"🎤",label:"말하기·설득",sub:"전달력",qs:["여러 사람 앞에서 말할 때 핵심을 비교적 분명하게 전달하는 편이다","내 생각을 말로 설명하면 상대방이 이해하기 쉽다는 말을 듣는 편이다","주변 사람을 설득해서 의견을 바꾸게 한 적이 있다"]},
-  {key:"②글쓰기·표현",icon:"✍️",label:"글쓰기·표현",sub:"표현력",qs:["글이나 문서로 생각을 정리하는 것이 비교적 편하다","글쓰기나 문서 정리로 좋은 평가를 받은 적이 있다","복잡한 내용도 글로 쉽게 풀어 설명할 수 있는 편이다"]},
-  {key:"③수·논리·분석",icon:"📐",label:"수·논리·분석",sub:"분석력",qs:["숫자나 데이터를 보면 패턴이나 규칙을 비교적 잘 찾는 편이다","문제의 원인을 따질 때 논리적으로 정리해보는 편이다","계산하거나 분석이 필요한 과목이 비교적 잘 맞는 편이었다"]},
-  {key:"④손·몸·감각",icon:"🤲",label:"손·몸·감각",sub:"현장수행력",qs:["손으로 직접 만들거나 다루는 일을 비교적 잘하는 편이다","몸을 움직이거나 현장에서 직접 하는 일을 비교적 잘 해내는 편이다","손기술이 섬세하거나 몸의 균형감각·반응이 좋다는 말을 들은 적이 있다"]},
-  {key:"⑤그리기·꾸미기",icon:"🎨",label:"그리기·꾸미기",sub:"시각감각",qs:["색감, 배치, 디자인의 차이를 비교적 잘 알아보는 편이다","발표 자료나 공간을 보기 좋게 꾸민다는 말을 듣는 편이다","시각적으로 보기 좋게 정리하거나 구성하는 데 감각이 있는 편이다"]},
-  {key:"⑥돌보기·공감",icon:"🫶",label:"돌보기·공감",sub:"공감력",qs:["주변 사람의 상태나 감정 변화를 비교적 잘 알아차리는 편이다","다른 사람의 입장을 잘 이해하고 공감한다는 말을 듣는 편이다","누군가를 도와주거나 가르칠 때 보람을 느끼는 편이다"]},
-  {key:"⑦관리·조율·정리",icon:"📋",label:"관리·조율·정리",sub:"조직력",qs:["할 일을 목록으로 정리하고 일정에 맞게 관리하는 편이다","팀 활동에서 역할 분담이나 진행 순서를 조율하는 편이다","복잡한 내용을 순서 있게 정리하고 체계화하는 편이다"]},
-  {key:"⑧탐구·연구·실험",icon:"🔬",label:"탐구·연구·실험",sub:"탐구력",qs:["어떤 현상의 원인이나 원리를 궁금해하며 끝까지 파고드는 편이다","실험하거나 가설을 확인해보는 과정이 재미있다","새로운 사실이나 원리를 알아내는 과정에 흥미를 느끼고 오래 파고드는 편이다"]},
+const SKILL_SURVEY = [
+  { key:"①말하기·설득",   icon:"🎤", label:"말하기·설득",   sub:"전달력",
+    qs:["여러 사람 앞에서 말할 때 핵심을 비교적 분명하게 전달하는 편이다",
+        "내 생각을 말로 설명하면 상대방이 이해하기 쉽다는 말을 듣는 편이다",
+        "주변 사람(친구, 가족, 동료)을 설득해서 의견을 바꾸게 한 적이 있다"] },
+  { key:"②글쓰기·표현",   icon:"✍️", label:"글쓰기·표현",   sub:"표현력",
+    qs:["글이나 문서로 생각을 정리하는 것이 비교적 편하다",
+        "글쓰기나 문서 정리로 좋은 평가를 받은 적이 있다",
+        "복잡한 내용도 글로 쉽게 풀어 설명할 수 있는 편이다"] },
+  { key:"③수·논리·분석",  icon:"📐", label:"수·논리·분석",  sub:"분석력",
+    qs:["숫자나 데이터를 보면 패턴이나 규칙을 비교적 잘 찾는 편이다",
+        "문제의 원인을 따질 때 논리적으로 정리해보는 편이다",
+        "계산하거나 분석이 필요한 과제나 과목이 비교적 잘 맞는 편이었다"] },
+  { key:"④손·몸·감각",    icon:"🤲", label:"손·몸·감각",    sub:"현장수행력",
+    qs:["손으로 직접 만들거나 다루는 일을 비교적 잘하는 편이다",
+        "몸을 움직이거나 현장에서 직접 하는 일을 비교적 잘 해내는 편이다",
+        "손기술이 섬세하거나 몸의 균형감각·반응이 좋다는 말을 들은 적이 있다"] },
+  { key:"⑤그리기·꾸미기", icon:"🎨", label:"그리기·꾸미기", sub:"시각감각",
+    qs:["색감, 배치, 디자인의 차이를 비교적 잘 알아보는 편이다",
+        "발표 자료나 공간을 보기 좋게 꾸민다는 말을 듣는 편이다",
+        "시각적으로 보기 좋게 정리하거나 구성하는 데 감각이 있는 편이다"] },
+  { key:"⑥돌보기·공감",   icon:"🫶", label:"돌보기·공감",   sub:"공감력",
+    qs:["주변 사람의 상태나 감정 변화를 비교적 잘 알아차리는 편이다",
+        "다른 사람의 입장을 잘 이해하고 공감한다는 말을 듣는 편이다",
+        "누군가를 도와주거나 가르칠 때 보람을 느끼는 편이다"] },
+  { key:"⑦관리·조율·정리",icon:"📋", label:"관리·조율·정리",sub:"조직력",
+    qs:["할 일을 목록으로 정리하고 일정에 맞게 관리하는 편이다",
+        "팀 활동에서 역할 분담이나 진행 순서를 조율하는 편이다",
+        "복잡한 내용을 순서 있게 정리하고 체계화하는 편이다"] },
+  { key:"⑧탐구·연구·실험",icon:"🔬", label:"탐구·연구·실험",sub:"탐구력",
+    qs:["어떤 현상의 원인이나 원리를 궁금해하며 끝까지 파고드는 편이다",
+        "실험하거나 가설을 확인해보는 과정이 재미있다",
+        "새로운 사실이나 원리를 알아내는 과정에 흥미를 느끼고 오래 파고드는 편이다"] },
 ];
-let skIdx=0,skAns={};
-function renderSkQ(idx){const sk=SKS[idx];document.getElementById("sk-title").textContent=`${sk.icon} ${sk.label}`;document.getElementById("sk-hint").textContent=`${idx+1} / ${SKS.length}번째 역량입니다. 나와 가장 가까운 것을 선택하세요.`;if(!skAns[sk.key])skAns[sk.key]={};const sv=skAns[sk.key];document.getElementById("sk-qs").innerHTML=sk.qs.map((q,qi)=>`<div class="qi"><div class="qnum">Q${qi+1}</div><div class="qtxt">${q}</div><div class="sqwrap"><button class="sqbtn ${sv[qi]==='H'?'sH':''}" onclick="setSkAns(${qi},'H',this)"><span class="sqm">✓ 그렇다</span><span class="sqsub">자신 있다</span></button><button class="sqbtn ${sv[qi]==='M'?'sM':''}" onclick="setSkAns(${qi},'M',this)"><span class="sqm">△ 보통</span><span class="sqsub">그럭저럭</span></button><button class="sqbtn ${sv[qi]==='L'?'sL':''}" onclick="setSkAns(${qi},'L',this)"><span class="sqm">✗ 아니다</span><span class="sqsub">잘 모르겠다</span></button></div></div>`).join('');document.getElementById("sk-dots").innerHTML=SKS.map((_,i)=>`<div class="mdot ${i<idx?'done':i===idx?'curr':''}"></div>`).join('');document.getElementById("sk-prog").textContent=`${idx+1} / ${SKS.length}`;document.getElementById("sk-next").textContent=idx===SKS.length-1?"🎯 결과 확인하기":"다음 →";}
-function setSkAns(qi,val,btn){const sk=SKS[skIdx];if(!skAns[sk.key])skAns[sk.key]={};skAns[sk.key][qi]=val;btn.closest('.sqwrap').querySelectorAll('.sqbtn').forEach(b=>b.className='sqbtn');btn.classList.add(`s${val}`);}
-function skNext(){const sk=SKS[skIdx];if(Object.keys(skAns[sk.key]||{}).length<3){alert(`"${sk.label}" 항목의 3개 문항을 모두 선택해 주세요.`);return;}if(skIdx<SKS.length-1){skIdx++;renderSkQ(skIdx);}else runDiag();}
-function skPrev(){if(skIdx>0){skIdx--;renderSkQ(skIdx);}else{goStep(2);svIdx=SVG.length-1;renderSvGroup(svIdx);}}
-// CALC
-function calcTypes(){function w(k,a,b){const ans=svAns[k];return ans.filter(v=>v===0).length>=ans.filter(v=>v===1).length?a:b;}const EI=w('EI','E','I'),SN=w('SN','S','N'),TF=w('TF','T','F'),JP=w('JP','J','P'),rel=w('REL','관계','과업'),act=w('ACT','시도','신중');const mbti=EI+SN+TF+JP;const t=rel==='관계'&&act==='시도'?'다혈질':rel==='과업'&&act==='시도'?'담즙질':rel==='과업'&&act==='신중'?'우울질':'점액질';return{mbti,temper:t,E:EI==='E',I:EI==='I',N:SN==='N',F:TF==='F',J:JP==='J',P:JP==='P',rel,act};}
-function calcEnv(t){return[(t.rel==='관계'?1:0)+(t.E?1:0)+(t.F?1:0),(t.act==='신중'?1:0)+(t.I?1:0)+(t.N?1:0),(t.act==='시도'?1:0)+(t.N?1:0)+(t.P?1:0),(t.act==='시도'?1:0)+(t.P?1:0)+(t.E?1:0),(t.act==='시도'?1:0)+(t.J?1:0)+(t.E?1:0)].map(s=>s>=3?'H':s>=2?'M':'L');}
-const EDESC=[
-  {label:'사람만남',H:'사람과 자주 소통하고 반응을 주고받는 환경에서 비교적 자연스럽고 편안하게 움직일 가능성이 높습니다.',M:'사람을 만나는 환경에도 적응할 수 있지만, 관계의 방식이나 깊이에 따라 편차가 있을 수 있습니다.',L:'지속적인 사람 접점이 많은 환경보다, 혼자 집중하거나 필요한 소통 중심의 환경이 더 잘 맞을 가능성이 있습니다.'},
-  {label:'자료조사·정보탐색',H:'자료를 찾고 정리하며 핵심을 파악하는 과정에서 비교적 안정감과 적합감을 느낄 가능성이 높습니다.',M:'정보 탐색과 정리에 어느 정도 적응할 수 있지만, 지나치게 오래 파고드는 방식은 피로할 수 있습니다.',L:'자료를 오래 찾고 정리하는 환경보다, 바로 움직이거나 외부 반응이 있는 환경에서 더 활력을 느낄 가능성이 있습니다.'},
-  {label:'창의성',H:'정해진 방식보다 새로운 방식이나 아이디어를 떠올리고 시도할 수 있는 환경에서 더 잘 맞을 가능성이 높습니다.',M:'필요할 때 새로운 방식을 생각해낼 수 있지만, 항상 자유도와 변화가 큰 환경을 선호하는 것은 아닐 수 있습니다.',L:'새로운 방식 자체보다 익숙하고 검증된 방식으로 안정적으로 진행하는 환경이 더 잘 맞을 가능성이 있습니다.'},
-  {label:'업무변화',H:'반복적이고 예측 가능한 일보다 변화와 변수가 있는 환경에서 오히려 활력을 느낄 가능성이 높습니다.',M:'변화가 있는 환경에도 적응할 수 있지만, 변화의 폭이 너무 크면 피로도가 높아질 수 있습니다.',L:'변화가 많은 환경보다는 일정한 흐름과 예측 가능한 구조가 있는 환경이 더 잘 맞을 가능성이 있습니다.'},
-  {label:'피드백속도',H:'결과와 반응을 비교적 빠르게 확인할 수 있는 환경에서 동기와 몰입이 높아질 가능성이 있습니다.',M:'빠른 반응이 있는 환경도 가능하지만, 반드시 즉각적인 결과가 보여야만 하는 것은 아닐 수 있습니다.',L:'즉각적인 반응이나 빠른 성과 확인보다, 시간을 두고 완성도 있게 쌓아가는 환경이 더 잘 맞을 가능성이 있습니다.'},
-];
-const TDESC={다혈질:'사교적이고 활달하며 아이디어가 풍부합니다. 사람을 만나는 일과 변화 있는 환경에서 에너지가 올라갑니다.',담즙질:'속전속결 실행력과 목표 지향성이 강합니다. 리더십과 도전적인 업무에서 두각을 나타냅니다.',우울질:'분석적이고 체계적이며 탐구 정신이 강합니다. 정확하고 깊이 있는 업무에서 강점을 발휘합니다.',점액질:'공감 능력과 지구력이 뛰어납니다. 안정적이고 협력적인 환경에서 꾸준히 성과를 냅니다.'};
-function runDiag(){
+
+let envIdx=0, skillIdx=0;
+let envAnswers={}, skillAnswers={};
+
+function initDiagTab() {
+  const groups = [...new Set(DB.majors.map(m => m.group_name).filter(Boolean))].sort();
+  const gbWrap = document.getElementById("group-btns");
+
+  // 계열별 버튼
+  const groupIcons = {
+    "경영·경제·금융":"💼","공연·콘텐츠":"🎭","공학-건설·환경":"🏗️",
+    "공학-기계·산업":"⚙️","공학-전기·전자·IT":"💻","공학-화학·소재":"🧪",
+    "교육":"📖","농·축·산림":"🌿","바이오·생명공학":"🧬",
+    "보건·의료":"🏥","사회과학":"🏛️","서비스·관광":"✈️",
+    "예술·디자인":"🎨","인문학":"📚","자연과학":"🔭","체육·스포츠":"⚽"
+  };
+  const allBtn = document.createElement("button");
+  allBtn.className = "group-btn all-btn selected";
+  allBtn.dataset.group = "";
+  allBtn.textContent = "🌐 전체 보기";
+  allBtn.onclick = () => selectGroup(allBtn);
+  gbWrap.appendChild(allBtn);
+  groups.forEach(g => {
+    const btn = document.createElement("button");
+    btn.className = "group-btn";
+    btn.dataset.group = g;
+    btn.textContent = (groupIcons[g]||"•") + " " + g;
+    btn.onclick = () => selectGroup(btn);
+    gbWrap.appendChild(btn);
+  });
+  ENV_SURVEY.forEach(e => { envAnswers[e.key] = {}; });
+  SKILL_SURVEY.forEach(s => { skillAnswers[s.key] = {}; });
+  renderEnvQuestion(0);
+  renderSkillQuestion(0);
+}
+
+function goStep(n) {
+  document.querySelectorAll(".step-panel").forEach((p,i) =>
+    p.classList.toggle("active", i+1 === n));
+  for(let i=1; i<=4; i++) {
+    const node = document.getElementById("sn"+i);
+    const line = document.getElementById("sl"+i);
+    if(node){ node.classList.toggle("active", i===n); node.classList.toggle("done", i<n); }
+    if(line) line.classList.toggle("done", i<n);
+  }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function renderEnvQuestion(idx) {
+  const env = ENV_SURVEY[idx];
+  document.getElementById("env-step-title").textContent = `${env.icon} ${env.label}`;
+  document.getElementById("env-step-hint").textContent =
+    `${idx+1} / ${ENV_SURVEY.length}번째 항목입니다. 나와 가장 가까운 것을 선택하세요.`;
+  const wrap = document.getElementById("env-q-items");
+  wrap.innerHTML = env.qs.map((q, qi) => {
+    const saved = envAnswers[env.key][qi];
+    return `<div class="survey-q-item">
+      <div class="survey-q-num">Q${qi+1}</div>
+      <div class="survey-q-text">${q}</div>
+      <div class="survey-q-btns">
+        <button class="sq-btn ${saved==='H'?'sel-H':''}" onclick="setEnvAns(${qi},'H',this)">
+          <span class="sq-main">✓ 그렇다</span><span class="sq-sub">잘 맞는다</span>
+        </button>
+        <button class="sq-btn ${saved==='M'?'sel-M':''}" onclick="setEnvAns(${qi},'M',this)">
+          <span class="sq-main">△ 보통</span><span class="sq-sub">상황에 따라</span>
+        </button>
+        <button class="sq-btn ${saved==='L'?'sel-L':''}" onclick="setEnvAns(${qi},'L',this)">
+          <span class="sq-main">✗ 아니다</span><span class="sq-sub">잘 안 맞는다</span>
+        </button>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("env-dots").innerHTML = ENV_SURVEY.map((_,i) =>
+    `<div class="mini-dot ${i<idx?'done':i===idx?'active':''}"></div>`).join("");
+  document.getElementById("env-progress-text").textContent = `${idx+1} / ${ENV_SURVEY.length}`;
+  document.getElementById("env-next-btn").textContent =
+    idx === ENV_SURVEY.length-1 ? "역량 설문으로 →" : "다음 →";
+}
+
+function setEnvAns(qi, val, btn) {
+  envAnswers[ENV_SURVEY[envIdx].key][qi] = val;
+  btn.closest(".survey-q-btns").querySelectorAll(".sq-btn").forEach(b => b.className="sq-btn");
+  btn.classList.add(`sel-${val}`);
+}
+
+function envNext() {
+  const env = ENV_SURVEY[envIdx];
+  if(Object.keys(envAnswers[env.key]).length < 3) {
+    alert(`"${env.label}" 항목의 3개 문항을 모두 선택해 주세요.`); return;
+  }
+  if(envIdx < ENV_SURVEY.length-1) { envIdx++; renderEnvQuestion(envIdx); }
+  else { goStep(3); skillIdx=0; renderSkillQuestion(0); }
+}
+
+function envPrev() {
+  if(envIdx > 0) { envIdx--; renderEnvQuestion(envIdx); } else goStep(1);
+}
+
+function renderSkillQuestion(idx) {
+  const sk = SKILL_SURVEY[idx];
+  document.getElementById("skill-step-title").textContent = `${sk.icon} ${sk.label}`;
+  document.getElementById("skill-step-hint").textContent =
+    `${idx+1} / ${SKILL_SURVEY.length}번째 역량입니다. 나와 가장 가까운 것을 선택하세요.`;
+  const wrap = document.getElementById("skill-q-items");
+  wrap.innerHTML = sk.qs.map((q, qi) => {
+    const saved = skillAnswers[sk.key][qi];
+    return `<div class="survey-q-item">
+      <div class="survey-q-num">Q${qi+1}</div>
+      <div class="survey-q-text">${q}</div>
+      <div class="survey-q-btns">
+        <button class="sq-btn ${saved==='H'?'sel-H':''}" onclick="setSkillAns(${qi},'H',this)">
+          <span class="sq-main">✓ 그렇다</span><span class="sq-sub">자신 있다</span>
+        </button>
+        <button class="sq-btn ${saved==='M'?'sel-M':''}" onclick="setSkillAns(${qi},'M',this)">
+          <span class="sq-main">△ 보통</span><span class="sq-sub">그럭저럭</span>
+        </button>
+        <button class="sq-btn ${saved==='L'?'sel-L':''}" onclick="setSkillAns(${qi},'L',this)">
+          <span class="sq-main">✗ 아니다</span><span class="sq-sub">잘 모르겠다</span>
+        </button>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("skill-dots").innerHTML = SKILL_SURVEY.map((_,i) =>
+    `<div class="mini-dot ${i<idx?'done':i===idx?'active':''}"></div>`).join("");
+  document.getElementById("skill-progress-text").textContent = `${idx+1} / ${SKILL_SURVEY.length}`;
+  document.getElementById("skill-next-btn").textContent =
+    idx === SKILL_SURVEY.length-1 ? "🎯 결과 확인하기" : "다음 →";
+}
+
+function setSkillAns(qi, val, btn) {
+  skillAnswers[SKILL_SURVEY[skillIdx].key][qi] = val;
+  btn.closest(".survey-q-btns").querySelectorAll(".sq-btn").forEach(b => b.className="sq-btn");
+  btn.classList.add(`sel-${val}`);
+}
+
+function skillNext() {
+  const sk = SKILL_SURVEY[skillIdx];
+  if(Object.keys(skillAnswers[sk.key]).length < 3) {
+    alert(`"${sk.label}" 항목의 3개 문항을 모두 선택해 주세요.`); return;
+  }
+  if(skillIdx < SKILL_SURVEY.length-1) { skillIdx++; renderSkillQuestion(skillIdx); }
+  else runDiag();
+}
+
+function skillPrev() {
+  if(skillIdx > 0) { skillIdx--; renderSkillQuestion(skillIdx); }
+  else { goStep(2); envIdx=ENV_SURVEY.length-1; renderEnvQuestion(envIdx); }
+}
+
+function calcHML(answers) {
+  const score = Object.values(answers).reduce((s,v)=>s+(v==='H'?2:v==='M'?1:0),0);
+  return score>=5?'H':score>=3?'M':'L';
+}
+
+function resetDiag() {
+  envIdx=0; skillIdx=0;
+  ENV_SURVEY.forEach(e=>{envAnswers[e.key]={};});
+  SKILL_SURVEY.forEach(s=>{skillAnswers[s.key]={};});
+  renderEnvQuestion(0); renderSkillQuestion(0);
+  document.querySelectorAll(".group-btn").forEach(b=>b.classList.remove("selected"));
+  document.querySelector(".all-btn").classList.add("selected");
+}
+
+function runDiag() {
   goStep(4);
-  const t=calcTypes(),eHML=calcEnv(t);
-  const ekmap={env_people:eHML[0],env_info:eHML[1],env_creative:eHML[2],env_change:eHML[3],env_feedback:eHML[4]};
-  const skSc={};SKS.forEach(s=>{skSc[s.key]=Object.values(skAns[s.key]||{}).reduce((sum,v)=>sum+(v==='H'?2:v==='M'?1:0),0);});
-  const srt=Object.entries(skSc).sort((a,b)=>b[1]-a[1]);
-  let top=srt.filter(([,v])=>v>=5).map(([k])=>k);if(!top.length)top=srt.slice(0,3).map(([k])=>k);
-  const selGrp=getSelGrp();let allowIds=null;if(selGrp)allowIds=new Set(DB.majors.filter(m=>m.group_name===selGrp).map(m=>m.major_id));
-  const scored=DB.jobs.filter(j=>!allowIds||allowIds.has(j.major_id)).map(j=>{let s=0;Object.entries(ekmap).forEach(([k,v])=>{if(j[k]===v)s+=2;});if(top.includes(j.skill_main))s+=3;if(top.includes(j.skill_sub))s+=1;return{...j,_score:s};}).filter(j=>j._score>=3).sort((a,b)=>b._score-a._score);
-  const vf=scored.filter(j=>j._score>=11),fi=scored.filter(j=>j._score>=8&&j._score<11).slice(0,12),rf=scored.filter(j=>j._score>=3&&j._score<8).slice(0,6);
-  const topLbl=top.slice(0,3).map(k=>{const f=SKS.find(s=>s.key===k);return f?`${f.icon} ${f.label}`:k;}).join(" · ");
-  const bW={H:'100%',M:'55%',L:'22%'},bC={H:'bH',M:'bM',L:'bL'},vC={H:'vH',M:'vM',L:'vL'};
-  const envHTML=EDESC.map((d,i)=>`<div class="erow"><div class="elbl">${d.label}</div><div class="ebar-bg"><div class="ebar ${bC[eHML[i]]}" style="width:${bW[eHML[i]]}"></div></div><div class="eval ${vC[eHML[i]]}">${eHML[i]}</div></div><div class="edesc">${d[eHML[i]]}</div>`).join('');
-  const grpLbl=selGrp?`<span style="font-size:13px;font-weight:400;color:var(--primary);margin-left:8px">· ${selGrp} 계열</span>`:`<span style="font-size:13px;font-weight:400;color:var(--muted);margin-left:8px">· 전체 계열</span>`;
-  let html=`<div class="type-card"><div class="chips"><span class="chip ch-mbti">MBTI 경향: <b>${t.mbti}</b></span><span class="chip ch-temp">기질: <b>${t.temper}</b></span></div><div class="type-desc">${TDESC[t.temper]}</div></div><div class="env-wrap"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;">나의 업무 환경 성향</div>${envHTML}</div><div style="background:var(--white);border-radius:12px;padding:14px 18px;margin-bottom:20px;border:1px solid var(--border);"><div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;">강점 역량</div><div style="font-size:13px;color:var(--muted);">${topLbl}</div></div><h3 style="margin-bottom:20px;font-size:17px;font-weight:900;color:var(--navy);">🎯 직무 추천 결과${grpLbl}</h3>`;
-  if(!scored.length){html+='<p style="text-align:center;color:var(--muted);padding:40px">조건에 맞는 직무를 찾지 못했습니다.<br><small>다시하기를 눌러 조건을 바꿔보세요.</small></p>';document.getElementById('diag-result').innerHTML=html;return;}
-  if(vf.length)html+=`<div class="rgroup"><div class="rgh gold"><span class="rgh-icon">⭐</span><span class="rgh-title">매우 적합</span><span class="rgh-cnt">${vf.length}개</span></div><div id="rv"></div></div>`;
-  if(fi.length)html+=`<div class="rgroup"><div class="rgh green"><span class="rgh-icon">✅</span><span class="rgh-title">적합</span><span class="rgh-cnt">${fi.length}개</span></div><div id="rf"></div></div>`;
-  if(rf.length)html+=`<div class="rgroup"><div class="rgh blue"><span class="rgh-icon">🔍</span><span class="rgh-title">참고해보세요</span><span class="rgh-cnt">${rf.length}개</span></div><div id="rr"></div></div>`;
-  document.getElementById('diag-result').innerHTML=html;
-  if(vf.length)renderGrid(vf,"rv",true);if(fi.length)renderGrid(fi,"rf",true);if(rf.length)renderGrid(rf,"rr",true);
+  const envSel={};
+  ENV_SURVEY.forEach(e=>{ envSel[e.key]=calcHML(envAnswers[e.key]); });
+  const skillScores={};
+  SKILL_SURVEY.forEach(s=>{
+    skillScores[s.key]=Object.values(skillAnswers[s.key]).reduce((sum,v)=>sum+(v==='H'?2:v==='M'?1:0),0);
+  });
+  const sorted=Object.entries(skillScores).sort((a,b)=>b[1]-a[1]);
+  let topSkills=sorted.filter(([,v])=>v>=5).map(([k])=>k);
+  if(!topSkills.length) topSkills=sorted.slice(0,3).map(([k])=>k);
+
+  const selectedGroup=getSelectedGroup();
+  let allowedMajorIds=null;
+  if(selectedGroup) allowedMajorIds=new Set(DB.majors.filter(m=>m.group_name===selectedGroup).map(m=>m.major_id));
+
+  const envKeys=["env_people","env_info","env_creative","env_change","env_feedback"];
+  const allScored=DB.jobs
+    .filter(j=>!allowedMajorIds||allowedMajorIds.has(j.major_id))
+    .map(j=>{
+      let s=0;
+      envKeys.forEach(k=>{if(envSel[k]&&j[k]===envSel[k])s+=2;});
+      if(topSkills.includes(j.skill_main))s+=3;
+      if(topSkills.includes(j.skill_sub))s+=1;
+      return{...j,_score:s};
+    }).filter(j=>j._score>=3).sort((a,b)=>b._score-a._score);
+
+  const veryFit=allScored.filter(j=>j._score>=11);
+  const fit=allScored.filter(j=>j._score>=8&&j._score<11).slice(0,12);
+  const ref=allScored.filter(j=>j._score>=3&&j._score<8).slice(0,6);
+
+  const rd=document.getElementById("diag-result");
+  if(!allScored.length){
+    rd.innerHTML='<p style="text-align:center;color:#aaa;padding:40px">조건에 맞는 직무를 찾지 못했습니다.<br><small>다시하기를 눌러 조건을 바꿔보세요.</small></p>';
+    return;
+  }
+
+  const topSkillLabels=topSkills.slice(0,3).map(k=>{
+    const f=SKILL_SURVEY.find(s=>s.key===k);
+    return f?`${f.icon} ${f.label}`:k;
+  }).join(" · ");
+  const envSummary=ENV_SURVEY.map(e=>
+    `<span class="kw-tag">${e.icon} ${e.label} <b>${envSel[e.key]}</b></span>`).join("");
+  const groupLabel=selectedGroup
+    ?`<span style="font-size:13px;font-weight:400;color:#2563EB;margin-left:8px">· ${selectedGroup} 계열</span>`
+    :`<span style="font-size:13px;font-weight:400;color:#888;margin-left:8px">· 전체 계열</span>`;
+
+  let html=`
+    <div style="background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:12px;font-weight:700;color:#1B3A6B;margin-bottom:8px">📋 내 진단 결과 요약</div>
+      <div style="font-size:12px;color:#555;margin-bottom:8px">강점 역량: <strong style="color:#1B3A6B">${topSkillLabels}</strong></div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">${envSummary}</div>
+    </div>
+    <h3 style="margin-bottom:20px;font-size:17px;font-weight:800;color:#1B3A6B">🎯 직무 추천 결과${groupLabel}</h3>`;
+
+  if(veryFit.length) html+=`<div class="result-group"><div class="result-group-header gold"><span class="result-group-icon">⭐</span><span class="result-group-title">매우 적합</span><span class="result-group-count">${veryFit.length}개</span></div><div id="result-very-fit"></div></div>`;
+  if(fit.length)     html+=`<div class="result-group"><div class="result-group-header green"><span class="result-group-icon">✅</span><span class="result-group-title">적합</span><span class="result-group-count">${fit.length}개</span></div><div id="result-fit"></div></div>`;
+  if(ref.length)     html+=`<div class="result-group"><div class="result-group-header blue"><span class="result-group-icon">🔍</span><span class="result-group-title">참고해보세요</span><span class="result-group-count">${ref.length}개</span></div><div id="result-ref"></div></div>`;
+
+  rd.innerHTML=html;
+  if(veryFit.length) renderJobGrid(veryFit,"result-very-fit",true);
+  if(fit.length)     renderJobGrid(fit,"result-fit",true);
+  if(ref.length)     renderJobGrid(ref,"result-ref",true);
 }
-function buildGroupBtns(){
-  const gs=[...new Set(DB.majors.map(m=>m.group_name).filter(Boolean))].sort();
-  const w=document.getElementById("gbwrap");
-  const ic={"경영·경제·금융":"💼","공연·콘텐츠":"🎭","공학-건설·환경":"🏗️","공학-기계·산업":"⚙️","공학-전기·전자·IT":"💻","공학-화학·소재":"🧪","교육":"📖","농·축·산림":"🌿","바이오·생명공학":"🧬","보건·의료":"🏥","사회과학":"🏛️","서비스·관광":"✈️","예술·디자인":"🎨","인문학":"📚","자연과학":"🔭","체육·스포츠":"⚽"};
-  const ab=document.createElement("button");ab.className="gbtn all sel";ab.dataset.group="";ab.textContent="🌐 전체 보기";ab.onclick=()=>selGrp(ab);w.appendChild(ab);
-  gs.forEach(g=>{const b=document.createElement("button");b.className="gbtn";b.dataset.group=g;b.textContent=(ic[g]||"•")+" "+g;b.onclick=()=>selGrp(b);w.appendChild(b);});
-  initSurvey();SKS.forEach(s=>{skAns[s.key]={};});renderSkQ(0);
+
+async function openModal(jobId, jobName, jobDesc) {
+  document.getElementById("modal-title").textContent=jobName;
+  document.getElementById("modal-sub").textContent=jobDesc;
+  document.getElementById("modal-body").innerHTML=
+    '<div class="loading"><div class="spinner"></div><p>불러오는 중...</p></div>';
+  document.getElementById("modal-overlay").classList.add("open");
+  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===0));
+  try {
+    const data=await jsonpFetch({action:"job_detail",job_id:jobId});
+    currentJobDetail=data.fields||{};
+    renderModalTab(0);
+  } catch(e) {
+    document.getElementById("modal-body").innerHTML=
+      '<p style="color:#e53e3e;padding:20px">상세 데이터를 불러오지 못했습니다.</p>';
+  }
 }
-function goStep(n){document.querySelectorAll(".step-panel").forEach((p,i)=>p.classList.toggle("active",i+1===n));for(let i=1;i<=4;i++){const nd=document.getElementById("sn"+i),ln=document.getElementById("sl"+i);if(nd){nd.classList.toggle("active",i===n);nd.classList.toggle("done",i<n);}if(ln)ln.classList.toggle("done",i<n);}window.scrollTo({top:0,behavior:"smooth"});}
-function resetDiag(){svIdx=0;skIdx=0;initSurvey();SKS.forEach(s=>{skAns[s.key]={};});renderSkQ(0);document.querySelectorAll(".gbtn").forEach(b=>b.classList.remove("sel"));document.querySelector(".all").classList.add("sel");}
-function selGrp(btn){document.querySelectorAll(".gbtn").forEach(b=>b.classList.remove("sel"));btn.classList.add("sel");}
-function getSelGrp(){const b=document.querySelector(".gbtn.sel");return b?b.dataset.group:"";}
-async function openModal(jid,jn,jd){document.getElementById("m-title").textContent=jn;document.getElementById("m-sub").textContent=jd;document.getElementById("m-body").innerHTML='<div class="loading"><div class="spinner"></div><p>불러오는 중...</p></div>';document.getElementById("mo").classList.add("open");document.querySelectorAll(".mtab").forEach((t,i)=>t.classList.toggle("active",i===0));try{const d=await jsonpFetch({action:"job_detail",job_id:jid});curJobDetail=d.fields||{};renderMTab(0);}catch(e){document.getElementById("m-body").innerHTML='<p style="color:#e53e3e;padding:20px">상세 데이터를 불러오지 못했습니다.</p>';}}
-function closeModal(){document.getElementById("mo").classList.remove("open");curJobDetail=null;}
-function moClose(e){if(e.target===document.getElementById("mo"))closeModal();}
-function switchMTab(idx){document.querySelectorAll(".mtab").forEach((t,i)=>t.classList.toggle("active",i===idx));renderMTab(idx);}
-function renderMTab(idx){const f=curJobDetail;if(!f)return;const b=document.getElementById("m-body");if(idx===0){b.innerHTML=dc("📌 하는 일",pt(f.work_summary))+dc("🕐 하루 일과 예시",pt(f.daily_routine))+dc("💡 이런 사람에게 맞습니다",pt(f.fit_person));}else if(idx===1){const se=f.salary_entry||[],sl=f.salary_label||[];const sh=Array.isArray(se)&&se.length?`<div class="sal-grid">${se.map((s,i)=>`<div class="si"><div class="amt">${s!=="0"?s+"만원":"창업"}</div><div class="lbl">${sl[i]||""}</div></div>`).join("")}</div>`:"<p>데이터 준비 중</p>";const co=Array.isArray(f.companies)?f.companies.map(c=>`<li>${c}</li>`).join(""):f.companies||"";const cr=Array.isArray(f.certifications)?f.certifications.map(c=>`<li>${c}</li>`).join(""):f.certifications||"";b.innerHTML=dc("💰 신입 연봉 범위",sh)+dc("🏢 주요 취업처",`<ul>${co}</ul>`)+dc("📜 관련 자격증",`<ul>${cr}</ul>`)+dc("⭐ 채용 우대 스펙",pt(f.preferred_spec))+`<div class="dc"><h4>🔗 채용공고 바로가기</h4><div class="lbg">${f.jobkorea_url?`<a href="${f.jobkorea_url}" target="_blank" class="lb lbj">잡코리아 검색</a>`:""}${f.saramin_url?`<a href="${f.saramin_url}" target="_blank" class="lb lbs">사람인 검색</a>`:""}</div></div>`;}else if(idx===2){const kw=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");b.innerHTML=dc("🎓 재학 중 추천 활동",pt(f.recommend_activity))+dc("📚 추천 교육·강의",pt(f.recommend_edu))+dc("👥 커뮤니티·채널",pt(f.community))+dc("📝 자소서 키워드",`<div class="kc">${kw.map(k=>k.trim()?`<span class="kt">${k.trim()}</span>`:"").join("")}</div>`);}else{const ac={"낮음":"ai-lo","중간":"ai-mi","높음":"ai-hi"}[f.ai_risk]||"ai-lo";b.innerHTML=`<div class="dc"><h4>🤖 AI 대체 위험도</h4><span class="ai-b ${ac}">${f.ai_risk||"분석중"}</span><p>${f.ai_risk_detail||"데이터 준비 중"}</p></div><div class="dc"><h4>📈 취업 전망</h4><div class="obox">${(f.outlook||"데이터 준비 중").replace(/\n/g,"<br>")}</div></div><div class="dc"><h4>🕒 최종 업데이트</h4><p>${(f.updated_at||"-").replace("-",".")}</p></div>`;}}
-function dc(t,h){return`<div class="dc"><h4>${t}</h4>${h||'<p style="color:#aaa">준비 중</p>'}</div>`;}
+function closeModal(){document.getElementById("modal-overlay").classList.remove("open");currentJobDetail=null;}
+function closeModalIfOverlay(e){if(e.target===document.getElementById("modal-overlay"))closeModal();}
+function switchModalTab(idx){
+  document.querySelectorAll(".modal-tab").forEach((t,i)=>t.classList.toggle("active",i===idx));
+  renderModalTab(idx);
+}
+function renderModalTab(idx){
+  const f=currentJobDetail;
+  if(!f)return;
+  const body=document.getElementById("modal-body");
+  if(idx===0){
+    body.innerHTML=
+      dc("📌 하는 일",pt(f.work_summary))+
+      dc("🕐 하루 일과 예시",pt(f.daily_routine))+
+      dc("💡 이런 사람에게 맞습니다",pt(f.fit_person));
+  } else if(idx===1){
+    const se=f.salary_entry||[];
+    const sl=f.salary_label||[];
+    const salHtml=Array.isArray(se)&&se.length
+      ?`<div class="salary-grid">${se.map((s,i)=>
+        `<div class="salary-item"><div class="amt">${s!=="0"?s+"만원":"창업"}</div><div class="lbl">${sl[i]||""}</div></div>`
+      ).join("")}</div>`:"<p>데이터 준비 중</p>";
+    const cos=Array.isArray(f.companies)?f.companies.map(c=>`<li>${c}</li>`).join(""):f.companies||"";
+    const crs=Array.isArray(f.certifications)?f.certifications.map(c=>`<li>${c}</li>`).join(""):f.certifications||"";
+    body.innerHTML=
+      dc("💰 신입 연봉 범위 (만원/년)",salHtml)+
+      dc("🏢 주요 취업처",`<ul>${cos}</ul>`)+
+      dc("📜 관련 자격증",`<ul>${crs}</ul>`)+
+      dc("⭐ 채용 우대 스펙",pt(f.preferred_spec))+
+      `<div class="detail-card"><h4>🔗 채용공고 바로가기</h4>
+       <div class="link-btn-group">
+         ${f.jobkorea_url?`<a href="${f.jobkorea_url}" target="_blank" class="link-btn link-btn-job">잡코리아 검색</a>`:""}
+         ${f.saramin_url?`<a href="${f.saramin_url}" target="_blank" class="link-btn link-btn-sar">사람인 검색</a>`:""}
+       </div></div>`;
+  } else if(idx===2){
+    const kws=Array.isArray(f.resume_keywords)?f.resume_keywords:(f.resume_keywords||"").split("|");
+    body.innerHTML=
+      dc("🎓 재학 중 추천 활동",pt(f.recommend_activity))+
+      dc("📚 추천 교육·강의",pt(f.recommend_edu))+
+      dc("👥 커뮤니티·채널",pt(f.community))+
+      dc("📝 자소서 키워드",`<div class="keyword-cloud">${kws.map(k=>k.trim()?`<span class="kw-tag">${k.trim()}</span>`:"").join("")}</div>`);
+  } else {
+    const aiC={"낮음":"ai-low","중간":"ai-mid","높음":"ai-high"}[f.ai_risk]||"ai-low";
+    body.innerHTML=
+      `<div class="detail-card"><h4>🤖 AI 대체 위험도</h4>
+       <span class="ai-badge ${aiC}">${f.ai_risk||"분석중"}</span>
+       <p>${f.ai_risk_detail||"데이터 준비 중"}</p></div>`+
+      `<div class="detail-card"><h4>📈 취업 전망</h4>
+       <div class="outlook-box">${(f.outlook||"데이터 준비 중").replace(/\n/g,"<br>")}</div></div>`+
+      `<div class="detail-card"><h4>🕒 최종 업데이트</h4><p>${(f.updated_at||"-").replace("-",".")}</p></div>`;
+  }
+}
+function dc(title,html){return`<div class="detail-card"><h4>${title}</h4>${html||'<p style="color:#aaa">준비 중</p>'}</div>`;}
 function pt(s){if(!s)return'<p style="color:#aaa">준비 중</p>';return`<p>${s.replace(/\n/g,"<br>")}</p>`;}
-function showUdate(d){let dt="";if(d.last_updated&&d.last_updated.trim())dt=d.last_updated.trim().replace("-",".");else if(d.timestamp){const x=new Date(d.timestamp);dt=x.getFullYear()+"."+String(x.getMonth()+1).padStart(2,"0");}const el=document.getElementById("udate");if(el)el.textContent=dt?`업데이트 ${dt}`:"최신 데이터";}
-function getScoreBadge(sc){if(sc>=11)return`<span class="sbadge sg">⭐ 매우 적합</span>`;if(sc>=8)return`<span class="sbadge sgr">✅ 적합</span>`;return`<span class="sbadge sbl">🔍 참고해보세요</span>`;}
+function showUpdateDate(data) {
+  let displayDate = "";
+  if (data.last_updated && data.last_updated.trim()) {
+    displayDate = data.last_updated.trim().replace("-", ".");
+  } else if (data.timestamp) {
+    const d = new Date(data.timestamp);
+    displayDate = d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0");
+  }
+  const el = document.getElementById("update-text");
+  if (el) el.textContent = displayDate ? `업데이트 ${displayDate}` : "최신 데이터";
+}
+function getScoreBadge(score) {
+  if (score >= 11) return `<span class="match-score-badge badge-gold">⭐ 매우 적합</span>`;
+  if (score >= 8)  return `<span class="match-score-badge badge-green">✅ 적합</span>`;
+  return `<span class="match-score-badge badge-blue">🔍 참고해보세요</span>`;
+}
+function selectGroup(btn) {
+  document.querySelectorAll(".group-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+}
+function getSelectedGroup() {
+  const btn = document.querySelector(".group-btn.selected");
+  return btn ? btn.dataset.group : "";
+}
 function esc(s){return(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
 </script>
 </body>
