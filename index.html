@@ -374,7 +374,20 @@ function setSkAns(qi,val,btn){const sk=SKS[skIdx];if(!skAns[sk.key])skAns[sk.key
 function skNext(){const sk=SKS[skIdx];if(Object.keys(skAns[sk.key]||{}).length<3){alert(`"${sk.label}" 항목의 3개 문항을 모두 선택해 주세요.`);return;}if(skIdx<SKS.length-1){skIdx++;renderSkQ(skIdx);}else runDiag();}
 function skPrev(){if(skIdx>0){skIdx--;renderSkQ(skIdx);}else{goStep(2);svIdx=SVG.length-1;renderSvGroup(svIdx);}}
 // CALC
-function calcTypes(){function w(k,a,b){const ans=svAns[k];return ans.filter(v=>v===0).length>=ans.filter(v=>v===1).length?a:b;}const EI=w('EI','E','I'),SN=w('SN','S','N'),TF=w('TF','T','F'),JP=w('JP','J','P'),rel=w('REL','관계','과업'),act=w('ACT','시도','신중');const mbti=EI+SN+TF+JP;const t=rel==='관계'&&act==='시도'?'다혈질':rel==='과업'&&act==='시도'?'담즙질':rel==='과업'&&act==='신중'?'우울질':'점액질';return{mbti,temper:t,E:EI==='E',I:EI==='I',N:SN==='N',F:TF==='F',J:JP==='J',P:JP==='P',rel,act};}
+function calcTypes(){
+  // 실제 응답한 것만 집계 (null 제외) → 동점이면 B 우선
+  function w(k,a,b){
+    const ans=(svAns[k]||[]).filter(v=>v!==null);
+    const cntA=ans.filter(v=>v===0).length;
+    const cntB=ans.filter(v=>v===1).length;
+    return cntA>cntB?a:cntB>cntA?b:a; // 동점이면 A
+  }
+  const EI=w('EI','E','I'),SN=w('SN','S','N'),TF=w('TF','T','F'),JP=w('JP','J','P');
+  const rel=w('REL','관계','과업'),act=w('ACT','시도','신중');
+  const mbti=EI+SN+TF+JP;
+  const t=rel==='관계'&&act==='시도'?'다혈질':rel==='과업'&&act==='시도'?'담즙질':rel==='과업'&&act==='신중'?'우울질':'점액질';
+  return{mbti,temper:t,E:EI==='E',I:EI==='I',N:SN==='N',S:SN==='S',F:TF==='F',T:TF==='T',J:JP==='J',P:JP==='P',rel,act};
+}
 function calcEnv(t){return[(t.rel==='관계'?1:0)+(t.E?1:0)+(t.F?1:0),(t.act==='신중'?1:0)+(t.I?1:0)+(t.N?1:0),(t.act==='시도'?1:0)+(t.N?1:0)+(t.P?1:0),(t.act==='시도'?1:0)+(t.P?1:0)+(t.E?1:0),(t.act==='시도'?1:0)+(t.J?1:0)+(t.E?1:0)].map(s=>s>=3?'H':s>=2?'M':'L');}
 const EDESC=[
   {label:'사람만남',H:'사람과 자주 소통하고 반응을 주고받는 환경에서 비교적 자연스럽고 편안하게 움직일 가능성이 높습니다.',M:'사람을 만나는 환경에도 적응할 수 있지만, 관계의 방식이나 깊이에 따라 편차가 있을 수 있습니다.',L:'지속적인 사람 접점이 많은 환경보다, 혼자 집중하거나 필요한 소통 중심의 환경이 더 잘 맞을 가능성이 있습니다.'},
@@ -383,7 +396,24 @@ const EDESC=[
   {label:'업무변화',H:'반복적이고 예측 가능한 일보다 변화와 변수가 있는 환경에서 오히려 활력을 느낄 가능성이 높습니다.',M:'변화가 있는 환경에도 적응할 수 있지만, 변화의 폭이 너무 크면 피로도가 높아질 수 있습니다.',L:'변화가 많은 환경보다는 일정한 흐름과 예측 가능한 구조가 있는 환경이 더 잘 맞을 가능성이 있습니다.'},
   {label:'피드백속도',H:'결과와 반응을 비교적 빠르게 확인할 수 있는 환경에서 동기와 몰입이 높아질 가능성이 있습니다.',M:'빠른 반응이 있는 환경도 가능하지만, 반드시 즉각적인 결과가 보여야만 하는 것은 아닐 수 있습니다.',L:'즉각적인 반응이나 빠른 성과 확인보다, 시간을 두고 완성도 있게 쌓아가는 환경이 더 잘 맞을 가능성이 있습니다.'},
 ];
-const TDESC={다혈질:'사교적이고 활달하며 아이디어가 풍부합니다. 사람을 만나는 일과 변화 있는 환경에서 에너지가 올라갑니다.',담즙질:'속전속결 실행력과 목표 지향성이 강합니다. 리더십과 도전적인 업무에서 두각을 나타냅니다.',우울질:'분석적이고 체계적이며 탐구 정신이 강합니다. 정확하고 깊이 있는 업무에서 강점을 발휘합니다.',점액질:'공감 능력과 지구력이 뛰어납니다. 안정적이고 협력적인 환경에서 꾸준히 성과를 냅니다.'};
+const TDESC={
+  ISTJ:'꼼꼼하고 책임감이 강하며 약속을 중요하게 생각합니다. 체계적으로 계획을 세우고 끝까지 완수하는 힘이 있습니다.',
+  ISFJ:'따뜻하고 배려심이 깊으며 주변 사람의 필요를 잘 챙깁니다. 안정적인 환경에서 묵묵히 성과를 만들어냅니다.',
+  INFJ:'깊은 통찰력과 공감 능력을 가지고 있습니다. 의미 있는 일에서 강한 동기를 느끼며 꾸준하게 성과를 냅니다.',
+  INTJ:'독립적이고 전략적 사고가 뛰어납니다. 복잡한 문제를 체계적으로 분석하고 장기적 관점에서 해결책을 찾습니다.',
+  ISTP:'논리적이고 분석적이며 실용성을 중시합니다. 현장에서 문제를 직접 파악하고 효율적으로 해결하는 능력이 있습니다.',
+  ISFP:'온화하고 감수성이 풍부합니다. 자신만의 방식으로 창의적 작업을 즐기며 사람과의 깊은 관계를 소중히 여깁니다.',
+  INFP:'이상과 가치를 중시하는 깊은 내면의 세계를 가지고 있습니다. 글쓰기·예술·상담 분야에서 독창적인 강점을 발휘합니다.',
+  INTP:'논리와 탐구를 즐기며 복잡한 개념을 이해하는 능력이 뛰어납니다. 독창적인 아이디어와 분석으로 문제를 해결합니다.',
+  ESTP:'현실 감각이 뛰어나고 즉각적인 상황 판단에 강합니다. 빠른 실행력과 대인 관계 능력으로 역동적인 환경에 잘 맞습니다.',
+  ESFP:'활기차고 사교적이며 주변에 긍정 에너지를 줍니다. 사람들과 함께하는 환경에서 최고의 성과를 만들어냅니다.',
+  ENFP:'열정적이고 창의적이며 새로운 가능성을 탐색하는 것을 즐깁니다. 아이디어를 발산하고 사람을 연결하는 능력이 뛰어납니다.',
+  ENTP:'다양한 아이디어를 연결하고 논쟁과 토론을 통해 사고를 발전시킵니다. 혁신적 문제 해결과 기획에서 두각을 나타냅니다.',
+  ESTJ:'체계와 질서를 중시하며 조직을 효율적으로 이끄는 능력이 있습니다. 명확한 목표와 계획으로 팀을 이끌어 나갑니다.',
+  ESFJ:'타인의 감정에 민감하고 조화를 중요하게 생각합니다. 사람을 돕고 관계를 돌보는 일에서 큰 보람을 느낍니다.',
+  ENFJ:'사람에 대한 깊은 관심과 리더십을 가지고 있습니다. 타인의 성장을 돕고 팀을 화합으로 이끄는 능력이 뛰어납니다.',
+  ENTJ:'목표 지향적이며 강한 추진력과 리더십을 가지고 있습니다. 복잡한 상황에서도 전략적으로 판단하고 결과를 만들어냅니다.',
+};
 function runDiag(){
   goStep(4);
   const t=calcTypes(),eHML=calcEnv(t);
@@ -398,7 +428,7 @@ function runDiag(){
   const bW={H:'100%',M:'55%',L:'22%'},bC={H:'bH',M:'bM',L:'bL'},vC={H:'vH',M:'vM',L:'vL'};
   const envHTML=EDESC.map((d,i)=>`<div class="erow"><div class="elbl">${d.label}</div><div class="ebar-bg"><div class="ebar ${bC[eHML[i]]}" style="width:${bW[eHML[i]]}"></div></div><div class="eval ${vC[eHML[i]]}">${eHML[i]}</div></div><div class="edesc">${d[eHML[i]]}</div>`).join('');
   const grpLbl=selGrp?`<span style="font-size:13px;font-weight:400;color:var(--primary);margin-left:8px">· ${selGrp} 계열</span>`:`<span style="font-size:13px;font-weight:400;color:var(--muted);margin-left:8px">· 전체 계열</span>`;
-  let html=`<div class="type-card"><div class="chips"><span class="chip ch-mbti">MBTI 경향: <b>${t.mbti}</b></span><span class="chip ch-temp">기질: <b>${t.temper}</b></span></div><div class="type-desc">${TDESC[t.temper]}</div></div><div class="env-wrap"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;">나의 업무 환경 성향</div>${envHTML}</div><div style="background:var(--white);border-radius:12px;padding:14px 18px;margin-bottom:20px;border:1px solid var(--border);"><div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;">강점 역량</div><div style="font-size:13px;color:var(--muted);">${topLbl}</div></div><h3 style="margin-bottom:20px;font-size:17px;font-weight:900;color:var(--navy);">🎯 직무 추천 결과${grpLbl}</h3>`;
+  let html=`<div class="type-card"><div class="type-desc">${TDESC[t.mbti]||TDESC.INFJ}</div></div><div class="env-wrap"><div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;">나의 업무 환경 성향</div>${envHTML}</div><div style="background:var(--white);border-radius:12px;padding:14px 18px;margin-bottom:20px;border:1px solid var(--border);"><div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;">강점 역량</div><div style="font-size:13px;color:var(--muted);">${topLbl}</div></div><h3 style="margin-bottom:20px;font-size:17px;font-weight:900;color:var(--navy);">🎯 직무 추천 결과${grpLbl}</h3>`;
   if(!scored.length){html+='<p style="text-align:center;color:var(--muted);padding:40px">조건에 맞는 직무를 찾지 못했습니다.<br><small>다시하기를 눌러 조건을 바꿔보세요.</small></p>';document.getElementById('diag-result').innerHTML=html;return;}
   if(vf.length)html+=`<div class="rgroup"><div class="rgh gold"><span class="rgh-icon">⭐</span><span class="rgh-title">매우 적합</span><span class="rgh-cnt">${vf.length}개</span></div><div id="rv"></div></div>`;
   if(fi.length)html+=`<div class="rgroup"><div class="rgh green"><span class="rgh-icon">✅</span><span class="rgh-title">적합</span><span class="rgh-cnt">${fi.length}개</span></div><div id="rf"></div></div>`;
