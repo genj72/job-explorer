@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>자소서 초안 작성 | goseyo.kr</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── 토큰 ── */
+    :root {
+      --bg: #f5f2ec;
+      --surface: #fffefa;
+      --surface2: #f0ede6;
+      --ink: #1a1814;
+      --ink2: #4a4640;
+      --ink3: #8a8480;
+      --accent: #b85c2a;
+      --accent2: #d4763e;
+      --accent-light: #f5e8de;
+      --border: #ddd9d0;
+      --shadow: 0 2px 16px rgba(0,0,0,0.07);
+      --radius: 12px;
+      --font-serif: 'Noto Serif KR', serif;
+      --font-sans: 'Noto Sans KR', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── 헤더 ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header .logo {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    header .sep { color: var(--border); font-size: 1.2rem; }
+    header .title {
+      font-size: 0.95rem;
+      color: var(--ink2);
+      font-weight: 500;
+    }
+
+    /* ── 메인 ── */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── 스텝 인디케이터 ── */
+    .steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 40px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .step.inactive .step-num { background: var(--surface2); color: var(--ink3); }
+    .step.active .step-num { background: var(--accent); color: #fff; }
+    .step.done .step-num { background: var(--ink2); color: #fff; }
+    .step-label {
+      font-size: 0.8rem;
+      color: var(--ink3);
+      transition: color 0.3s;
+    }
+    .step.active .step-label { color: var(--accent); font-weight: 600; }
+    .step.done .step-label { color: var(--ink2); }
+    .step-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      margin: 0 8px;
+    }
+
+    /* ── 패널 ── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── 패널 타이틀 ── */
+    .panel-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .panel-desc {
+      font-size: 0.875rem;
+      color: var(--ink3);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* ── 폼 요소 ── */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--ink2);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .field input,
+    .field textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--ink);
+      resize: vertical;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+    .field textarea { min-height: 90px; }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* ── 버튼 ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-primary:disabled { background: var(--ink3); cursor: not-allowed; transform: none; }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--ink2);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    /* ── 분석 결과 박스 ── */
+    .analysis-box {
+      background: var(--accent-light);
+      border: 1px solid #e8c9b0;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+    .analysis-box .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .analysis-box p {
+      font-size: 0.875rem;
+      color: var(--ink2);
+      line-height: 1.6;
+    }
+    .analysis-box .flow {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── 소재 질문 목록 ── */
+    .q-list { display: flex; flex-direction: column; gap: 18px; }
+    .q-item {}
+    .q-item .q-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .q-item .q-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    /* ── 초안 결과 ── */
+    .draft-box {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      font-size: 0.925rem;
+      line-height: 1.85;
+      color: var(--ink);
+      white-space: pre-wrap;
+      word-break: keep-all;
+    }
+    .draft-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .char-count {
+      font-size: 0.8rem;
+      color: var(--ink3);
+    }
+    .char-count span { color: var(--accent); font-weight: 700; }
+
+    /* ── 로딩 ── */
+    .loading {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 0;
+      color: var(--ink3);
+      font-size: 0.875rem;
+    }
+    .loading.active { display: flex; }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── 공지 배너 ── */
+    .notice {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.8rem;
+      color: var(--ink3);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .notice strong { color: var(--ink2); }
+
+    /* ── 반응형 ── */
+    @media (max-width: 600px) {
+      .row-2 { grid-template-columns: 1fr; }
+      .panel { padding: 24px 20px; }
+      main { padding: 28px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="https://goseyo.kr">goseyo.kr</a>
+  <span class="sep">›</span>
+  <span class="title">자소서 초안 작성</span>
+</header>
+
+<main>
+
+  <!-- 스텝 인디케이터 -->
+  <div class="steps">
+    <div class="step active" id="step1">
+      <div class="step-num">1</div>
+      <div class="step-label">질문 입력</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step inactive" id="step2">
+      <div class="step-num">2</div>
+      <div class="step-label">소재 입력</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step inactive" id="step3">
+      <div class="step-num">3</div>
+      <div class="step-label">초안 완성</div>
+    </div>
+  </div>
+
+  <!-- ── 패널 1: 질문 입력 ── -->
+  <div class="panel active" id="panel1">
+    <div class="panel-title">자소서 항목 질문을 입력하세요</div>
+    <div class="panel-desc">
+      지원 기업의 자소서 항목 질문을 그대로 붙여넣어 주세요.<br>
+      AI가 질문의 의도를 분석하여 맞춤 소재 질문을 만들어 드립니다.
+    </div>
+
+    <div class="notice">
+      <strong>입력한 내용은 저장되지 않습니다.</strong> 초안 생성 후 직접 복사해 보관해 주세요.
+    </div>
+
+    <div class="row-2">
+      <div class="field">
+        <label>지원 기업명</label>
+        <input type="text" id="inp-company" placeholder="예: 삼성전자" />
+      </div>
+      <div class="field">
+        <label>지원 직무</label>
+        <input type="text" id="inp-job" placeholder="예: 온라인 마케팅" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>자소서 항목 질문 (원문 그대로)</label>
+      <textarea id="inp-question" rows="4"
+        placeholder="예: 지원 동기와 입사 후 이루고 싶은 목표를 구체적으로 기술해 주세요."></textarea>
+    </div>
+
+    <div class="loading" id="loading1">
+      <div class="spinner"></div>
+      <span>질문을 분석하고 있습니다…</span>
+    </div>
+
+    <div class="btn-actions">
+      <button class="btn btn-primary" onclick="analyzeQuestion()">질문 분석 → 소재 질문 받기</button>
+    </div>
+  </div>
+
+  <!-- ── 패널 2: 소재 입력 ── -->
+  <div class="panel" id="panel2">
+    <div class="panel-title">소재를 입력해 주세요</div>
+    <div class="panel-desc">
+      아래 질문에 짧게 답해 주세요. 완성된 문장이 아니어도 됩니다.<br>
+      키워드나 단어만 입력해도 AI가 자연스럽게 연결합니다.
+    </div>
+
+    <!-- AI 분석 결과 요약 -->
+    <div class="analysis-box" id="analysis-box">
+      <span class="tag">AI 분석</span>
+      <p id="analysis-intent"></p>
+      <p class="flow" id="analysis-flow"></p>
+    </div>
+
+    <!-- 동적 소재 질문 목록 -->
+    <div class="q-list" id="q-list"></div>
+
+    <div class="loading" id="loading2">
+      <div class="spinner"></div>
+      <span>초안을 작성하고 있습니다…</span>
+    </div>
+
+    <div class="btn-actions">
+      <button class="btn btn-primary" onclick="generateDraft()">초안 생성</button>
+      <button class="btn btn-secondary" onclick="goBack(1)">← 다시 입력</button>
+    </div>
+  </div>
+
+  <!-- ── 패널 3: 초안 결과 ── -->
+  <div class="panel" id="panel3">
+    <div class="panel-title">초안이 완성되었습니다</div>
+    <div class="panel-desc">
+      아래 내용을 복사하여 자소서에 붙여넣고 본인 상황에 맞게 다듬어 주세요.
+    </div>
+
+    <div class="draft-box" id="draft-output"></div>
+
+    <div class="draft-meta">
+      <div class="char-count">공백 포함 <span id="char-count">0</span>자</div>
+    </div>
+
+    <div class="btn-actions">
+      <button class="btn btn-primary" onclick="copyDraft()">초안 복사</button>
+      <button class="btn btn-secondary" onclick="goBack(2)">← 소재 수정</button>
+      <button class="btn btn-secondary" onclick="reset()">처음부터</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ── 설정 ──────────────────────────────────────
+  // 배포 후 실제 Cloudflare Worker URL로 교체하세요
+  const WORKER_URL = 'https://goseyo-jasoseo.genj4204.workers.dev';
+
+  // ── 상태 ──────────────────────────────────────
+  let state = {
+    company: '',
+    job: '',
+    question: '',
+    intent: '',
+    flow: '',
+    questions: [],   // [{id, label, question, placeholder}]
+  };
+
+  // ── 유틸 ──────────────────────────────────────
+  function setStep(n) {
+    [1,2,3].forEach(i => {
+      const el = document.getElementById('step' + i);
+      el.className = 'step ' + (i < n ? 'done' : i === n ? 'active' : 'inactive');
+    });
+    [1,2,3].forEach(i => {
+      document.getElementById('panel' + i).className = 'panel' + (i === n ? ' active' : '');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goBack(n) { setStep(n); }
+
+  function reset() {
+    document.getElementById('inp-company').value = '';
+    document.getElementById('inp-job').value = '';
+    document.getElementById('inp-question').value = '';
+    state = { company:'', job:'', question:'', intent:'', flow:'', questions:[] };
+    setStep(1);
+  }
+
+  function showLoading(id, show) {
+    document.getElementById(id).className = 'loading' + (show ? ' active' : '');
+  }
+
+  async function callWorker(mode, data) {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode, data }),
+    });
+    if (!res.ok) throw new Error('서버 오류: ' + res.status);
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    return json.result;
+  }
+
+  // ── 1단계: 질문 분석 ──────────────────────────
+  async function analyzeQuestion() {
+    const company  = document.getElementById('inp-company').value.trim();
+    const job      = document.getElementById('inp-job').value.trim();
+    const question = document.getElementById('inp-question').value.trim();
+
+    if (!company || !job || !question) {
+      alert('기업명, 직무, 질문을 모두 입력해 주세요.');
+      return;
+    }
+
+    state.company  = company;
+    state.job      = job;
+    state.question = question;
+
+    showLoading('loading1', true);
+    document.querySelector('#panel1 .btn-primary').disabled = true;
+
+    try {
+      const raw = await callWorker('analyze', { company, job, question });
+
+      // JSON 파싱
+      const cleaned = raw.replace(/```json|```/g, '').trim();
+      const parsed  = JSON.parse(cleaned);
+
+      state.intent    = parsed.intent;
+      state.flow      = parsed.flow;
+      state.questions = parsed.questions;
+
+      renderPanel2();
+      setStep(2);
+
+    } catch (err) {
+      alert('분석 중 오류가 발생했습니다.\n' + err.message);
+    } finally {
+      showLoading('loading1', false);
+      document.querySelector('#panel1 .btn-primary').disabled = false;
+    }
+  }
+
+  // ── 패널2 렌더링 ──────────────────────────────
+  function renderPanel2() {
+    document.getElementById('analysis-intent').textContent = state.intent;
+    document.getElementById('analysis-flow').textContent = '✦ 글의 흐름: ' + state.flow;
+
+    const list = document.getElementById('q-list');
+    list.innerHTML = '';
+
+    state.questions.forEach(q => {
+      const div = document.createElement('div');
+      div.className = 'q-item';
+      div.innerHTML = `
+        <div class="q-label">소재 ${q.id}</div>
+        <div class="q-text">${q.question}</div>
+        <div class="field">
+          <textarea id="ans-${q.id}" rows="2"
+            placeholder="${q.placeholder || '간단히 입력해 주세요'}"></textarea>
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  // ── 2단계: 초안 생성 ──────────────────────────
+  async function generateDraft() {
+    const answers = state.questions.map(q => ({
+      question: q.question,
+      answer: (document.getElementById('ans-' + q.id)?.value || '').trim(),
+    }));
+
+    const empty = answers.filter(a => !a.answer);
+    if (empty.length > 0) {
+      alert('모든 소재 질문에 답변을 입력해 주세요.');
+      return;
+    }
+
+    showLoading('loading2', true);
+    document.querySelector('#panel2 .btn-primary').disabled = true;
+
+    try {
+      const draft = await callWorker('draft', {
+        company:  state.company,
+        job:      state.job,
+        question: state.question,
+        flow:     state.flow,
+        answers,
+      });
+
+      document.getElementById('draft-output').textContent = draft;
+      document.getElementById('char-count').textContent   = draft.length.toLocaleString();
+      setStep(3);
+
+    } catch (err) {
+      alert('초안 생성 중 오류가 발생했습니다.\n' + err.message);
+    } finally {
+      showLoading('loading2', false);
+      document.querySelector('#panel2 .btn-primary').disabled = false;
+    }
+  }
+
+  // ── 복사 ──────────────────────────────────────
+  async function copyDraft() {
+    const text = document.getElementById('draft-output').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.querySelector('#panel3 .btn-primary');
+      const orig = btn.textContent;
+      btn.textContent = '✓ 복사 완료!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    } catch {
+      alert('복사에 실패했습니다. 직접 선택하여 복사해 주세요.');
+    }
+  }
+</script>
+</body>
+</html>
